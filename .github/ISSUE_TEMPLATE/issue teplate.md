@@ -3,7 +3,7 @@ name: 'issue template'
 about: Suggest an idea for this project
 title: ''
 labels: enhancement
-projects: PROJECT_BE
+projects: 'PROJECT_BE'
 assignees: ''
 
 ---
