@@ -1,5 +1,5 @@
 ---
-name: 'feat: 이슈이름'
+name: 'issue name'
 about: Suggest an idea for this project
 title: ''
 labels: enhancement
