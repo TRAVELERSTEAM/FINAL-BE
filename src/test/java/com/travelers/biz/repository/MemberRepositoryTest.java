@@ -29,7 +29,6 @@ class MemberRepositoryTest {
         Member member = Member.builder()
                 .email("test@naver.com")
                 .username("홍길동")
-                .nickname("괴도키드")
                 .password("1234")
                 .tel("01022225555")
                 .gender(Gender.MAIL)
