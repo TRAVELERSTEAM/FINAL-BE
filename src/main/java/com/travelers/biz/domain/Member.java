@@ -8,11 +8,12 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "member")
 public class Member extends BaseTime{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberId")
+    @Column(name = "member_id")
     private long id;
 
     @Column(name = "username")
@@ -30,6 +31,12 @@ public class Member extends BaseTime{
     @Column(name = "birth")
     private String birth;
 
+    @Column(name = "hobby")
+    private String hobby;
+
+    @Column(name = "prefer")
+    private String prefer;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
@@ -39,12 +46,14 @@ public class Member extends BaseTime{
     private Authority authority;
 
     @Builder
-    private Member(String username, String password, String email, String tel, String birth, Gender gender){
+    private Member(String username, String password, String email, String tel, String birth, String hobby, String prefer, Gender gender){
         this.username = username;
         this.password = password;
         this.email = email;
         this.tel = tel;
         this.birth = birth;
+        this.hobby = hobby;
+        this.prefer = prefer;
         this.gender = gender;
         this.authority = Authority.ROLE_USER;
     }
