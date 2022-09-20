@@ -5,10 +5,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @MappedSuperclass
@@ -17,12 +16,20 @@ public class BaseTime {
 
     @Column(name = "createdAt")
     @CreatedDate
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @Column(name = "modifiedAt")
     @LastModifiedDate
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
+    @PrePersist
+    public void prePersist(){
+        this.createdAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.modifiedAt = this.createdAt;
+    }
 
-
+    @PreUpdate
+    public void preUpdate(){
+        this.modifiedAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+    }
 }
