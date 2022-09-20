@@ -57,4 +57,8 @@ public class Member extends BaseTime{
         this.gender = gender;
         this.authority = Authority.ROLE_USER;
     }
+
+    public void changeAuthority(Authority authority){
+        this.authority = authority;
+    }
 }
