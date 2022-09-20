@@ -31,13 +31,18 @@ class MemberRepositoryTest {
                 .username("홍길동")
                 .password("1234")
                 .tel("01022225555")
-                .gender(Gender.MAIL)
                 .birth("1998-09-11")
+                .hobby("등산")
+                .prefer("남자끼리, 누구든지")
+                .gender(Gender.MAIL)
                 .build();
 
         memberRepository.save(member);
 
         Optional<Member> getMember = memberRepository.findById(1L);
+
+        log.info(getMember.get().getCreatedAt() + "");
+        log.info(getMember.get().getPrefer() + "");
 
         // 회원가입이 되있나 확인!
         assertThat(getMember.get().getGender()).isEqualTo(Gender.MAIL);
