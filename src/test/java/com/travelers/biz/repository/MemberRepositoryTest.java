@@ -34,7 +34,7 @@ class MemberRepositoryTest {
                 .birth("1998-09-11")
                 .hobby("등산")
                 .prefer("남자끼리, 누구든지")
-                .gender(Gender.MAIL)
+                .gender(Gender.MALE)
                 .build();
 
         memberRepository.save(member);
@@ -45,7 +45,7 @@ class MemberRepositoryTest {
         log.info(getMember.get().getPrefer() + "");
 
         // 회원가입이 되있나 확인!
-        assertThat(getMember.get().getGender()).isEqualTo(Gender.MAIL);
+        assertThat(getMember.get().getGender()).isEqualTo(Gender.MALE);
         assertThat(getMember.get().getAuthority()).isEqualTo(Authority.ROLE_USER);
         assertThat(getMember.get().getEmail()).isEqualTo("test@naver.com");
 
