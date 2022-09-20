@@ -107,8 +107,6 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        Authority authority = findMember.getAuthority();
-        if(authority.equals(Authority.ROLE_ADMIN)) return true;
-        else return false;
+        return Authority.isAdmin(findMember.getAuthority());
     }
 }
