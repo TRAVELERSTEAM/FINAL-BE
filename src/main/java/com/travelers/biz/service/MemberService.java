@@ -26,7 +26,7 @@ public class MemberService {
 
     // 회원가입
     @Transactional
-    public TokenResponseDto register(MemberRequestDto memberRequestDto){
+    public void register(MemberRequestDto memberRequestDto){
 
         if(checkEmailDuplicate(memberRequestDto.getEmail())) {
             throw new RuntimeException("이미 존재하는 아이디입니다.");
@@ -48,11 +48,6 @@ public class MemberService {
                 .refreshToken(refreshToken)
                 .build();
         tokenRepository.save(token);
-
-        // 회원가입때 토큰을 줄지말지??
-        return TokenResponseDto.builder()
-                .refreshToken(refreshToken)
-                .build();
     }
 
     // 로그인
