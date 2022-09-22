@@ -100,7 +100,7 @@ public class JwtTokenProvider {
 
     public boolean validateAccessToken(String accessToken) {
         try {
-            Claims accessClaims = getRefreshClaimsToken(accessToken);
+            Claims accessClaims = getAccessClaimsToken(accessToken);
             log.info("Access expireTime: " + accessClaims.getExpiration());
             log.info("Access memberId: " + accessClaims.get("sub"));
             log.info("Access auth: " + accessClaims.get("auth"));
