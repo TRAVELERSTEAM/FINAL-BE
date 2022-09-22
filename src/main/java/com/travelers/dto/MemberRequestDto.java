@@ -35,11 +35,11 @@ public class MemberRequestDto {
     @NotNull
     private String tel;
 
-    @NotNull
-    private String hobby;
+    private String groupTrip;
 
-    @NotNull
-    private String prefer;
+    private String area;
+
+    private String theme;
 
     @NotNull
     private Gender gender;
@@ -51,13 +51,10 @@ public class MemberRequestDto {
                 .password(passwordEncoder.encode(password))
                 .tel(tel)
                 .birth(birth)
-                .hobby(hobby)
-                .prefer(prefer)
+                .groupTrip(groupTrip)
+                .area(area)
+                .theme(theme)
                 .gender(gender)
                 .build();
-    }
-
-    public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }
