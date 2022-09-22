@@ -31,11 +31,14 @@ public class Member extends BaseTime{
     @Column(name = "birth")
     private String birth;
 
-    @Column(name = "hobby")
-    private String hobby;
+    @Column(name = "group_trip")
+    private String groupTrip;
 
-    @Column(name = "prefer")
-    private String prefer;
+    @Column(name = "area")
+    private String area;
+
+    @Column(name = "theme")
+    private String theme;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -46,14 +49,15 @@ public class Member extends BaseTime{
     private Authority authority;
 
     @Builder
-    private Member(String username, String password, String email, String tel, String birth, String hobby, String prefer, Gender gender){
+    private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender){
         this.username = username;
         this.password = password;
         this.email = email;
         this.tel = tel;
         this.birth = birth;
-        this.hobby = hobby;
-        this.prefer = prefer;
+        this.groupTrip = groupTrip;
+        this.area = area;
+        this.theme = theme;
         this.gender = gender;
         this.authority = Authority.ROLE_USER;
     }
