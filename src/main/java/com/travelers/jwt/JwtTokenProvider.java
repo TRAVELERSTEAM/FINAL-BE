@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,22 +26,17 @@ public class JwtTokenProvider {
     @Value("${jwt.secret.refresh}")
     private String REFRESH_KEY;
 
+    Logger logger = LoggerFactory.getLogger(FunctionalWithJWTThrowable.class);
+
     private final long ACCESS_TOKEN_TIME = 1 * 60 * 1000L;      // 1분
     private final long REFRESH_TOKEN_TIME = 1 * 60 * 3 * 1000L;   // 3분
 
     // 의존성 주입이 이루어진 후 키값을 초기화 하기위해 설정
     @PostConstruct
     private void init() {
-        log.info("BEFORE : " + SECRET_KEY);
-        log.info("BEFORE : " + REFRESH_KEY);
-
         SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
         REFRESH_KEY = Base64.getEncoder().encodeToString(REFRESH_KEY.getBytes());
-
-        log.info("AFTER : " + SECRET_KEY);
-        log.info("AFTER : " + REFRESH_KEY);
     }
-
 
     // JWT 토큰 생성
     public String createAccessToken(String email) {
@@ -70,11 +67,11 @@ public class JwtTokenProvider {
 
     // Request의 Header에서 token 값을 가져오기
     public String resolveAccessToken(HttpServletRequest request) {
-        return request.getHeader("ACCESS_TOKEN");
+        return request.getHeader("accessToken");
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
-        return request.getHeader("REFRESH_TOKEN");
+        return request.getHeader("refreshToken");
     }
 
     public Claims getClaimsFormToken(String token) {
@@ -92,55 +89,29 @@ public class JwtTokenProvider {
     }
 
     public boolean isValidAccessToken(String token) {
-        System.out.println("isValidToken is : " +token);
-        try {
-            Claims accessClaims = getClaimsFormToken(token);
-            System.out.println("Access expireTime: " + accessClaims.getExpiration());
-            System.out.println("Access email: " + accessClaims.get("email"));
-            return true;
-        } catch (ExpiredJwtException exception) {
-            System.out.println("Token Expired email : " + exception.getClaims().get("email"));
-            return false;
-        } catch (JwtException exception) {
-            System.out.println("Token Tampered");
-            return false;
-        } catch (NullPointerException exception) {
-            System.out.println("Token is null");
-            return false;
-        }
+        return checkClaims(token);
     }
     public boolean isValidRefreshToken(String token) {
-        try {
-            Claims accessClaims = getClaimsToken(token);
-            System.out.println("Access expireTime: " + accessClaims.getExpiration());
-            System.out.println("Access email: " + accessClaims.get("email"));
-            return true;
-        } catch (ExpiredJwtException exception) {
-            System.out.println("Token Expired email : " + exception.getClaims().get("email"));
-            return false;
-        } catch (JwtException exception) {
-            System.out.println("Token Tampered");
-            return false;
-        } catch (NullPointerException exception) {
-            System.out.println("Token is null");
-            return false;
-        }
+        return checkClaims(token);
     }
     public boolean isOnlyExpiredToken(String token) {
-        System.out.println("isValidToken is : " +token);
+        return checkClaims(token);
+    }
+
+    public boolean checkClaims(String token) {
         try {
-            Claims accessClaims = getClaimsFormToken(token);
-            System.out.println("Access expireTime: " + accessClaims.getExpiration());
-            System.out.println("Access email: " + accessClaims.get("email"));
-            return false;
-        } catch (ExpiredJwtException exception) {
-            System.out.println("Token Expired email : " + exception.getClaims().get("email"));
+            Claims accessClaims = getClaimsToken(token);
+            log.info("Access expireTime: " + accessClaims.getExpiration());
+            log.info("Access email: " + accessClaims.get("email"));
             return true;
+        } catch (ExpiredJwtException exception) {
+            log.info("Token Expired email : " + exception.getClaims().get("email"));
+            return false;
         } catch (JwtException exception) {
-            System.out.println("Token Tampered");
+            log.info("Token Tampered");
             return false;
         } catch (NullPointerException exception) {
-            System.out.println("Token is null");
+            log.info("Token is null");
             return false;
         }
     }
