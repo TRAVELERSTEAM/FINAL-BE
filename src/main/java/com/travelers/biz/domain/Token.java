@@ -7,35 +7,32 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "token")
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "token_id")
-    private Long id;
+    @Column(name = "id")
+    private String id;
     @Column(name = "access_token")
     private String accessToken;
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @ManyToOne
-    @JoinColumn(name = "email")
-    private Member member;
-
     @Builder
-    private Token(Member member, String refreshToken) {
-        this.member = member;
-        this.refreshToken = refreshToken;
-    }
-
-    public void accessUpdate(String accessToken) {
+    private Token(String id, String accessToken, String refreshToken) {
+        this.id = id;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
-    public void refreshUpdate(String refreshToken) {
+    public Token accessUpdate(String accessToken) {
+        this.accessToken = accessToken;
+        return this;
+    }
+
+    public Token refreshUpdate(String refreshToken) {
         this.refreshToken = refreshToken;
+        return this;
     }
 
 }
