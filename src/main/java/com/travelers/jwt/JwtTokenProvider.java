@@ -41,18 +41,15 @@ public class JwtTokenProvider {
     private final long ACCESS_TOKEN_TIME = 1 * 60 * 1000L;      // 1분
     private final long REFRESH_TOKEN_TIME = 1 * 60 * 3 * 1000L;   // 3분
 
-    private final Key key;
-
-    public JwtTokenProvider() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-    }
+    private Key key;
 
     // 의존성 주입이 이루어진 후 키값을 초기화 하기위해 설정
     @PostConstruct
     private void init() {
         SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
         REFRESH_KEY = Base64.getEncoder().encodeToString(REFRESH_KEY.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // JWT 토큰 생성
@@ -103,14 +100,16 @@ public class JwtTokenProvider {
 
     public boolean validateAccessToken(String accessToken) {
         try {
-            Claims accessClaims = getAccessClaimsToken(accessToken);
+            Claims accessClaims = getRefreshClaimsToken(accessToken);
             log.info("Access expireTime: " + accessClaims.getExpiration());
-            log.info("Access email: " + accessClaims.get("email"));
+            log.info("Access memberId: " + accessClaims.get("sub"));
+            log.info("Access auth: " + accessClaims.get("auth"));
             return true;
         } catch (ExpiredJwtException exception) {
-            log.info("Token Expired email : " + exception.getClaims().get("email"));
+            log.info("Token Expired memberId : " + exception.getClaims().get("sub"));
             return false;
         } catch (JwtException exception) {
+            log.info("JwtException : " + accessToken);
             log.info("Token Tampered");
             return false;
         } catch (NullPointerException exception) {
@@ -119,16 +118,18 @@ public class JwtTokenProvider {
         }
     }
 
-    public boolean validateRefreshToken(String token) {
+    public boolean validateRefreshToken(String refreshToken) {
         try {
-            Claims accessClaims = getRefreshClaimsToken(token);
+            Claims accessClaims = getRefreshClaimsToken(refreshToken);
             log.info("Access expireTime: " + accessClaims.getExpiration());
-            log.info("Access email: " + accessClaims.get("email"));
+            log.info("Access memberId: " + accessClaims.get("sub"));
+            log.info("Access auth: " + accessClaims.get("auth"));
             return true;
         } catch (ExpiredJwtException exception) {
-            log.info("Token Expired email : " + exception.getClaims().get("email"));
+            log.info("Token Expired memberId : " + exception.getClaims().get("sub"));
             return false;
         } catch (JwtException exception) {
+            log.info("JwtException : " + refreshToken);
             log.info("Token Tampered");
             return false;
         } catch (NullPointerException exception) {
@@ -148,6 +149,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
+        log.info(claims.toString());
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
