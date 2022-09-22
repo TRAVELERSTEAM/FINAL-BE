@@ -7,14 +7,19 @@ import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.TokenRepository;
 import com.travelers.dto.MemberLoginRequestDto;
 import com.travelers.dto.MemberRequestDto;
+import com.travelers.dto.TokenRequestDto;
 import com.travelers.dto.TokenResponseDto;
 import com.travelers.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -86,6 +91,41 @@ public class MemberService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    // 내 정보 확인
+    public Member getMyInfo(String accessToken, String refreshToken) {
+
+        // 토큰 정보값이 없으면 리턴시킬 빈 맴버객체 생성
+        Member emptyMember = Member.builder().build();
+
+        // 만약 액세스토큰이 유효하면 해당 이메일의 주인에 해당하는 맴버정보 리턴
+        if(jwtTokenProvider.isValidAccessToken(accessToken)){
+            Claims accessClaims = jwtTokenProvider.getClaimsToken(accessToken);
+            String email = String.valueOf(accessClaims.get("email"));
+            log.info("access : " + email);
+            Member member = memberRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+            return member;
+        } // 엑세스 토큰이 유효하지 않으면 refreshToken 유효성검사후 accessToken 재발급후 맴버 리턴
+        else {
+            if(jwtTokenProvider.isValidRefreshToken(refreshToken)){
+                Claims accessClaims = jwtTokenProvider.getClaimsToken(refreshToken);
+                String email = String.valueOf(accessClaims.get("email"));
+                log.info("refresh : " + email);
+                Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                Token token = tokenRepository.findByMemberEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException("토큰이 존재하지 않습니다."));
+                accessToken = jwtTokenProvider.createAccessToken(email);
+                token.accessUpdate(accessToken);
+                return member;
+            }
+            else{
+                return emptyMember;
+            }
+        }
+    }
+
 
     // 회원 중복 체크(이메일)
     public boolean checkEmailDuplicate(String email) {
