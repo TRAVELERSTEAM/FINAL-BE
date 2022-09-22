@@ -35,8 +35,9 @@ public class TravelersApplication {
                     .birth("1998-09-16")
                     .gender(Gender.MALE)
                     .tel("01055222222")
-                    .hobby("코딩")
-                    .prefer("상관없음")
+                    .groupTrip("남자끼리")
+                    .area("중남미/북미")
+                    .theme("문화탐방")
                     .build();
 
             member.changeAuthority(Authority.ROLE_ADMIN);
