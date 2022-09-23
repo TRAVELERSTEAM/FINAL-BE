@@ -94,5 +94,7 @@ public class ProductService {
         registAll(productDtoList);
     }
 
-
+    public List<Product> getProductAll() {
+        return productRepository.findAll();
+    }
 }
