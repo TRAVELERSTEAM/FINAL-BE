@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,6 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminBannerController {
     private final BannerService bannerService;
+
+    @PostMapping("/banner/loaddata")
+    public void loadData() throws IOException {
+        bannerService.loadData();
+    }
 
     @PostMapping("banners")
     public void  register(@RequestBody BannerDto bannerDto) {
