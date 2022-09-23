@@ -33,4 +33,9 @@ public class AdminProductController {
     public ResponseEntity<List<Product>> getProducts() {
         return ResponseEntity.ok(productService.getProductAll());
     }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Product> getProductDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductDetails(id).get());
+    }
 }
