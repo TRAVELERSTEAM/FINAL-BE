@@ -3,6 +3,7 @@ package com.travelers.biz.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Random;
 
 @Entity
 @Getter
@@ -40,6 +41,12 @@ public class Member extends BaseTime{
     @Column(name = "theme")
     private String theme;
 
+    @Column(name = "recommend")
+    private String recommend;
+
+    @Column(name = "recommend_code")
+    private String recommendCode;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
@@ -49,7 +56,7 @@ public class Member extends BaseTime{
     private Authority authority;
 
     @Builder
-    private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender){
+    private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender, String recommend){
         this.username = username;
         this.password = password;
         this.email = email;
@@ -60,9 +67,26 @@ public class Member extends BaseTime{
         this.theme = theme;
         this.gender = gender;
         this.authority = Authority.ROLE_USER;
+        this.recommend = recommend;
+        this.recommendCode = createRecommendCode();
     }
 
     public void changeAuthority(Authority authority){
         this.authority = authority;
+    }
+
+    // 추천인 코드 생성
+    public String createRecommendCode(){
+        Random rnd =new Random();
+        StringBuffer buf =new StringBuffer();
+        for(int i=0;i<8;i++) {
+            if(rnd.nextBoolean()){
+                buf.append((char)((int)(rnd.nextInt(26))+97));
+            }
+            else{
+                buf.append((rnd.nextInt(10)));
+            }
+        }
+        return buf.toString();
     }
 }
