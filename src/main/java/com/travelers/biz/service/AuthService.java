@@ -29,6 +29,11 @@ public class AuthService {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
+
+        if(checkPasswordIsSame(memberRequestDto.getPassword(), memberRequestDto.getConfirmPassword())){
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
         Member member = memberRequestDto.toMember(passwordEncoder);
         return MemberResponseDto.of(memberRepository.save(member));
     }
@@ -86,5 +91,10 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    // 회원 비밀번호 체크(같은지 안같은지)
+    public boolean checkPasswordIsSame(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
     }
 }
