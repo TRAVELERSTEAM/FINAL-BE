@@ -30,4 +30,8 @@ public class BannerService {
         }
         bannerRepository.saveAll(bannerList);
     }
+
+    public List<Banner> getBannerList() {
+        return bannerRepository.findAll();
+    }
 }

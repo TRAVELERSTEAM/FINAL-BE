@@ -1,12 +1,13 @@
 package com.travelers.admin.controller;
 
+import com.travelers.biz.domain.Banner;
 import com.travelers.biz.service.BannerService;
 import com.travelers.dto.BannerDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author kei
@@ -15,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class BannerController {
+public class AdminBannerController {
     private final BannerService bannerService;
 
     @PostMapping("banner")
     public void  register(@RequestBody BannerDto bannerDto) {
         bannerService.addBanner(bannerDto);
+    }
+
+    @GetMapping("banners")
+    public ResponseEntity<List<Banner>> getBannerList() {
+        return ResponseEntity.ok(bannerService.getBannerList());
     }
 }
