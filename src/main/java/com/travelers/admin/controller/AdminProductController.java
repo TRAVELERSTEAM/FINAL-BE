@@ -4,7 +4,6 @@ import com.travelers.biz.domain.Product;
 import com.travelers.biz.service.ProductService;
 import com.travelers.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,7 @@ public class AdminProductController {
         List<ProductDto> productDtoList = new ArrayList<>();
         for (Product product: productList) {
             ProductDto productDto = new ProductDto();
-            productDto.setProduct(product);
+            productDto.initProduct(product);
             productDtoList.add(productDto);
         }
         return ResponseEntity.ok(productDtoList);
@@ -44,7 +43,7 @@ public class AdminProductController {
     public ResponseEntity<ProductDto> getProductDetails(@PathVariable Long id) {
         Optional<Product> productOpt = productService.getProductDetails(id);
         ProductDto productDto = new ProductDto();
-        productOpt.ifPresent(productDto::setProduct);
+        productOpt.ifPresent(productDto::initProduct);
         return ResponseEntity.ok(productDto);
     }
 
