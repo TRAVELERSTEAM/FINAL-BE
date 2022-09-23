@@ -25,15 +25,30 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
+        boolean isAccessToken = false;
+        boolean isRefreshToken = false;
+
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = resolveToken(req);
 
         // 2. validateToken 으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
         if (StringUtils.hasText(jwt) && jwtTokenProvider.validateAccessToken(jwt)) {
+            isAccessToken = true;
+        }
+        else if (StringUtils.hasText(jwt) && jwtTokenProvider.validateRefreshToken(jwt)) {
+            isRefreshToken = true;
+        }
+
+        if(isAccessToken) {
             Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        else if(isRefreshToken) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
         filterChain.doFilter(req, res);
     }
 
