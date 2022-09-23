@@ -32,15 +32,7 @@ public class ProductService {
         List<Product> productList = new ArrayList<>();
         for(ProductDto productDto: productDtoList) {
             List<ProductStartDate> productStartDates = new ArrayList<>();
-            for (Integer startDate : productDto.getStartDate() ) {
-                ProductStartDate productStartDate = ProductStartDate.builder().startDate(startDate).build();
-                productStartDates.add(productStartDate);
-            }
             List<ProductImage> productImages = new ArrayList<>();
-            for (String image : productDto.getImage() ) {
-                ProductImage productImage = ProductImage.builder().image(image).build();
-                productImages.add(productImage);
-            }
             Product product = Product.builder()
                     .title(productDto.getTitle())
                     .price(productDto.getPrice())
@@ -51,6 +43,14 @@ public class ProductService {
                     .startDates(productStartDates)
                     .images(productImages)
                     .build();
+            for (Integer startDate : productDto.getStartDate() ) {
+                ProductStartDate productStartDate = ProductStartDate.builder().product(product).startDate(startDate).build();
+                productStartDates.add(productStartDate);
+            }
+            for (String image : productDto.getImage() ) {
+                ProductImage productImage = ProductImage.builder().product(product).image(image).build();
+                productImages.add(productImage);
+            }
             productList.add(product);
         }
         productRepository.saveAll(productList);
