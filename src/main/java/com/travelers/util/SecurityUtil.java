@@ -15,7 +15,6 @@ public class SecurityUtil {
     public static Long getCurrentMemberId() {
         // 시큐리티 콘텍스트에서 Authentication 을 가져온다.
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("getCurrentMemberId : " + authentication.getName());
         if (authentication == null || authentication.getName() == null) {
             throw new RuntimeException("Security Context 에 인증 정보가 없습니다.");
         }
