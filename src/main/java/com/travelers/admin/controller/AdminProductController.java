@@ -3,13 +3,9 @@ package com.travelers.admin.controller;
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.service.ProductService;
 import com.travelers.dto.ProductDto;
-import com.travelers.storage.FileDetail;
-import com.travelers.storage.FileUploadService;
-import com.travelers.storage.FileWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,5 +33,10 @@ public class AdminProductController {
     @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProductDetails(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductDetails(id).get());
+    }
+
+    @PostMapping("/product")
+    public void register(@RequestBody List<ProductDto> productDto){
+        productService.registAll(productDto);
     }
 }
