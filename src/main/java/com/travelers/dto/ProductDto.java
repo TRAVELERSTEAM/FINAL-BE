@@ -33,7 +33,7 @@ public class ProductDto {
     @Builder.Default
     private List<String> image = new ArrayList<>();
 
-    public void setProduct(Product product) {
+    public void initProduct(Product product) {
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.thumbnail = product.getThumbnail();
