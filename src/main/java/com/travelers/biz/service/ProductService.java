@@ -2,20 +2,18 @@ package com.travelers.biz.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.ProductImage;
 import com.travelers.biz.domain.ProductStartDate;
 import com.travelers.biz.repository.ProductRepository;
 import com.travelers.dto.ProductDto;
+import com.travelers.utils.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -40,6 +38,9 @@ public class ProductService {
                     .target(productDto.getTarget())
                     .destination(productDto.getDestination())
                     .theme(productDto.getTheme())
+                    .priority(productDto.getPriority())
+                    .summary(productDto.getSummary())
+                    .packaging(productDto.getPackaging())
                     .startDates(productStartDates)
                     .images(productImages)
                     .build();
@@ -56,15 +57,9 @@ public class ProductService {
         productRepository.saveAll(productList);
     }
 
-    private JsonArray getJson(String data) throws IOException {
-        ClassPathResource resource = new ClassPathResource(data);
-        JsonArray jsonArray = (JsonArray) JsonParser.parseReader(new InputStreamReader(resource.getInputStream()));
-        return jsonArray;
-    }
-
     public void loadData() throws IOException {
         List<ProductDto> productDtoList = new ArrayList<>();
-        JsonArray jsonProduct = getJson("json/product.json");
+        JsonArray jsonProduct = JsonUtil.getJson("json/product.json");
         for (int i = 0; i < jsonProduct.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonProduct.get(i);
             ProductDto productDto = ProductDto.builder()
@@ -73,6 +68,9 @@ public class ProductService {
                     .target(jsonObject.get("target").getAsString())
                     .destination(jsonObject.get("destination").getAsString())
                     .theme(jsonObject.get("theme").getAsString())
+                    .priority(jsonObject.get("priority").getAsInt())
+                    .summary(jsonObject.get("summary").getAsString())
+                    .packaging(jsonObject.get("packaging").getAsString())
                     .build();
             for (Object arr : jsonObject.get("startDate").getAsJsonArray()) {
                 productDto.getStartDate().add(((JsonPrimitive) arr).getAsInt());
@@ -82,7 +80,7 @@ public class ProductService {
             }
             productDtoList.add(productDto);
         }
-        JsonArray jsonThumb = getJson("json/thumbnail.json");
+        JsonArray jsonThumb = JsonUtil.getJson("json/thumbnail.json");
         for (int i = 0; i < jsonThumb.size()&& i<productDtoList.size(); i++) {
             ProductDto productDto = productDtoList.get(i);
             productDto.setThumbnail(jsonThumb.get(i).getAsString());

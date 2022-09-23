@@ -9,7 +9,9 @@ import javax.persistence.*;
  * @since 2022-09-17
  */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductStartDate {
     @Id
