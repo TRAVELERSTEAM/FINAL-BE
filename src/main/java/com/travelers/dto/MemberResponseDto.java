@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,16 +19,23 @@ public class MemberResponseDto {
     private String email;
     private String birth;
     private String tel;
-    private String groupTrip;
-    private String area;
-    private String theme;
+    private List<String> groupTrip;
+    private List<String> area;
+    private List<String> theme;
+    private String recommendCode;
     private Gender gender;
     private Authority authority;
 
     public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(member.getUsername(),
-                member.getEmail(), member.getBirth(), member.getTel(),
-                member.getGroupTrip(), member.getArea(), member.getTheme(),
-                member.getGender(), member.getAuthority());
+                member.getEmail(),
+                member.getBirth(),
+                member.getTel(),
+                Arrays.asList(member.getGroupTrip().split(",")),
+                Arrays.asList(member.getArea().split(",")),
+                Arrays.asList(member.getTheme().split(",")),
+                member.getRecommendCode(),
+                member.getGender(),
+                member.getAuthority());
     }
 }
