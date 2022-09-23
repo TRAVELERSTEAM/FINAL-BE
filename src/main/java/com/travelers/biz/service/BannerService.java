@@ -54,17 +54,6 @@ public class BannerService {
         registAll(bannerDtoList);
     }
 
-    public void addBanner(BannerDto bannerDto) {
-//        List<Banner> bannerList = new ArrayList<>();
-//        for (String image : bannerDto.getImage()) {
-//            Banner banner = Banner.builder()
-//                    .image(image)
-//                    .build();
-//            bannerList.add(banner);
-//        }
-//        bannerRepository.saveAll(bannerList);
-    }
-
     public List<Banner> getBannerList() {
         return bannerRepository.findAll();
     }
