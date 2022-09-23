@@ -56,11 +56,6 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
-    // 회원 비밀번호 체크(같은지 안같은지)
-    public boolean checkPasswordIsSame(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
-    }
-
     // 회원 등급 체크
     public boolean checkMemberAuthority(String email){
         Member findMember = memberRepository.findByEmail(email)
