@@ -97,4 +97,8 @@ public class ProductService {
     public List<Product> getProductAll() {
         return productRepository.findAll();
     }
+
+    public Optional<Product> getProductDetails(Long id) {
+        return productRepository.findById(id);
+    }
 }
