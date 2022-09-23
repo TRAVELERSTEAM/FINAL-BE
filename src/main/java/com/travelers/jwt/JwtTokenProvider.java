@@ -32,24 +32,27 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     @Value("${jwt.secret.access}")
-    private String SECRET_KEY;
+    private String ACCESS_KEY;
     @Value("${jwt.secret.refresh}")
     private String REFRESH_KEY;
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
-    private final long ACCESS_TOKEN_TIME = 1 * 60 * 1000L;      // 1분
-    private final long REFRESH_TOKEN_TIME = 1 * 60 * 3 * 1000L;   // 3분
+    private final long ACCESS_TOKEN_TIME = 60 * 60 * 3 * 1000L;                   // 3시간
+    private final long REFRESH_TOKEN_TIME = 60 * 60 * 24 * 30 * 6 * 1000L;   // 6달
 
-    private Key key;
+    private Key secretKey;
+    private Key refreshKey;
 
     // 의존성 주입이 이루어진 후 키값을 초기화 하기위해 설정
     @PostConstruct
     private void init() {
-        SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+        ACCESS_KEY = Base64.getEncoder().encodeToString(ACCESS_KEY.getBytes());
         REFRESH_KEY = Base64.getEncoder().encodeToString(REFRESH_KEY.getBytes());
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        byte[] secretKeyBytes = Decoders.BASE64.decode(ACCESS_KEY);
+        byte[] refreshKeyBytes = Decoders.BASE64.decode(REFRESH_KEY);
+        this.secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+        this.refreshKey = Keys.hmacShaKeyFor(refreshKeyBytes);
     }
 
     // JWT 토큰 생성
@@ -67,13 +70,13 @@ public class JwtTokenProvider {
                 .setSubject(authentication.getName())       // payload "sub": "1"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .signWith(secretKey, SignatureAlgorithm.HS512)    // header "alg": "HS512"
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(refreshKey, SignatureAlgorithm.HS512)
                 .compact();
 
         return TokenResponseDto.builder()
@@ -86,7 +89,7 @@ public class JwtTokenProvider {
 
     public Claims getAccessClaimsToken(String token) {
         return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                .setSigningKey(DatatypeConverter.parseBase64Binary(ACCESS_KEY))
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -121,9 +124,9 @@ public class JwtTokenProvider {
     public boolean validateRefreshToken(String refreshToken) {
         try {
             Claims accessClaims = getRefreshClaimsToken(refreshToken);
-            log.info("Access expireTime: " + accessClaims.getExpiration());
-            log.info("Access memberId: " + accessClaims.get("sub"));
-            log.info("Access auth: " + accessClaims.get("auth"));
+            log.info("Refresh expireTime: " + accessClaims.getExpiration());
+            log.info("Refresh memberId: " + accessClaims.get("sub"));
+            log.info("Refresh auth: " + accessClaims.get("auth"));
             return true;
         } catch (ExpiredJwtException exception) {
             log.info("Token Expired memberId : " + exception.getClaims().get("sub"));
@@ -140,7 +143,7 @@ public class JwtTokenProvider {
 
     private Claims parseClaims(String token) {
         try{
-            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
+            return Jwts.parserBuilder().setSigningKey(ACCESS_KEY).build().parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
@@ -149,7 +152,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
-        log.info(claims.toString());
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
