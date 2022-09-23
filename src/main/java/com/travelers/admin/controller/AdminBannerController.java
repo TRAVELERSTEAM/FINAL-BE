@@ -19,7 +19,7 @@ import java.util.List;
 public class AdminBannerController {
     private final BannerService bannerService;
 
-    @PostMapping("banner")
+    @PostMapping("banners")
     public void  register(@RequestBody BannerDto bannerDto) {
         bannerService.addBanner(bannerDto);
     }
