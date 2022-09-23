@@ -1,11 +1,11 @@
 package com.travelers.dto;
 
+import com.travelers.annotation.Tel;
 import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
@@ -33,6 +33,7 @@ public class MemberRequestDto {
     private String birth;
 
     @NotNull
+    @Tel
     private String tel;
 
     private String groupTrip;
@@ -40,6 +41,8 @@ public class MemberRequestDto {
     private String area;
 
     private String theme;
+
+    private String recommend;
 
     @NotNull
     private Gender gender;
@@ -54,6 +57,7 @@ public class MemberRequestDto {
                 .groupTrip(groupTrip)
                 .area(area)
                 .theme(theme)
+                .recommend(recommend)
                 .gender(gender)
                 .build();
     }
