@@ -25,12 +25,12 @@ public class AdminBannerController {
         bannerService.loadData();
     }
 
-    @PostMapping("banners")
-    public void  register(@RequestBody BannerDto bannerDto) {
-        bannerService.addBanner(bannerDto);
+    @PostMapping("/banners")
+    public void  register(@RequestBody List<BannerDto> bannerDtoList) {
+        bannerService.registAll(bannerDtoList);
     }
 
-    @GetMapping("banners")
+    @GetMapping("/banners")
     public ResponseEntity<List<Banner>> getBannerList() {
         return ResponseEntity.ok(bannerService.getBannerList());
     }

@@ -1,17 +1,18 @@
 package com.travelers.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author kei
  * @since 2022-09-21
  */
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BannerDto {
     private String hashtag;
     private String title;
