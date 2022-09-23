@@ -1,5 +1,6 @@
 package com.travelers.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,6 +11,10 @@ import java.util.List;
  * @since 2022-09-21
  */
 @Data
+@Builder
 public class BannerDto {
-    private List<String> image = new ArrayList<>();
+    private String hashtag;
+    private String title;
+    private String image;
+    private Long productId;
 }
