@@ -22,4 +22,11 @@ public class AdminMemberController {
         memberService.updateAuthority(id, authority);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    // 특정 회원 탈퇴
+    @DeleteMapping("/member/{id}")
+    public ResponseEntity deleteMember(@PathVariable Long id) {
+        memberService.deleteByMemberId(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
