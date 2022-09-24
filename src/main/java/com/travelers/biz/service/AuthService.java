@@ -30,7 +30,7 @@ public class AuthService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
-        if(checkPasswordIsSame(memberRequestDto.getPassword(), memberRequestDto.getConfirmPassword())){
+        if(!checkPasswordIsSame(memberRequestDto.getPassword(), memberRequestDto.getConfirmPassword())){
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
