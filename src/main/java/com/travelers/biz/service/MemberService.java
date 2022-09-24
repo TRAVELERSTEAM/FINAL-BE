@@ -51,6 +51,16 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
+    public void deleteByMemberId(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+        Token token = tokenRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("토큰 정보가 없습니다."));
+        memberRepository.delete(member);
+        tokenRepository.delete(token);
+    }
+
     // 회원 중복 체크(이메일)
     public boolean checkEmailDuplicate(String email) {
         return memberRepository.existsByEmail(email);
