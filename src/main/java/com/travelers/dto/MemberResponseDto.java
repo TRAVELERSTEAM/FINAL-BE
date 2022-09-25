@@ -3,6 +3,7 @@ package com.travelers.dto;
 import com.travelers.biz.domain.Authority;
 import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberResponseDto {
 
     private String username;
