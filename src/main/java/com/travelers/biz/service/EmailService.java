@@ -35,6 +35,7 @@ public class EmailService {
             if(ran.nextBoolean()) buf.append((char)((int)(ran.nextInt(26)) + 65));
             else buf.append((ran.nextInt(10)));
         }
+        log.info("임시 비밀번호 : " + buf.toString());
         this.authStringNumber = buf.toString();
     }
 
@@ -43,7 +44,7 @@ public class EmailService {
         makeRandomNumber();
         String setFrom = "lmhtest0237@gmail.com";
         String toMail = email;
-        String title = "회원 가입 인증 이메일 입니다.";
+        String title = "고투게더 회원 가입 인증 이메일 입니다.";
         String content =
                 "고투게더 홈페이지를 방문해주셔서 감사합니다." +
                         "<br><br>" +
@@ -59,7 +60,7 @@ public class EmailService {
         makeRandomStringNumber();
         String setFrom = "lmhtest0237@gmail.com";
         String toMail = email;
-        String title = "임시 비밀번호 발급 이메일 입니다.";
+        String title = "고투게더 임시 비밀번호 발급 이메일 입니다.";
         String content =
                 "고투게더 홈페이지를 방문해주셔서 감사합니다." +
                         "<br><br>" +
@@ -81,7 +82,7 @@ public class EmailService {
             helper.setSubject(title);
 
             helper.setText(content, true);
-//            mailSender.send(message);
+            mailSender.send(message);
         }
         catch (MessagingException e) {
             e.printStackTrace();
