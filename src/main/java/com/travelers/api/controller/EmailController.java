@@ -3,7 +3,6 @@ package com.travelers.api.controller;
 import com.travelers.biz.service.EmailService;
 import com.travelers.biz.service.MemberService;
 import com.travelers.dto.EmailRequestDto;
-import com.travelers.dto.MemberResetPasswordRequestDto;
 import com.travelers.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
