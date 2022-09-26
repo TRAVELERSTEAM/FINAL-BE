@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -18,15 +20,15 @@ public class AdminMemberController {
 
     // 회원 등급 변경
     @PutMapping("/member/{id}")
-    public ResponseEntity updateAuthority(@PathVariable Long id, @RequestBody AuthorityResponseDto authority){
+    public ResponseEntity<Objects> updateAuthority(@PathVariable Long id, @RequestBody AuthorityResponseDto authority){
         memberService.updateAuthority(id, authority);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 특정 회원 탈퇴
     @DeleteMapping("/member/{id}")
-    public ResponseEntity deleteMember(@PathVariable Long id) {
+    public ResponseEntity<Objects> deleteMember(@PathVariable Long id) {
         memberService.deleteByMemberId(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
