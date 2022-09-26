@@ -1,10 +1,12 @@
 package com.travelers.api.controller;
 
+import com.travelers.biz.domain.Member;
 import com.travelers.biz.service.AuthService;
 import com.travelers.biz.service.EmailService;
 import com.travelers.biz.service.MemberService;
 import com.travelers.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -43,15 +46,20 @@ public class AuthController {
     // 아이디 찾기
     @PostMapping("/find_email")
     public ResponseEntity<MemberFindEmailResponseDto> findEmail(@RequestBody MemberFindEmailRequestDto memberFindEmailRequestDto){
-        return new ResponseEntity<>(memberService.getMemberInfo(memberFindEmailRequestDto.getUsername(), memberFindEmailRequestDto.getBirth(), memberFindEmailRequestDto.getGender()), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.getMemberEmailInfo(memberFindEmailRequestDto.getUsername(), memberFindEmailRequestDto.getBirth(), memberFindEmailRequestDto.getGender()), HttpStatus.OK);
     }
 
+    // 비밀번호 찾기 이메일 임시비밀번호 발송
+    @PostMapping("/find_password")
+    public ResponseEntity<Objects> findPassword(@RequestBody MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
+        Member member = memberService.getMemberInfo(memberFindPasswordRequestDto.getUsername(),
+                memberFindPasswordRequestDto.getBirth(),
+                memberFindPasswordRequestDto.getGender(),
+                memberFindPasswordRequestDto.getTel(),
+                memberFindPasswordRequestDto.getEmail());
 
-    // 비밀번호 찾기 이메일 인증번호 발송
-//    @PostMapping("/reset_password")
-//    public ResponseEntity<Objects> resetPassword(@RequestBody MemberResetPasswordRequestDto memberResetPasswordRequestDto) {
-//        if(!memberService.checkEmail(memberResetPasswordRequestDto.getEmail())) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        emailService.joinResetPassword(memberResetPasswordRequestDto.getEmail());
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+        String tempPassword = emailService.joinResetPassword(memberFindPasswordRequestDto.getEmail());
+        memberService.changePassword(member, tempPassword, memberFindPasswordRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
