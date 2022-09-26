@@ -3,7 +3,6 @@ package com.travelers.admin.controller;
 import com.travelers.biz.service.AuthService;
 import com.travelers.biz.service.MemberService;
 import com.travelers.dto.MemberLoginRequestDto;
-import com.travelers.dto.MemberRequestDto;
 import com.travelers.dto.TokenResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +22,10 @@ public class AdminAuthController {
 
     // 어드민 로그인
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody MemberLoginRequestDto memberLoginRequestDto){
+    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto){
         if(memberService.checkMemberAuthority(memberLoginRequestDto.getEmail())){
-            return ResponseEntity.ok(authService.login(memberLoginRequestDto));
+            return new ResponseEntity<>(authService.login(memberLoginRequestDto), HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }
