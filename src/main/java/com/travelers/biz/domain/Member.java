@@ -56,7 +56,7 @@ public class Member extends BaseTime{
     private Authority authority;
 
     @Builder
-    private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender, String recommend){
+    private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender, String recommend, String recommendCode){
         this.username = username;
         this.password = password;
         this.email = email;
@@ -68,7 +68,7 @@ public class Member extends BaseTime{
         this.gender = gender;
         this.authority = Authority.ROLE_USER;
         this.recommend = recommend;
-        this.recommendCode = createRecommendCode();
+        this.recommendCode = recommendCode == null ? createRecommendCode() : recommendCode;
     }
 
     public void changeAuthority(Authority authority){
@@ -88,5 +88,9 @@ public class Member extends BaseTime{
             }
         }
         return buf.toString();
+    }
+
+    public void setId(Long id){
+        this.id = id;
     }
 }
