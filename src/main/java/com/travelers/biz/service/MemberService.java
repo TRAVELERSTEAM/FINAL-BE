@@ -6,13 +6,12 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Token;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.TokenRepository;
-import com.travelers.dto.AuthorityResponseDto;
-import com.travelers.dto.MemberFindEmailResponseDto;
-import com.travelers.dto.MemberResponseDto;
+import com.travelers.dto.*;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,15 +23,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
 
     // 비회원
-    // 해당 유저이름과 생년월일에 해당하는 이메일 리턴
+    // 해당 유저이름과 성별, 생년월일에 해당하는 이메일 리턴
     @Transactional(readOnly = true)
-    public MemberFindEmailResponseDto getMemberInfo(String username, String birth, Gender gender) {
+    public MemberFindEmailResponseDto getMemberEmailInfo(String username, String birth, Gender gender) {
         return memberRepository.findByUsernameAndBirthAndGender(username, birth, gender)
                 .map(MemberFindEmailResponseDto::of)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "검색된 회원 정보가 없습니다."));
+    }
+
+    // 해당 유저이름과 생년월일, 성별, 생년월일, 전화번호, 이메일에 해당하는 맴버 리턴
+    @Transactional(readOnly = true)
+    public Member getMemberInfo (String username, String birth, Gender gender, String tel, String email) {
+        return memberRepository.findByUsernameAndBirthAndGenderAndTelAndEmail(username, birth, gender, tel, email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "검색된 회원 정보가 없습니다."));
     }
 
@@ -96,5 +103,13 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "존재하지 않는 회원입니다."));
         return Authority.isAdmin(findMember.getAuthority());
+    }
+
+    // 비밀번호 암호화해서 변경하기
+    public void changePassword(Member member, String password, MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
+        Member tempMember = memberFindPasswordRequestDto
+                .toMember(member, passwordEncoder, password);
+        tempMember.setId(member.getId());
+        memberRepository.save(tempMember);
     }
 }
