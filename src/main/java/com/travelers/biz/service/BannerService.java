@@ -58,4 +58,14 @@ public class BannerService {
         return bannerRepository.findAll();
     }
 
+    public void modifyBanner(Long id, BannerDto bannerDto) {
+        bannerRepository.findById(id).ifPresent(banner -> {
+            banner.setHashtag(bannerDto.getHashtag());
+            banner.setTitle(bannerDto.getTitle());
+            banner.setImage(bannerDto.getImage());
+            banner.setProductId(bannerDto.getProductId());
+        });
+    }
+
+
 }
