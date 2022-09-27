@@ -56,4 +56,9 @@ public class AdminProductController {
     public void modifyProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
         productService.modifyProduct(id, productDto);
     }
+
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+    }
 }
