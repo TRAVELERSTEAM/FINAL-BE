@@ -67,5 +67,7 @@ public class BannerService {
         });
     }
 
-
+    public void deleteBanner(Long id) {
+        bannerRepository.deleteById(id);
+    }
 }
