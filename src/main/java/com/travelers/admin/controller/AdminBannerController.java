@@ -3,7 +3,6 @@ package com.travelers.admin.controller;
 import com.travelers.biz.domain.Banner;
 import com.travelers.biz.service.BannerService;
 import com.travelers.dto.BannerDto;
-import com.travelers.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
