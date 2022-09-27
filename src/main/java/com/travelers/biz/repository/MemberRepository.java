@@ -4,9 +4,13 @@ import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    // 전체 맴버 목록
+    List<Member> findAll();
 
     // 맴버 찾기(이메일)
     Optional<Member> findByEmail(String email);
