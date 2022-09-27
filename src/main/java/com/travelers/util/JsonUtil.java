@@ -1,4 +1,4 @@
-package com.travelers.utils;
+package com.travelers.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;

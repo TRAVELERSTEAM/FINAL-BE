@@ -8,7 +8,7 @@ import com.travelers.biz.domain.ProductImage;
 import com.travelers.biz.domain.ProductStartDate;
 import com.travelers.biz.repository.ProductRepository;
 import com.travelers.dto.ProductDto;
-import com.travelers.utils.JsonUtil;
+import com.travelers.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

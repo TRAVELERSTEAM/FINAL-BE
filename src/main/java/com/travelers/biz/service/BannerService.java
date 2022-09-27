@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.travelers.biz.domain.Banner;
 import com.travelers.biz.repository.BannerRepository;
 import com.travelers.dto.BannerDto;
-import com.travelers.utils.JsonUtil;
+import com.travelers.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
