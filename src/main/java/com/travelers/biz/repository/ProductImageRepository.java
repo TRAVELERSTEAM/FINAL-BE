@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
+    void deleteByProductIdAndImage(Long productId, String image);
 }

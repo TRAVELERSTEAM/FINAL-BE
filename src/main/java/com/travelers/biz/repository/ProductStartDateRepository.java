@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProductStartDateRepository extends JpaRepository<ProductStartDate, Long> {
+    void deleteByProductIdAndStartDate(Long productId, Integer startDate);
 }
