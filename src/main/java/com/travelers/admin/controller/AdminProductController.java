@@ -2,7 +2,8 @@ package com.travelers.admin.controller;
 
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.service.ProductService;
-import com.travelers.dto.ProductDto;
+import com.travelers.dto.ProductReqDto;
+import com.travelers.dto.ProductResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,33 +29,33 @@ public class AdminProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDto>> getProducts() {
+    public ResponseEntity<List<ProductResDto>> getProducts() {
         List<Product> productList = productService.getProductAll();
-        List<ProductDto> productDtoList = new ArrayList<>();
+        List<ProductResDto> productResDtoList = new ArrayList<>();
         for (Product product: productList) {
-            ProductDto productDto = new ProductDto();
-            productDto.initProduct(product);
-            productDtoList.add(productDto);
+            ProductResDto productResDto = new ProductResDto();
+            productResDto.initProduct(product);
+            productResDtoList.add(productResDto);
         }
-        return ResponseEntity.ok(productDtoList);
+        return ResponseEntity.ok(productResDtoList);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ProductDto> getProductDetails(@PathVariable Long id) {
+    public ResponseEntity<ProductResDto> getProductDetails(@PathVariable Long id) {
         Optional<Product> productOpt = productService.getProductDetails(id);
-        ProductDto productDto = new ProductDto();
-        productOpt.ifPresent(productDto::initProduct);
-        return ResponseEntity.ok(productDto);
+        ProductResDto productResDto = new ProductResDto();
+        productOpt.ifPresent(productResDto::initProduct);
+        return ResponseEntity.ok(productResDto);
     }
 
     @PostMapping("/products")
-    public void register(@RequestBody List<ProductDto> productDto){
-        productService.registAll(productDto);
+    public void register(@RequestBody List<ProductReqDto> productReqDto){
+        productService.registAll(productReqDto);
     }
 
     @PutMapping("/product/{id}")
-    public void modifyProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
-        productService.modifyProduct(id, productDto);
+    public void modifyProduct(@PathVariable Long id, @RequestBody ProductReqDto productReqDto) {
+        productService.modifyProduct(id, productReqDto);
     }
 
     @DeleteMapping("/product/{id}")
@@ -65,5 +66,10 @@ public class AdminProductController {
     @DeleteMapping("/product/{id}/startdate")
     public void deleteProduct(@PathVariable Long id, @RequestBody Integer startDate) {
         productService.deleteProductStartDate(id, startDate);
+    }
+
+    @DeleteMapping("/product/{id}/image")
+    public void deleteProduct(@PathVariable Long id, @RequestBody String image) {
+        productService.deleteProductImage(id, image);
     }
 }
