@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -68,6 +70,13 @@ public class MemberService {
     /******************************************************************************************************************/
 
     // ADMIN (관리자)
+    // 회원 전체 목록
+    @Transactional(readOnly = true)
+    public List<MemberResponseDto> showAllMember(){
+        return memberRepository.findAll()
+                .stream().map(MemberResponseDto::of).collect(Collectors.toList());
+    }
+
     // 회원 등급 변경
     @Transactional
     public void updateAuthority(Long id, AuthorityResponseDto authority){
@@ -77,6 +86,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    // 회원 삭제
     @Transactional
     public void deleteByMemberId(Long id) {
         Member member = memberRepository.findById(id)
