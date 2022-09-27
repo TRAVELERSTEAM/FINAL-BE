@@ -3,6 +3,7 @@ package com.travelers.admin.controller;
 import com.travelers.biz.domain.Banner;
 import com.travelers.biz.service.BannerService;
 import com.travelers.dto.BannerDto;
+import com.travelers.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,4 +35,11 @@ public class AdminBannerController {
     public ResponseEntity<List<Banner>> getBannerList() {
         return ResponseEntity.ok(bannerService.getBannerList());
     }
+
+    @PutMapping("/banner/{id}")
+    public void modifyBanner(@PathVariable Long id,@RequestBody BannerDto bannerDto) {
+        bannerService.modifyBanner(id, bannerDto);
+    }
+
+
 }
