@@ -51,4 +51,9 @@ public class AdminProductController {
     public void register(@RequestBody List<ProductDto> productDto){
         productService.registAll(productDto);
     }
+
+    @PutMapping("/product/{id}")
+    public void modifyProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+        productService.modifyProduct(id, productDto);
+    }
 }
