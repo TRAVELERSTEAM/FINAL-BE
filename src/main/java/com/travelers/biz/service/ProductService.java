@@ -95,4 +95,58 @@ public class ProductService {
     public Optional<Product> getProductDetails(Long id) {
         return productRepository.findById(id);
     }
+
+    public void modifyProduct(Long id, ProductDto productDto) {
+        productRepository.findById(id).ifPresent(product -> {
+            product.setTitle(productDto.getTitle());
+            product.setPrice(productDto.getPrice());
+            product.setThumbnail(productDto.getThumbnail());
+            product.setTarget(productDto.getTarget());
+            product.setDestination(productDto.getDestination());
+            product.setTheme(productDto.getTheme());
+            product.setPriority(productDto.getPriority());
+            product.setSummary(productDto.getSummary());
+            product.setPackaging(productDto.getPackaging());
+            // startDate list
+            if(product.getStartDates().size() > productDto.getStartDate().size()) {
+                List<Long> ids = new ArrayList<>();
+                for (int idx = product.getStartDates().size(); idx>productDto.getStartDate().size(); idx--){
+                    product.getStartDates().remove(idx-1);
+                }
+            }
+            for (int idx =0; idx<product.getStartDates().size(); idx++){
+                ProductStartDate startDate = product.getStartDates().get(idx);
+                startDate.setStartDate(productDto.getStartDate().get(idx));
+            }
+            if(product.getStartDates().size() < productDto.getStartDate().size()) {
+                for (int idx =product.getStartDates().size(); idx<productDto.getStartDate().size(); idx++){
+                    ProductStartDate startDate = ProductStartDate.builder()
+                            .startDate(productDto.getStartDate().get(idx))
+                            .product(product).build();
+                    product.getStartDates().add(startDate);
+                }
+            }
+            // image list
+            if(product.getImages().size() > productDto.getImage().size()) {
+                List<Long> ids = new ArrayList<>();
+                for (int idx = product.getImages().size(); idx>productDto.getImage().size(); idx--){
+                    product.getImages().remove(idx-1);
+                }
+            }
+            for (int idx =0; idx<product.getImages().size(); idx++){
+                ProductImage image = product.getImages().get(idx);
+                image.setImage(productDto.getImage().get(idx));
+            }
+            if(product.getImages().size() < productDto.getImage().size()) {
+                for (int idx =product.getImages().size(); idx<productDto.getImage().size(); idx++){
+                    ProductImage image = ProductImage.builder()
+                            .image(productDto.getImage().get(idx))
+                            .product(product).build();
+                    product.getImages().add(image);
+                }
+            }
+        });
+    }
+
+
 }
