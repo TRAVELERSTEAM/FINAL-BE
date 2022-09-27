@@ -61,4 +61,9 @@ public class AdminProductController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
+
+    @DeleteMapping("/product/{id}/startdate")
+    public void deleteProduct(@PathVariable Long id, @RequestBody Integer startDate) {
+        productService.deleteProductStartDate(id, startDate);
+    }
 }
