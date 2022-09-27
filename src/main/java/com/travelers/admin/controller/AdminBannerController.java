@@ -41,5 +41,8 @@ public class AdminBannerController {
         bannerService.modifyBanner(id, bannerDto);
     }
 
-
+    @DeleteMapping("/banner/{id}")
+    public void deleteBanner(@PathVariable Long id) {
+        bannerService.deleteBanner(id);
+    }
 }
