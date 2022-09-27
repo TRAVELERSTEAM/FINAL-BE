@@ -28,6 +28,8 @@ public class SwaggerConfig {
                 .apiInfo(TravelerApiInfo())
                 .tags( new Tag("admin-auth-controller", "어드민 로그인"))
                 .tags( new Tag("admin-member-controller", "사용자 관리"))
+                .tags( new Tag("admin-product-controller", "여행 상품 관리"))
+                .tags( new Tag("admin-banner-controller", "배너 관리"))
                 ;
     }
 
