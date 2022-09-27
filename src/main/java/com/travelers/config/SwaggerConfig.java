@@ -26,8 +26,8 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(TravelerApiInfo())
-                .tags( new Tag("auth-controller", "회원가입/로그인"))
-                .tags( new Tag("member-controller", "사용자 관리"))
+                .tags( new Tag("admin-auth-controller", "어드민 로그인"))
+                .tags( new Tag("admin-member-controller", "사용자 관리"))
                 ;
     }
 
@@ -42,6 +42,7 @@ public class SwaggerConfig {
                 .apiInfo(TravelerApiInfo())
                 .tags( new Tag("auth-controller", "회원가입/로그인"))
                 .tags( new Tag("member-controller", "사용자 관리"))
+                .tags( new Tag("email-controller", "이메일 인증"))
                 .tags( new Tag("product-controller", "상품 관리"))
                 .tags( new Tag("reservation-controller", "예약 관리"))
                 .tags( new Tag("content-controller", "컨텐츠 관리"))
