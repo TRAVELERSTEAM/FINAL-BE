@@ -82,7 +82,7 @@ public class EmailService {
             helper.setSubject(title);
 
             helper.setText(content, true);
-            mailSender.send(message);
+//            mailSender.send(message);
         }
         catch (MessagingException e) {
             e.printStackTrace();
@@ -95,7 +95,4 @@ public class EmailService {
         if(memberEmail.isEmpty()) return false;
         else return memberEmail.get().equals(email);
     }
-
-
-
 }
