@@ -5,6 +5,7 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.notify.*;
 import com.travelers.config.DBSliceTest;
 import com.travelers.dto.NotifyResponse;
+import com.travelers.dto.PagingResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
+
 import static com.travelers.biz.domain.notify.QNotify.notify;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @DBSliceTest
@@ -59,11 +63,24 @@ class NotifyRepositoryTest {
     @DisplayName("공지사항 목록 출력")
     void select_notice_list() {
         PageRequest pagingCondition = PageRequest.of(0, 7, Sort.by("createdAt").descending());
-        Page<NotifyResponse.SimpleInfo> noticeList = notifyRepository.findSimpleList(NotifyType.NOTICE, pagingCondition);
 
-        then(noticeList.getSize()).isSameAs(7);
-        then(noticeList.getTotalPages()).isSameAs(2);
-        then(noticeList.getContent()).isNotNull();
+        PagingResponse<NotifyResponse.SimpleInfo> noticeList = notifyRepository.findSimpleList(NotifyType.NOTICE, pagingCondition);
+        List<NotifyResponse.SimpleInfo> contents = noticeList.getContents();
+
+        then(contents.size()).isSameAs(7);
+        then(noticeList.getCurrentPage()).isSameAs(1);
+        then(noticeList.isShowPrev()).isFalse();
+        then(noticeList.isShowNext()).isFalse();
+        then(noticeList.getStartPage()).isSameAs(1);
+        then(noticeList.getEndPage()).isSameAs(2);
+        then(contents).extracting("title")
+                .containsExactly(
+                        "취업하고 싶다",
+                        "러시아 여행 출국 금지 관련 안내",
+                        "찾아오시는 길",
+                        "여행 예약 안내",
+                        "입금 계좌 안내",
+                        "백신 및 안내 규정",
+                        "배고프다");
     }
-
 }
