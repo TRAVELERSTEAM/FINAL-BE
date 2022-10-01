@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
@@ -64,5 +65,90 @@ public class MemberRequestDto {
                 .recommend(recommend)
                 .gender(gender)
                 .build();
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberChangePasswordRequestDto {
+
+        @NotNull
+        private String currentPassword;
+
+        @NotNull
+        private String changePassword;
+
+        @NotNull
+        private String confirmChangePassword;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberFindEmailRequestDto {
+
+        @NotNull
+        private String username;
+
+        @NotNull
+        private Gender gender;
+
+        @NotNull
+        private String birth;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberFindPasswordRequestDto {
+
+        @NotNull
+        private String username;
+
+        @NotNull
+        private Gender gender;
+
+        @NotNull
+        private String birth;
+
+        @NotNull
+        @Tel
+        private String tel;
+
+        @NotNull
+        private String email;
+
+        public Member toMember(Member member, PasswordEncoder passwordEncoder, String password) {
+            return Member.builder()
+                    .username(member.getUsername())
+                    .email(member.getEmail())
+                    .password(passwordEncoder.encode(password))
+                    .tel(member.getTel())
+                    .birth(member.getBirth())
+                    .groupTrip(member.getGroupTrip())
+                    .area(member.getArea())
+                    .theme(member.getTheme())
+                    .recommend(member.getRecommend())
+                    .recommendCode(member.getRecommendCode())
+                    .gender(member.getGender())
+                    .build();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberLoginRequestDto {
+
+        @Email
+        @NotNull
+        private String email;
+
+        @NotNull
+        private String password;
+
+        public UsernamePasswordAuthenticationToken toAuthentication() {
+            return new UsernamePasswordAuthenticationToken(email, password);
+        }
     }
 }
