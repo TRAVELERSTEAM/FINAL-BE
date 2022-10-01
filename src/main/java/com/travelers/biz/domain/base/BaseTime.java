@@ -1,4 +1,4 @@
-package com.travelers.biz.domain;
+package com.travelers.biz.domain.base;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
