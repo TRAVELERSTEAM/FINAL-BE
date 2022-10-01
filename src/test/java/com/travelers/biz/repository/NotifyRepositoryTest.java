@@ -7,10 +7,8 @@ import com.travelers.config.DBSliceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.travelers.biz.domain.notify.QNotice.notice;
 import static com.travelers.biz.domain.notify.QNotify.notify;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -45,7 +43,8 @@ class NotifyRepositoryTest {
         then(savedNotify.getNotifyType()).isSameAs(NotifyType.NOTICE);
 
         final Notify notified = qf.selectFrom(notify)
-                .where(notify.notifyType.eq(NotifyType.NOTICE))
+                .where(notify.notifyType.eq(NotifyType.NOTICE),
+                        notify.id.eq(savedNotify.getId()))
                 .fetchOne();
 
         then(notified).isNotNull();
