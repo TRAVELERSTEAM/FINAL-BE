@@ -16,8 +16,6 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 public class EmailController {
-
-    private final MemberService memberService;
     private final EmailService emailService;
     private final RedisUtil redisUtil;
 
@@ -34,8 +32,12 @@ public class EmailController {
     // 회원가입 이메일 인증번호 확인
     @GetMapping("/verify/{email}/{key}")
     public ResponseEntity<Objects> verifyEmailKey(@PathVariable String email, @PathVariable String key){
-        if(emailService.verifyKey(email, key)) return new ResponseEntity<>(HttpStatus.OK);
+        if(emailService.verifyKey(email, key)) {
+            if(emailService.changeExpireKey(email, key)){
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-
 }
