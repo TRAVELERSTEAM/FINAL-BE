@@ -145,10 +145,8 @@ public class MemberService {
     }
 
     // 비밀번호 암호화해서 변경하기
-    public void changePassword(Member member, String password, MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
-        Member tempMember = memberFindPasswordRequestDto
-                .toMember(member, passwordEncoder, password);
-        tempMember.setId(member.getId());
-        memberRepository.save(tempMember);
+    public void changePassword(Member member, String password) {
+        member.changePassword(password, passwordEncoder);
+        memberRepository.save(member);
     }
 }
