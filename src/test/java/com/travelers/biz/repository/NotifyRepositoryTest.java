@@ -4,10 +4,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.notify.*;
 import com.travelers.config.DBSliceTest;
+import com.travelers.dto.NotifyResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import static com.travelers.biz.domain.notify.QNotify.notify;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -22,6 +26,7 @@ class NotifyRepositoryTest {
     private Member member;
     @Autowired
     private JPAQueryFactory qf;
+
     @BeforeEach
     void initFixture(){
         member = memberRepository.save(Member.builder().build());
@@ -49,4 +54,16 @@ class NotifyRepositoryTest {
 
         then(notified).isNotNull();
     }
+
+    @Test
+    @DisplayName("공지사항 목록 출력")
+    void select_notice_list() {
+        PageRequest pagingCondition = PageRequest.of(0, 7, Sort.by("createdAt").descending());
+        Page<NotifyResponse.SimpleInfo> noticeList = notifyRepository.findSimpleList(NotifyType.NOTICE, pagingCondition);
+
+        then(noticeList.getSize()).isSameAs(7);
+        then(noticeList.getTotalPages()).isSameAs(2);
+        then(noticeList.getContent()).isNotNull();
+    }
+
 }
