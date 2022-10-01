@@ -6,5 +6,8 @@ import com.travelers.dto.PagingResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface NotifyRepositoryQuery {
+
     PagingResponse<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable);
+
+    NotifyResponse.DetailInfo findDetail(final Long id, final NotifyType notifyType);
 }
