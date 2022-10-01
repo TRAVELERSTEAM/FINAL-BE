@@ -16,18 +16,18 @@ public class PagingResponse<T> {
     private final int naviSize; // 페이지 내비게이션의 크기
     private final int startPage;
     private final int endPage;
-    private final boolean showNext;
     private final boolean showPrev;
+    private final boolean showNext;
 
     public static <T> PagingResponse<T> from(Page<T> page) {
         final int currentPage = page.getNumber() + 1;
         final int naviSize = 10;
         final int beginPage = (currentPage - 1) / naviSize * naviSize + 1;
-        int totalElements = (int) page.getTotalElements();
-        int totalPage = totalElements / page.getSize() + (totalElements % page.getSize() == 0 ? 0 : 1);
+        final int totalElements = (int) page.getTotalElements();
+        final int totalPage = totalElements / page.getSize() + (totalElements % page.getSize() == 0 ? 0 : 1);
         final int endPage = Math.min(beginPage + naviSize - 1, totalPage);
         final boolean showPrev = beginPage != 1;
-        final boolean showNext = endPage != totalElements;
+        final boolean showNext = endPage != totalPage;
 
         return new PagingResponse<>(
                 page.getContent(),
