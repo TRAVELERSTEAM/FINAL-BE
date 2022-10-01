@@ -2,26 +2,36 @@ package com.travelers.biz.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelers.biz.domain.Member;
-import com.travelers.biz.domain.notify.*;
+import com.travelers.biz.domain.image.NotifyImage;
+import com.travelers.biz.domain.notify.Notice;
+import com.travelers.biz.domain.notify.Notify;
+import com.travelers.biz.domain.notify.NotifyType;
 import com.travelers.config.DBSliceTest;
+import com.travelers.dto.BoardRequest;
 import com.travelers.dto.NotifyResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
+import org.assertj.core.api.BDDSoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnitUtil;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.travelers.biz.domain.notify.QNotify.notify;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @DBSliceTest
 class NotifyRepositoryTest {
@@ -30,13 +40,26 @@ class NotifyRepositoryTest {
     private MemberRepository memberRepository;
     @Autowired
     private NotifyRepository notifyRepository;
-    private Member member;
+    @Autowired
+    private ImageRepository imageRepository;
     @Autowired
     private JPAQueryFactory qf;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+    private Member member;
+
+
+    private PersistenceUnitUtil persistenceUnitUtil;
 
     @BeforeEach
-    void initFixture(){
+    void setUp() {
+    }
+
+    @BeforeEach
+    void initFixture() {
         member = memberRepository.save(Member.builder().build());
+        persistenceUnitUtil = entityManagerFactory.getPersistenceUnitUtil();
+
     }
 
     @Test
@@ -101,11 +124,30 @@ class NotifyRepositoryTest {
                 .containsExactly(aroundTitle);
     }
 
-    private static Stream<Arguments> aroundTest(){
+    private static Stream<Arguments> aroundTest() {
         return Stream.of(
                 Arguments.of(1L, "여행 시 규칙", new String[]{"환불 규정"}),
                 Arguments.of(2L, "환불 규정", new String[]{"여행 시 규칙", "안전 수칙"}),
-                Arguments.of( 3L, "안전 수칙", new String[]{"환불 규정", "전화 상담에 대한 안내문"})
+                Arguments.of(3L, "안전 수칙", new String[]{"환불 규정", "전화 상담에 대한 안내문"})
         );
+    }
+
+    @Test
+    @DisplayName("공지사항 저장 시 Image Entity도 함께 저장돼야 한다.")
+    void saved_with_image() {
+        NotifyType notice = NotifyType.NOTICE;
+        BoardRequest.Write mockWrite = mock(BoardRequest.Write.class);
+        given(mockWrite.getTitle()).willReturn("test");
+        given(mockWrite.getContent()).willReturn("content");
+        given(mockWrite.getUrls()).willReturn(List.of("http://localhost", "http://pll0123"));
+
+        Notify notify = notice.toNotify(NotifyType.NOTICE, member, mockWrite);
+        mockWrite.getUrls().forEach(url -> new NotifyImage(url, notify));
+        notifyRepository.save(notify);
+
+        then(persistenceUnitUtil.isLoaded(notify)).isTrue();
+        notify.getImages()
+                .forEach(e -> persistenceUnitUtil.isLoaded(e));
+
     }
 }
