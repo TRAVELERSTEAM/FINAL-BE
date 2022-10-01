@@ -59,7 +59,7 @@ public class AuthController {
                 memberFindPasswordRequestDto.getEmail());
 
         String tempPassword = emailService.joinResetPassword(memberFindPasswordRequestDto.getEmail());
-        memberService.changePassword(member, tempPassword, memberFindPasswordRequestDto);
+        memberService.changePassword(member, tempPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
