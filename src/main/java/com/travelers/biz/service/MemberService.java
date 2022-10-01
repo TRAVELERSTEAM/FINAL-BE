@@ -32,9 +32,9 @@ public class MemberService {
     // 비회원
     // 해당 유저이름과 성별, 생년월일에 해당하는 이메일 리턴
     @Transactional(readOnly = true)
-    public MemberFindEmailResponseDto getMemberEmailInfo(String username, String birth, Gender gender) {
+    public MemberResponseDto.MemberFindEmailResponseDto getMemberEmailInfo(String username, String birth, Gender gender) {
         return memberRepository.findByUsernameAndBirthAndGender(username, birth, gender)
-                .map(MemberFindEmailResponseDto::of)
+                .map(MemberResponseDto.MemberFindEmailResponseDto::of)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "검색된 회원 정보가 없습니다."));
     }
 
@@ -58,7 +58,7 @@ public class MemberService {
 
     // 회원 정보 수정하기
     @Transactional
-    public void changeMyPassword(MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
+    public void changeMyPassword(MemberRequestDto.MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "현재 로그인 상태가 아닙니다."));
 

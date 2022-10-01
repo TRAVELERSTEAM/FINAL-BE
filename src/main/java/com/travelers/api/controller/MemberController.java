@@ -1,8 +1,8 @@
 package com.travelers.api.controller;
 
 import com.travelers.biz.service.MemberService;
+import com.travelers.dto.MemberRequestDto;
 import com.travelers.dto.MemberResponseDto;
-import com.travelers.dto.MemberChangePasswordRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class MemberController {
 
     // 비밀번호 변경
     @PutMapping("/user/password")
-    public ResponseEntity<Objects> changeMyPassword(@RequestBody MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
+    public ResponseEntity<Objects> changeMyPassword(@RequestBody MemberRequestDto.MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
         memberService.changeMyPassword(memberChangePasswordRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

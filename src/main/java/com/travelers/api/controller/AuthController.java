@@ -33,7 +33,7 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberRequestDto.MemberLoginRequestDto memberLoginRequestDto) {
         return ResponseEntity.ok(authService.login(memberLoginRequestDto));
     }
 
@@ -45,13 +45,13 @@ public class AuthController {
 
     // 아이디 찾기
     @PostMapping("/find_email")
-    public ResponseEntity<MemberFindEmailResponseDto> findEmail(@RequestBody MemberFindEmailRequestDto memberFindEmailRequestDto){
+    public ResponseEntity<MemberResponseDto.MemberFindEmailResponseDto> findEmail(@RequestBody MemberRequestDto.MemberFindEmailRequestDto memberFindEmailRequestDto){
         return new ResponseEntity<>(memberService.getMemberEmailInfo(memberFindEmailRequestDto.getUsername(), memberFindEmailRequestDto.getBirth(), memberFindEmailRequestDto.getGender()), HttpStatus.OK);
     }
 
     // 비밀번호 찾기 이메일 임시비밀번호 발송
     @PostMapping("/find_password")
-    public ResponseEntity<Objects> findPassword(@RequestBody MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
+    public ResponseEntity<Objects> findPassword(@RequestBody MemberRequestDto.MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
         Member member = memberService.getMemberInfo(memberFindPasswordRequestDto.getUsername(),
                 memberFindPasswordRequestDto.getBirth(),
                 memberFindPasswordRequestDto.getGender(),
