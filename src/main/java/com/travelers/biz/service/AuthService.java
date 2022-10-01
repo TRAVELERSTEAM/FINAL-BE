@@ -25,6 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
     @Transactional
     public MemberResponseDto register(MemberRequestDto memberRequestDto) {
@@ -36,7 +37,12 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
         }
 
+        if(!emailService.verifyKey(memberRequestDto.getEmail() ,memberRequestDto.getKey())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "회원가입 기간이 초과하였습니다.");
+        }
+
         Member member = memberRequestDto.toMember(passwordEncoder);
+        emailService.deleteKey(memberRequestDto.getKey());
         return MemberResponseDto.of(memberRepository.save(member));
     }
 
