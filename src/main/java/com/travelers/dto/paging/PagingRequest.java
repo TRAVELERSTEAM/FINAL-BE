@@ -1,4 +1,4 @@
-package com.travelers.dto;
+package com.travelers.dto.paging;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package com.travelers.dto;
+package com.travelers.dto.paging;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
