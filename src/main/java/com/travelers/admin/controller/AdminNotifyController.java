@@ -3,14 +3,11 @@ package com.travelers.admin.controller;
 import com.travelers.biz.domain.notify.NotifyType;
 import com.travelers.biz.service.NotifyService;
 import com.travelers.dto.NotifyResponse;
-import com.travelers.dto.PagingRequest;
-import com.travelers.dto.PagingResponse;
+import com.travelers.dto.paging.PagingCorrespondence;
+import com.travelers.dto.paging.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,8 +17,8 @@ public class AdminNotifyController {
     private final NotifyService notifyService;
 
     @GetMapping("/notice")
-    public ResponseEntity<PagingResponse<NotifyResponse.SimpleInfo>> findAll(
-            final PagingRequest.Info pagingInfo
+    public ResponseEntity<PagingCorrespondence.Response<NotifyResponse.SimpleInfo>> findAll(
+            final PagingCorrespondence.Request pagingInfo
     ) {
         return ResponseEntity.ok(
                 notifyService.showNotifies(NotifyType.NOTICE, pagingInfo)
@@ -37,4 +34,11 @@ public class AdminNotifyController {
         );
     }
 
+    @PostMapping("/notice")
+    public ResponseEntity<Void> create(
+            final Long memberId,
+            final Long
+    ){
+//        SecurityUtil.getCurrentMemberId();
+    }
 }

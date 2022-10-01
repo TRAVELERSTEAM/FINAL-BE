@@ -5,7 +5,7 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.notify.*;
 import com.travelers.config.DBSliceTest;
 import com.travelers.dto.NotifyResponse;
-import com.travelers.dto.PagingResponse;
+import com.travelers.dto.paging.PagingCorrespondence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -69,7 +67,7 @@ class NotifyRepositoryTest {
     void select_notice_list() {
         final PageRequest pagingCondition = PageRequest.of(0, 7, Sort.by("createdAt").descending());
 
-        final PagingResponse<NotifyResponse.SimpleInfo> noticeList = notifyRepository.findSimpleList(NotifyType.NOTICE, pagingCondition);
+        final PagingCorrespondence.Response<NotifyResponse.SimpleInfo> noticeList = notifyRepository.findSimpleList(NotifyType.NOTICE, pagingCondition);
         final List<NotifyResponse.SimpleInfo> contents = noticeList.getContents();
 
         then(contents.size()).isSameAs(7);
