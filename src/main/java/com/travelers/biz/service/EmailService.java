@@ -19,6 +19,8 @@ public class EmailService {
     Random ran = new Random();
     StringBuffer buf =new StringBuffer();
 
+    private final long REGISTER_EMAIL_EXPIRE_TIME = 60 * 60 * 2L;
+
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
     private String authStringNumber;
@@ -96,6 +98,21 @@ public class EmailService {
         else return memberEmail.get().equals(email);
     }
 
+    // 이메일 인증 완료된 이메일 유효기간 늘리기
+    public boolean changeExpireKey(String email, String key) {
+        Optional<String> memberEmail = Optional.ofNullable(redisUtil.getData(key));
+        if(memberEmail.isEmpty()) return false;
+        else {
+            // 일단 키값에 해당하는 값 삭제후 유효기간 2시간으로 늘려준 뒤 저장
+            redisUtil.deleteData(key);
+            redisUtil.setDataExpire(key, email, REGISTER_EMAIL_EXPIRE_TIME);
+            return true;
+        }
+    }
 
+    // 해당 키값 삭제하기
+    public void deleteKey(String key) {
+        redisUtil.deleteData(key);
+    }
 
 }
