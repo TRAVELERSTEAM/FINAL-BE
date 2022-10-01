@@ -26,10 +26,15 @@ public class BaseTime {
     public void prePersist(){
         this.createdAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.modifiedAt = this.createdAt;
+        init();
     }
 
     @PreUpdate
     public void preUpdate(){
         this.modifiedAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+    }
+
+    protected void init(){
+
     }
 }
