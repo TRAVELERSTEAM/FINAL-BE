@@ -1,6 +1,7 @@
 package com.travelers.biz.domain;
 
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Random;
@@ -92,5 +93,10 @@ public class Member extends BaseTime{
 
     public void setId(Long id){
         this.id = id;
+    }
+
+    // 비밀번호 변경
+    public void changePassword(String password, PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
     }
 }
