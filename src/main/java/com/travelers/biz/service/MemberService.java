@@ -56,6 +56,27 @@ public class MemberService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "현재 내 계정 정보가 존재하지 않습니다"));
     }
 
+    // 회원 정보 수정하기
+    @Transactional
+    public void changeMyPassword(MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
+        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "현재 로그인 상태가 아닙니다."));
+
+        // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
+        if(!checkPasswordIsSame(memberChangePasswordRequestDto.getChangePassword(), memberChangePasswordRequestDto.getConfirmChangePassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        }
+
+        // 입력받은 비밀번호가 현재 비밀번호와 일치하지 않으면
+        if(!memberChangePasswordRequestDto.getCurrentPassword().isEmpty() &&
+                !passwordEncoder.matches(memberChangePasswordRequestDto.getCurrentPassword(), member.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "현재 비밀번호와 일치하지 않습니다.");
+        }
+
+        member.changePassword(memberChangePasswordRequestDto.getChangePassword(), passwordEncoder);
+        memberRepository.save(member);
+    }
+
     // 회원 탈퇴하기
     @Transactional
     public void deleteMyAccount() {
@@ -97,6 +118,9 @@ public class MemberService {
         tokenRepository.delete(token);
     }
 
+
+    /******************************************************************************************************************/
+
     // 해당 이메일이 존재하는지 체크
     public boolean checkEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
@@ -113,6 +137,11 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "존재하지 않는 회원입니다."));
         return Authority.isAdmin(findMember.getAuthority());
+    }
+
+    // 회원 비밀번호 체크(같은지 안같은지)
+    public boolean checkPasswordIsSame(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
     }
 
     // 비밀번호 암호화해서 변경하기
