@@ -19,6 +19,7 @@ import java.util.List;
 public abstract class Notify extends BaseContent {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notify_id")
     private Long id;
 
     protected Long sequence;
