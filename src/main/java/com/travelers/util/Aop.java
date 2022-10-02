@@ -1,8 +1,7 @@
 package com.travelers.util;
 
-import com.travelers.admin.NoticeRequest;
 import com.travelers.biz.service.handler.S3Uploader;
-import com.travelers.dto.ReviewRequest;
+import com.travelers.dto.BoardRequest;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.aspectj.lang.JoinPoint;
@@ -18,18 +17,22 @@ import java.util.stream.Collectors;
 @Component
 public class Aop {
 
-    private final ExpiringMap<Long, List<String>> cashing;
+    private final ExpiringMap<Long, List<String>> cashMap;
 
     public Aop(final S3Uploader s3Uploader) {
-        cashing = ExpiringMap.builder()
+        cashMap = ExpiringMap.builder()
                 .maxSize(1000)
                 .expirationPolicy(ExpirationPolicy.CREATED)
                 .expiration(60, TimeUnit.SECONDS)
                 .build();
 
-        cashing.addExpirationListener((k, v) -> {
+        cashMap.addExpirationListener((k, v) -> {
             s3Uploader.delete(extractFromFolder(v));
         });
+    }
+
+    public void temporaryStorage(final Long memberId, final List<String> s3Url) {
+        cashMap.put(memberId, s3Url);
     }
 
     private List<String> extractFromFolder(final List<String> urls) {
@@ -43,57 +46,24 @@ public class Aop {
                 .collect(Collectors.toList());
     }
 
-    private void cashing(Long targetId, List<String> target) {
-        if (cashing.containsKey(targetId)){
-            final List<String> from = cashing.get(targetId);
-            final List<String> to = target;
+    @Before(value = "execution(* com.travelers.biz.service.NotifyService.write(..))"
+            + "|| execution(* com.travelers.biz.service.NotifyService.update(..))")
+    public void beforeReviewSave(final JoinPoint joinPoint) {
+        Long targetId = SecurityUtil.getCurrentMemberId();
 
-            to.addAll(from);
-            cashing.remove(targetId);
+        if (cashMap.containsKey(targetId)) {
+            transferTo(joinPoint, targetId);
+            cashMap.remove(targetId);
         }
     }
 
-    private Long getTargetId(JoinPoint joinPoint, int index) {
-        return (Long) getTarget(joinPoint, index);
+    private void transferTo(JoinPoint joinPoint, Long targetId) {
+        List.of(joinPoint.getArgs())
+                .forEach(e -> {
+                    if (BoardRequest.Write.class.isAssignableFrom(e.getClass())) {
+                        ((BoardRequest.Write) e).getUrls().addAll(cashMap.get(targetId));
+                    }
+                });
     }
 
-    private static Object getTarget(JoinPoint joinPoint, int index) {
-        return joinPoint.getArgs()[index];
-    }
-
-    @Before("execution(public void com.travelers.biz.service.ReviewService.write(..))")
-    public void beforeReviewSave(final JoinPoint joinPoint) {
-        final Long targetId = getTargetId(joinPoint, 0);
-        final ReviewRequest.Create target = (ReviewRequest.Create) getTarget(joinPoint, 2);
-
-        cashing(targetId, target.getUrls());
-    }
-
-    @Before("execution(public void com.travelers.biz.service.ReviewService.update(..))")
-    public void beforeReviewUpdate(final JoinPoint joinPoint) {
-        final Long targetId = getTargetId(joinPoint, 1);
-        final ReviewRequest.Update target = (ReviewRequest.Update) getTarget(joinPoint, 2);
-
-        cashing(targetId, target.getUrls());
-    }
-
-    @Before("execution(public void com.travelers.admin.service.AdminNoticeService.write(..))")
-    public void beforeNoticeSave(final JoinPoint joinPoint){
-        final Long targetId = getTargetId(joinPoint, 0);
-        final NoticeRequest.Create target = (NoticeRequest.Create) getTarget(joinPoint, 1);
-
-        cashing(targetId, target.getUrls());
-    }
-
-    @Before("execution(public void com.travelers.admin.service.AdminNoticeService.update(..))")
-    public void beforeNoticeUpdate(final JoinPoint joinPoint){
-        final Long targetId = getTargetId(joinPoint, 0);
-        final NoticeRequest.Update target = (NoticeRequest.Update) getTarget(joinPoint, 2);
-
-        cashing(targetId, target.getUrls());
-    }
-
-    public void temporaryStorage(final Long memberId, final List<String> s3Url) {
-        cashing.put(memberId, s3Url);
-    }
 }
