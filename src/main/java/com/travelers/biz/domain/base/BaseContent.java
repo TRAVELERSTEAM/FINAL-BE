@@ -28,7 +28,7 @@ public abstract class BaseContent extends BaseTime {
         this.content = content;
     }
 
-    protected void edit(final String title, final String content){
+    public void edit(final String title, final String content){
         this.title = title;
         this.content = content;
     }
