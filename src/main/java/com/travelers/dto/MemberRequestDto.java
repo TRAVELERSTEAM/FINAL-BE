@@ -70,7 +70,7 @@ public class MemberRequestDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberChangePasswordRequestDto {
+    public static class ChangePassword {
 
         @NotNull
         private String currentPassword;
@@ -85,7 +85,7 @@ public class MemberRequestDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberFindEmailRequestDto {
+    public static class FindEmail {
 
         @NotNull
         private String username;
@@ -100,7 +100,7 @@ public class MemberRequestDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberFindPasswordRequestDto {
+    public static class FindPassword {
 
         @NotNull
         private String username;
@@ -138,7 +138,7 @@ public class MemberRequestDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberLoginRequestDto {
+    public static class Login {
 
         @Email
         @NotNull
