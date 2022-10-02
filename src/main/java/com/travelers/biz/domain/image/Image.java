@@ -1,6 +1,5 @@
 package com.travelers.biz.domain.image;
 
-import com.travelers.biz.domain.notify.Notify;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,8 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Image {
-    private static final String DELIMITER = "/";
+
+    private static final String PATH_DELIMITER = "/";
 
     @Column(name = "image_id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +30,9 @@ public abstract class Image {
     }
 
     private String extractKey() {
-        int indexOfImageName = url.lastIndexOf(DELIMITER);
+        int indexOfImageName = url.lastIndexOf(PATH_DELIMITER);
         String urlWithoutImageName = url.substring(0, indexOfImageName);
-        int indexOfDirectoryName = urlWithoutImageName.lastIndexOf(DELIMITER);
+        int indexOfDirectoryName = urlWithoutImageName.lastIndexOf(PATH_DELIMITER);
 
         return url.substring(indexOfDirectoryName + 1);
     }
