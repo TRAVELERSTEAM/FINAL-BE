@@ -27,7 +27,7 @@ public class TravelersApplication {
     public CommandLineRunner initData(MemberRepository memberRepository, PasswordEncoder passwordEncoder){
 
         return (arg) -> {
-            if(memberRepository.findByEmail(email).isEmpty()) {
+            if(memberRepository.findByEmail(email).isPresent()) {
                 Member member = Member.builder()
                         .email(email)
                         .username("관리자")
