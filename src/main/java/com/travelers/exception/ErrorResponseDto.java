@@ -1,6 +1,5 @@
-package com.travelers.dto;
+package com.travelers.exception;
 
-import com.travelers.Exception.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
