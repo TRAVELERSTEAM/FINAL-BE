@@ -48,4 +48,22 @@ public class ReviewController {
     private Long currentMemberId() {
         return SecurityUtil.getCurrentMemberId();
     }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<Void> update(
+            @PathVariable final Long reviewId,
+            @RequestBody final BoardRequest.Write write
+    ) {
+        reviewService.update(currentMemberId(), reviewId, write);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable final Long reviewId
+    ) {
+        reviewService.delete(currentMemberId(), reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
