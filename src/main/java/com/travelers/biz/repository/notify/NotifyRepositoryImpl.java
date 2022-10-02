@@ -42,7 +42,7 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     @Override
     public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable) {
 
-        PagingCorrespondence.Response<NotifyResponse.SimpleInfo> from = PagingCorrespondence.Response.from(
+        return PagingCorrespondence.Response.from(
                 applyPagination(pageable,
                         () -> selectFromWhere(notifyType,
                                 new QNotifyResponse_SimpleInfo(
@@ -58,7 +58,6 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
                         countQuery(notifyType)
                 )
         );
-        return from;
     }
 
     @Override
