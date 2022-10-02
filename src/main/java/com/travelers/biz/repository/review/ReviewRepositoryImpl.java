@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static com.travelers.biz.domain.QMember.member;
 import static com.travelers.biz.domain.QReview.review;
+import static java.util.Objects.isNull;
 
 public class ReviewRepositoryImpl extends QuerydslSupports implements ReviewRepositoryQuery {
 
@@ -68,7 +69,7 @@ public class ReviewRepositoryImpl extends QuerydslSupports implements ReviewRepo
                         .fetchFirst());
 
 
-        List<ReviewResponse.AroundTitle> aroundTitles = new ArrayList<>();
+        final List<ReviewResponse.AroundTitle> aroundTitles = new ArrayList<>();
         addPrev(aroundTitles, reviewId);
         addNext(aroundTitles, reviewId);
 
@@ -79,28 +80,30 @@ public class ReviewRepositoryImpl extends QuerydslSupports implements ReviewRepo
         return detailInfo;
     }
 
-    private void addPrev(List<ReviewResponse.AroundTitle> aroundTitles, final Long reviewId) {
-
-        ReviewResponse.AroundTitle prev = getPrev(reviewId);
+    private void addPrev(final List<ReviewResponse.AroundTitle> aroundTitles, final Long reviewId) {
+        final ReviewResponse.AroundTitle prev = getPrev(reviewId);
         if (prev != null) {
             aroundTitles.add(prev);
         }
     }
 
-    private void addNext(List<ReviewResponse.AroundTitle> aroundTitles, final Long reviewId) {
-
-        ReviewResponse.AroundTitle next = getNext(reviewId);
+    private void addNext(final List<ReviewResponse.AroundTitle> aroundTitles, final Long reviewId) {
+        final ReviewResponse.AroundTitle next = getNext(reviewId);
         if (next != null) {
             aroundTitles.add(next);
         }
     }
 
     private ReviewResponse.AroundTitle getPrev(final Long reviewId) {
-        QReview sub = new QReview("reviewSub");
-        Long productId = select(review.placeToTravel.id)
+        final QReview sub = new QReview("reviewSub");
+        final Long productId = select(review.placeToTravel.id)
                 .from(review)
                 .where(review.id.eq(reviewId))
                 .fetchOne();
+
+        if(isNull(productId)){
+            return null;
+        }
 
         return select(new QReviewResponse_AroundTitle(
                 review.id,
@@ -117,11 +120,15 @@ public class ReviewRepositoryImpl extends QuerydslSupports implements ReviewRepo
     }
 
     private ReviewResponse.AroundTitle getNext(final Long reviewId) {
-        QReview sub = new QReview("reviewSub");
-        Long productId = select(review.placeToTravel.id)
+        final QReview sub = new QReview("reviewSub");
+        final Long productId = select(review.placeToTravel.id)
                 .from(review)
                 .where(review.id.eq(reviewId))
                 .fetchOne();
+
+        if(isNull(productId)){
+            return null;
+        }
 
         return select(new QReviewResponse_AroundTitle(
                 review.id,
