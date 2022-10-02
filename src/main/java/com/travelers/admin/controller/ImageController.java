@@ -19,11 +19,12 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping(value = "/notify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<String>> uploadNotifyImage(
             final List<MultipartFile> files
     ){
         Long currentMemberId = SecurityUtil.getCurrentMemberId();
         return ResponseEntity.ok(imageService.uploadNotifyImage(currentMemberId, files));
     }
+
 }
