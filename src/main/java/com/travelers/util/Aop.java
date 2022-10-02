@@ -57,11 +57,11 @@ public class Aop {
         }
     }
 
-    private void transferTo(JoinPoint joinPoint, Long targetId) {
+    private void transferTo(final JoinPoint joinPoint, final Long targetId) {
         List.of(joinPoint.getArgs())
                 .forEach(e -> {
                     if (BoardRequest.Write.class.isAssignableFrom(e.getClass())) {
-                        ((BoardRequest.Write) e).getUrls().addAll(cashMap.get(targetId));
+                        ((BoardRequest.Write) e).changeUrls(cashMap.get(targetId));
                     }
                 });
     }
