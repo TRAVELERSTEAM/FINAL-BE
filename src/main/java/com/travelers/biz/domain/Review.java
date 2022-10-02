@@ -3,6 +3,8 @@ package com.travelers.biz.domain;
 import com.travelers.biz.domain.base.BaseContent;
 import com.travelers.biz.domain.image.ReviewImage;
 import com.travelers.biz.domain.notify.Notice;
+import com.travelers.exception.ErrorCode;
+import com.travelers.exception.TravelersException;
 import io.lettuce.core.dynamic.annotation.CommandNaming;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import java.util.List;
 public class Review extends BaseContent {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,4 +43,9 @@ public class Review extends BaseContent {
         images.add(reviewImage);
     }
 
+    public void checkAuthority(final Long memberId){
+        if (!getWriter().getId().equals(memberId)) {
+            throw new TravelersException(ErrorCode.NO_PERMISSIONS);
+        }
+    }
 }
