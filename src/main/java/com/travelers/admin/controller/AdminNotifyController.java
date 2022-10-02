@@ -66,5 +66,4 @@ public class AdminNotifyController {
         return SecurityUtil.getCurrentMemberId();
     }
 
-
 }
