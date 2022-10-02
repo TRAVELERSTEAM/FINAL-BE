@@ -1,4 +1,4 @@
-package com.travelers.biz.repository.query;
+package com.travelers.biz.repository.notify;
 
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.dsl.*;
@@ -6,8 +6,9 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.travelers.biz.domain.notify.NotifyType;
 import com.travelers.biz.domain.notify.QNotify;
-import com.travelers.biz.repository.query.config.QuerydslSupports;
+import com.travelers.biz.repository.notify.config.QuerydslSupports;
 import com.travelers.dto.*;
+import com.travelers.dto.paging.PagingCorrespondence;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -23,7 +24,7 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     private static final QNotify N = notify;
 
     public NotifyRepositoryImpl(EntityManager em) {
-        super(notify, em);
+        super(em);
     }
 
     private <T> JPAQuery<T> selectFromWhere(final NotifyType notifyType, ConstructorExpression<T> dtoResponse) {
@@ -39,8 +40,9 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
     @Override
-    public PagingResponse<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable) {
-        return PagingResponse.from(
+    public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable) {
+
+        PagingCorrespondence.Response<NotifyResponse.SimpleInfo> from = PagingCorrespondence.Response.from(
                 applyPagination(pageable,
                         () -> selectFromWhere(notifyType,
                                 new QNotifyResponse_SimpleInfo(
@@ -52,10 +54,11 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
                                 .join(N.writer, member)
                                 .offset(pageable.getOffset())
                                 .limit(pageable.getPageSize())
-                                .orderBy(N.createdAt.desc()),
+                                .orderBy(N.id.desc()),
                         countQuery(notifyType)
                 )
         );
+        return from;
     }
 
     @Override
@@ -106,7 +109,6 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
     private JPAQuery<NotifyResponse.AroundTitle> getFrom() {
-
         return select(
                 new QNotifyResponse_AroundTitle(
                         N.id, N.sequence, N.title

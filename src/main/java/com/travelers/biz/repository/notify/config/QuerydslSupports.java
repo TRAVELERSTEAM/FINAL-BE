@@ -1,44 +1,55 @@
 package com.travelers.biz.repository.query.config;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.Querydsl;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class QuerydslSupports {
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final Querydsl querydsl;
 
-    protected QuerydslSupports(final EntityPath<?> entityPath, final EntityManager em) {
-        jpaQueryFactory = new JPAQueryFactory(em);
-        querydsl = new Querydsl(em, new PathBuilder<>(entityPath.getType(), entityPath.getMetadata()));
+    protected QuerydslSupports(final EntityManager em) {
+//        JpaEntityInformation entityInformation = JpaEntityInformationSupport.getEntityInformation(domainClass, em);
+//        SimpleEntityPathResolver resolver = SimpleEntityPathResolver.INSTANCE;
+//        EntityPath path = resolver.createPath(entityInformation.getJavaType());
+//        this.querydsl = new Querydsl(em, new PathBuilder<>(path.getType(), path.getMetadata()));
+        this.jpaQueryFactory = new JPAQueryFactory(em);
+
+//        querydsl = new Querydsl(em, new PathBuilder<>(entityPath.getType(), entityPath.getMetadata()));
     }
 
     protected JPAQueryFactory getJpaQueryFactory() {
         return jpaQueryFactory;
     }
 
-    protected Querydsl getQuerydsl() {
-        return querydsl;
-    }
+//    protected Querydsl getQuerydsl() {
+//        return querydsl;
+//    }
 
     protected <T> JPAQuery<T> select(final Expression<T> expr) {
         return getJpaQueryFactory().select(expr);
+    }
+
+    public JPAQuery<Tuple> select(Expression<?>... exprs) {
+        return getJpaQueryFactory().select(exprs);
     }
 
     protected <T> JPAQuery<T> selectFrom(final EntityPath<T> from) {
@@ -47,25 +58,6 @@ public abstract class QuerydslSupports {
 
     protected <T> JPAQuery<Integer> selectOne() {
         return getJpaQueryFactory().selectOne();
-    }
-
-    protected <T> Optional<T> findWhereCondition(final JPAQuery<T> query, final Predicate... o) {
-        final BooleanBuilder booleanBuilder = iterationPredicate(o);
-
-        return Optional.ofNullable(
-                query.where(booleanBuilder)
-                        .fetchFirst()
-        );
-    }
-
-    private BooleanBuilder iterationPredicate(final Predicate... o) {
-        final BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        for (Predicate predicate : o) {
-            booleanBuilder.and(predicate);
-        }
-
-        return booleanBuilder;
     }
 
     protected BooleanBuilder equals(final Supplier<BooleanExpression> supplier) {
@@ -100,14 +92,10 @@ public abstract class QuerydslSupports {
 //        return Order.DESC;
 //    }
 
-    protected <T> Page<T> applyPagination(final Pageable pageable, final Supplier<JPAQuery<T>> jpaQuery, final Supplier<JPAQuery<Long>> countQuery) {
-        final JPAQuery<T> query = jpaQuery.get();
+    protected <T> Page<T> applyPagination(final Pageable pageable, final Supplier<JPAQuery<T>> jpaQuery, final JPAQuery<Long> countQuery) {
+        List<T> fetch = jpaQuery.get().fetch();
 
-        final List<T> fetch = getQuerydsl().applyPagination(pageable, query).fetch();
-
-        final JPAQuery<Long> longJPAQuery = countQuery.get();
-
-        return PageableExecutionUtils.getPage(fetch, pageable, longJPAQuery::fetchOne);
+        return PageableExecutionUtils.getPage(fetch, pageable, countQuery::fetchOne);
     }
 
     protected <T> JPADeleteClause delete(EntityPath<T> entityPath){
