@@ -7,7 +7,7 @@ import com.travelers.biz.domain.notify.Notify;
 import com.travelers.biz.domain.notify.NotifyType;
 import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
-import com.travelers.biz.repository.NotifyRepository;
+import com.travelers.biz.repository.notify.NotifyRepository;
 import com.travelers.biz.service.handler.FileUploader;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.NotifyResponse;
@@ -57,7 +57,8 @@ public class NotifyService {
 
     private void addImages(
             final Notify notify,
-            final BoardRequest.Write write) {
+            final BoardRequest.Write write
+    ) {
         write.getUrls()
                 .forEach(url -> new NotifyImage(url, notify));
     }
@@ -70,11 +71,13 @@ public class NotifyService {
     @Transactional
     public void update(
             final Long notifyId,
-            final BoardRequest.Write write) {
-        Notify notify = notifyRepository.findById(notifyId)
+            final BoardRequest.Write write
+    ) {
+        final Notify notify = notifyRepository.findById(notifyId)
                 .orElseThrow(RuntimeException::new);
 
         notify.edit(write.getTitle(), write.getContent());
+        deleteImages(notifyId);
         addImages(notify, write);
     }
 
