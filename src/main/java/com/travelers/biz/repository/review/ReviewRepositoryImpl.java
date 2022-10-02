@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.travelers.biz.domain.QMember.member;
@@ -68,6 +67,9 @@ public class ReviewRepositoryImpl extends QuerydslSupports implements ReviewRepo
                         .where(R.id.eq(reviewId))
                         .fetchFirst());
 
+        if(detailInfo.isEmpty()){
+            return Optional.empty();
+        }
 
         final List<ReviewResponse.AroundTitle> aroundTitles = new ArrayList<>();
         addPrev(aroundTitles, reviewId);
