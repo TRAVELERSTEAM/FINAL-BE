@@ -85,10 +85,25 @@ public class ReviewService {
     }
 
     private Review checkAuthority(final Long memberId, final Long reviewId) {
-        final Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+        final Review review = findReviewById(reviewId);
 
         review.checkAuthority(memberId);
         return review;
+    }
+
+    private Review findReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    @Transactional
+    public void delete(
+            final Long memberId,
+            final Long reviewId
+    ) {
+        final Review review = findReviewById(reviewId);
+        review.checkAuthority(memberId);
+        
+        reviewRepository.deleteById(reviewId);
     }
 }
