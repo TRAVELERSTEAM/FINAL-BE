@@ -3,6 +3,7 @@ package com.travelers.biz.domain.notify;
 import com.travelers.biz.domain.base.BaseContent;
 import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.Member;
+import com.travelers.biz.domain.image.NotifyImage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public abstract class Notify extends BaseContent {
     protected Long sequence;
 
     @OneToMany(mappedBy = "notify", cascade = CascadeType.ALL)
-    private final List<Image> images = new ArrayList<>();
+    private final List<NotifyImage> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private NotifyType notifyType;
@@ -35,5 +36,7 @@ public abstract class Notify extends BaseContent {
         this.notifyType = notifyType;
     }
 
-    abstract public void addImage(final Image image);
+    public void addImage(final NotifyImage image) {
+        images.add(image);
+    }
 }
