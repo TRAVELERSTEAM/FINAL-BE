@@ -69,13 +69,13 @@ public class S3Uploader implements FileUploader {
     }
 
     public void delete(final List<String> keys) {
-        List<KeyVersion> keyVersions = convertKeyVersionsFrom(keys);
-        DeleteObjectsRequest deleteObjectsRequest = getDeleteObjectsRequest(keyVersions);
+        final List<KeyVersion> keyVersions = convertKeyVersionsFrom(keys);
+        final DeleteObjectsRequest deleteObjectsRequest = getDeleteObjectsRequest(keyVersions);
         amazonS3.deleteObjects(deleteObjectsRequest);
     }
 
-    private DeleteObjectsRequest getDeleteObjectsRequest(List<KeyVersion> keyVersions) {
-        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
+    private DeleteObjectsRequest getDeleteObjectsRequest(final List<KeyVersion> keyVersions) {
+        final DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
         deleteObjectsRequest.setKeys(keyVersions);
         return deleteObjectsRequest;
     }

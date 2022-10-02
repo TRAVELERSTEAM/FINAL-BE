@@ -1,8 +1,8 @@
 package com.travelers.biz.service.handler;
 
+import com.travelers.exception.ErrorCode;
 import com.travelers.exception.RunnableWithThrowable;
-import com.travelers.exception.TravelerException;
-import com.travelers.exception.status.ReviewErrorResult;
+import com.travelers.exception.TravelersException;
 import com.travelers.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class FileHandler {
                 FileCopyUtils.copy(multipartFile.getBytes(), file);
                 return;
             }
-            throw new TravelerException(ReviewErrorResult.BAD_REQUEST);
+            throw new TravelersException(ErrorCode.CLIENT_BAD_REQUEST);
         });
     }
 
@@ -47,7 +47,7 @@ public class FileHandler {
             run.runWithThrowable();
         } catch (IOException e) {
             remove(file);
-            throw new TravelerException(ReviewErrorResult.BAD_REQUEST);
+            throw new TravelersException(ErrorCode.CLIENT_BAD_REQUEST);
         }
 
     }
