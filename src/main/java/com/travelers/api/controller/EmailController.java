@@ -1,6 +1,6 @@
 package com.travelers.api.controller;
 
-import com.travelers.Exception.TravelersException;
+import com.travelers.exception.TravelersException;
 import com.travelers.biz.service.EmailService;
 import com.travelers.dto.EmailRequestDto;
 import com.travelers.util.RedisUtil;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.travelers.Exception.ErrorCode.*;
+import static com.travelers.exception.ErrorCode.*;
 
 @Slf4j
 @RestController

@@ -1,6 +1,5 @@
-package com.travelers.Exception;
+package com.travelers.exception;
 
-import com.travelers.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.travelers.Exception.ErrorCode.DUPLICATE_RESOURCE;
+import static com.travelers.exception.ErrorCode.DUPLICATE_RESOURCE;
 
 @Slf4j
 @RestControllerAdvice

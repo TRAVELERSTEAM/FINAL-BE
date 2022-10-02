@@ -1,4 +1,4 @@
-package com.travelers.Exception;
+package com.travelers.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.travelers.biz.service;
 
-import com.travelers.Exception.TravelersException;
+import com.travelers.exception.TravelersException;
 import com.travelers.biz.domain.Authority;
 import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.travelers.Exception.ErrorCode.*;
+import static com.travelers.exception.ErrorCode.*;
 
 @Slf4j
 @Service

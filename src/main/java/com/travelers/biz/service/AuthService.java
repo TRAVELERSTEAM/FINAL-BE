@@ -1,7 +1,7 @@
 package com.travelers.biz.service;
 
 
-import com.travelers.Exception.TravelersException;
+import com.travelers.exception.TravelersException;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Token;
 import com.travelers.biz.repository.MemberRepository;
@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.travelers.Exception.ErrorCode.*;
+import static com.travelers.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

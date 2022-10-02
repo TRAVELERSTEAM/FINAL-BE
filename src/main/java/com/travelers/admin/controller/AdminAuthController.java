@@ -1,6 +1,6 @@
 package com.travelers.admin.controller;
 
-import com.travelers.Exception.TravelersException;
+import com.travelers.exception.TravelersException;
 import com.travelers.biz.service.AuthService;
 import com.travelers.biz.service.MemberService;
 import com.travelers.dto.MemberRequestDto;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.travelers.Exception.ErrorCode.*;
+import static com.travelers.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
