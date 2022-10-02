@@ -89,10 +89,10 @@ public class NotifyService {
         notifyRepository.deleteById(notifyId);
     }
 
-    private void deleteImages(Long notifyId) {
-        List<Image> images = imageRepository.findAllByNotifyId(notifyId);
+    private void deleteImages(final Long notifyId) {
+        final List<Image> images = imageRepository.findAllByNotifyId(notifyId);
 
-        List<String> keyList = images.stream()
+        final List<String> keyList = images.stream()
                 .map(Image::getKey)
                 .collect(Collectors.toList());
 
