@@ -1,9 +1,13 @@
 package com.travelers.biz.domain.notify;
 
-import lombok.Getter;
+import com.travelers.biz.domain.Member;
+import com.travelers.dto.BoardRequest;
+import com.travelers.exception.SupplierWithThrowable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.ReflectionUtils;
 
-@Getter
+import java.lang.reflect.Constructor;
+
 @RequiredArgsConstructor
 public enum NotifyType {
     NOTICE(Notice.class),
@@ -11,4 +15,24 @@ public enum NotifyType {
     ,;
 
     private final Class<?> clazz;
+
+    public Notify toNotify(
+            final NotifyType notifyType,
+            final Member member,
+            final BoardRequest.Write write
+    ){
+        return createNotify(() -> {
+            Constructor<?> constructor = ReflectionUtils.accessibleConstructor(notifyType.clazz, Member.class, String.class, String.class);
+            ReflectionUtils.makeAccessible(constructor);
+            return (Notify) constructor.newInstance(member, write.getTitle(), write.getContent());
+        });
+    }
+
+    public Notify createNotify(SupplierWithThrowable<Notify> supplier) {
+        try {
+            return supplier.get();
+        } catch (final ReflectiveOperationException e){
+            return null;
+        }
+    }
 }
