@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/notify")
+@RequestMapping("/admin/notify")
 public class AdminNotifyController {
 
     private final NotifyService notifyService;
