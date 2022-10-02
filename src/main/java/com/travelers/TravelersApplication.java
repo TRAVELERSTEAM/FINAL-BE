@@ -27,21 +27,23 @@ public class TravelersApplication {
     public CommandLineRunner initData(MemberRepository memberRepository, PasswordEncoder passwordEncoder){
 
         return (arg) -> {
-            Member member = Member.builder()
-                    .email(email)
-                    .username("관리자")
-                    .password(passwordEncoder.encode(password))
-                    .birth("19000906")
-                    .gender(Gender.MALE)
-                    .tel("01077777777")
-                    .recommend("")
-                    .groupTrip("5070끼리,2040끼리,남자끼리,여자끼리,자녀동반,누구든지")
-                    .area("동남아/태평양,인도/중앙아시아,아프리카/중동,유럽/코카서스,중남미/북미,대만/중국/일본")
-                    .theme("문화탐방,골프여행,휴양지,트레킹,성지순례,볼론투어")
-                    .build();
+            if(memberRepository.findByEmail(email).isEmpty()) {
+                Member member = Member.builder()
+                        .email(email)
+                        .username("관리자")
+                        .password(passwordEncoder.encode(password))
+                        .birth("19000906")
+                        .gender(Gender.MALE)
+                        .tel("01077777777")
+                        .recommend("")
+                        .groupTrip("5070끼리,2040끼리,남자끼리,여자끼리,자녀동반,누구든지")
+                        .area("동남아/태평양,인도/중앙아시아,아프리카/중동,유럽/코카서스,중남미/북미,대만/중국/일본")
+                        .theme("문화탐방,골프여행,휴양지,트레킹,성지순례,볼론투어")
+                        .build();
 
-            member.changeAuthority(Authority.ROLE_ADMIN);
-            memberRepository.save(member);
+                member.changeAuthority(Authority.ROLE_ADMIN);
+                memberRepository.save(member);
+            }
         };
     }
 }
