@@ -1,7 +1,7 @@
 package com.travelers.api.controller;
 
+import com.travelers.Exception.TravelersException;
 import com.travelers.biz.service.EmailService;
-import com.travelers.biz.service.MemberService;
 import com.travelers.dto.EmailRequestDto;
 import com.travelers.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+
+import static com.travelers.Exception.ErrorCode.*;
 
 @Slf4j
 @RestController
@@ -36,8 +38,8 @@ public class EmailController {
             if(emailService.changeExpireKey(email, key)){
                 return new ResponseEntity<>(HttpStatus.OK);
             }
-            else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            else throw new TravelersException(KEY_NOT_FOUND);
         }
-        else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        else throw new TravelersException(KEY_NOT_FOUND);
     }
 }

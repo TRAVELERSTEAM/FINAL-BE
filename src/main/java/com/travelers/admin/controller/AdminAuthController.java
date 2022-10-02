@@ -1,5 +1,6 @@
 package com.travelers.admin.controller;
 
+import com.travelers.Exception.TravelersException;
 import com.travelers.biz.service.AuthService;
 import com.travelers.biz.service.MemberService;
 import com.travelers.dto.MemberRequestDto;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.travelers.Exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +29,6 @@ public class AdminAuthController {
         if(memberService.checkMemberAuthority(login.getEmail())){
             return new ResponseEntity<>(authService.login(login), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        else throw new TravelersException(NO_PERMISSIONS);
     }
 }
