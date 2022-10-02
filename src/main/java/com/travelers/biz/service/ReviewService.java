@@ -72,4 +72,23 @@ public class ReviewService {
             throw new TravelersException(ErrorCode.NO_PERMISSIONS);
         }
     }
+
+    @Transactional
+    public void update(
+            final Long memberId,
+            final Long reviewId,
+            final BoardRequest.Write write
+    ) {
+        final Review review = checkAuthority(memberId, reviewId);
+
+        review.edit(write.getTitle(), write.getContent());
+    }
+
+    private Review checkAuthority(final Long memberId, final Long reviewId) {
+        final Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        review.checkAuthority(memberId);
+        return review;
+    }
 }
