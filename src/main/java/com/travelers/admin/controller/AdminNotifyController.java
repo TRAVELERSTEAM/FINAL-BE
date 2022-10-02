@@ -7,6 +7,7 @@ import com.travelers.dto.NotifyResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class AdminNotifyController {
     ) {
         Long memberId = getCurrentMemberId();
         notifyService.write(memberId, NotifyType.NOTICE, write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{notifyId}")
@@ -53,8 +54,17 @@ public class AdminNotifyController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{notifyId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable final Long notifyId
+    ){
+        notifyService.delete(notifyId);
+        return ResponseEntity.noContent().build();
+    }
+
     private static Long getCurrentMemberId() {
         return SecurityUtil.getCurrentMemberId();
     }
+
 
 }

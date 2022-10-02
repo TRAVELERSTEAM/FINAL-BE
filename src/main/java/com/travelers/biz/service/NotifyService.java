@@ -1,11 +1,14 @@
 package com.travelers.biz.service;
 
 import com.travelers.biz.domain.Member;
+import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.image.NotifyImage;
 import com.travelers.biz.domain.notify.Notify;
 import com.travelers.biz.domain.notify.NotifyType;
+import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.NotifyRepository;
+import com.travelers.biz.service.handler.FileUploader;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.NotifyResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
@@ -13,12 +16,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NotifyService {
 
     private final NotifyRepository notifyRepository;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
+    private final FileUploader fileUploader;
 
     @Transactional(readOnly = true)
     public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> showNotifies(
@@ -70,4 +78,22 @@ public class NotifyService {
         addImages(notify, write);
     }
 
+    @Transactional
+    public void delete(
+            final Long notifyId
+    ) {
+        deleteImages(notifyId);
+        notifyRepository.deleteById(notifyId);
+    }
+
+    private void deleteImages(Long notifyId) {
+        List<Image> images = imageRepository.findAllByNotifyId(notifyId);
+
+        List<String> keyList = images.stream()
+                .map(Image::getKey)
+                .collect(Collectors.toList());
+
+        fileUploader.delete(keyList);
+        imageRepository.deleteAll(images);
+    }
 }
