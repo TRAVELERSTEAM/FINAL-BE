@@ -44,13 +44,13 @@ public class MemberResponseDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberFindEmailResponseDto {
+    public static class FindEmail {
 
         @NotNull
         private String email;
 
-        public static MemberFindEmailResponseDto of(Member member){
-            return new MemberFindEmailResponseDto(member.getEmail());
+        public static FindEmail of(Member member){
+            return new FindEmail(member.getEmail());
         }
     }
 }
