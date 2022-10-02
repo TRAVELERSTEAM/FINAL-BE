@@ -2,10 +2,12 @@ package com.travelers.biz.domain.image;
 
 import com.travelers.biz.domain.notify.Notify;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @DiscriminatorColumn(name = "image_type")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -34,6 +36,4 @@ public abstract class Image {
 
         return url.substring(indexOfDirectoryName + 1);
     }
-
-
 }

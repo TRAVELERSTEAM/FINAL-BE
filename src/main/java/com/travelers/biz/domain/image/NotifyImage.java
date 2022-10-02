@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class NotifyImage extends Image{
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notify_id", nullable = false)
+    @JoinColumn(name = "notify_id")
     private Notify notify;
 
     public NotifyImage(final String url, final Notify notify) {
