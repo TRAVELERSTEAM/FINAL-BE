@@ -32,9 +32,9 @@ public class MemberService {
     // 비회원
     // 해당 유저이름과 성별, 생년월일에 해당하는 이메일 리턴
     @Transactional(readOnly = true)
-    public MemberResponseDto.MemberFindEmailResponseDto getMemberEmailInfo(String username, String birth, Gender gender) {
+    public MemberResponseDto.FindEmail getMemberEmailInfo(String username, String birth, Gender gender) {
         return memberRepository.findByUsernameAndBirthAndGender(username, birth, gender)
-                .map(MemberResponseDto.MemberFindEmailResponseDto::of)
+                .map(MemberResponseDto.FindEmail::of)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "검색된 회원 정보가 없습니다."));
     }
 
@@ -58,22 +58,22 @@ public class MemberService {
 
     // 회원 정보 수정하기
     @Transactional
-    public void changeMyPassword(MemberRequestDto.MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
+    public void changeMyPassword(MemberRequestDto.ChangePassword changePassword) {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "현재 로그인 상태가 아닙니다."));
 
         // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
-        if(!checkPasswordIsSame(memberChangePasswordRequestDto.getChangePassword(), memberChangePasswordRequestDto.getConfirmChangePassword())) {
+        if(!checkPasswordIsSame(changePassword.getChangePassword(), changePassword.getConfirmChangePassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
         // 입력받은 비밀번호가 현재 비밀번호와 일치하지 않으면
-        if(!memberChangePasswordRequestDto.getCurrentPassword().isEmpty() &&
-                !passwordEncoder.matches(memberChangePasswordRequestDto.getCurrentPassword(), member.getPassword())) {
+        if(!changePassword.getCurrentPassword().isEmpty() &&
+                !passwordEncoder.matches(changePassword.getCurrentPassword(), member.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "현재 비밀번호와 일치하지 않습니다.");
         }
 
-        member.changePassword(memberChangePasswordRequestDto.getChangePassword(), passwordEncoder);
+        member.changePassword(changePassword.getChangePassword(), passwordEncoder);
         memberRepository.save(member);
     }
 

@@ -24,8 +24,8 @@ public class MemberController {
 
     // 비밀번호 변경
     @PutMapping("/user/password")
-    public ResponseEntity<Objects> changeMyPassword(@RequestBody MemberRequestDto.MemberChangePasswordRequestDto memberChangePasswordRequestDto) {
-        memberService.changeMyPassword(memberChangePasswordRequestDto);
+    public ResponseEntity<Objects> changeMyPassword(@RequestBody MemberRequestDto.ChangePassword changePassword) {
+        memberService.changeMyPassword(changePassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

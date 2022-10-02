@@ -22,9 +22,9 @@ public class AdminAuthController {
 
     // 어드민 로그인
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberRequestDto.MemberLoginRequestDto memberLoginRequestDto){
-        if(memberService.checkMemberAuthority(memberLoginRequestDto.getEmail())){
-            return new ResponseEntity<>(authService.login(memberLoginRequestDto), HttpStatus.OK);
+    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberRequestDto.Login login){
+        if(memberService.checkMemberAuthority(login.getEmail())){
+            return new ResponseEntity<>(authService.login(login), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
