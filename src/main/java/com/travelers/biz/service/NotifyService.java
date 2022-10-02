@@ -12,6 +12,8 @@ import com.travelers.biz.service.handler.FileUploader;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.NotifyResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
+import com.travelers.exception.ErrorCode;
+import com.travelers.exception.TravelersException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,8 @@ public class NotifyService {
             final Long id,
             final NotifyType notifyType
     ) {
-        return notifyRepository.findDetail(id, notifyType);
+        return notifyRepository.findDetail(id, notifyType)
+                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
     @Transactional

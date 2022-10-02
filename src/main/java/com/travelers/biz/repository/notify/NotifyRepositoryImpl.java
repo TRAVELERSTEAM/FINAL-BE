@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.travelers.biz.domain.QMember.member;
 import static com.travelers.biz.domain.notify.QNotify.notify;
@@ -61,22 +62,21 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
     @Override
-    public NotifyResponse.DetailInfo findDetail(final Long notifyId, final NotifyType notifyType) {
-        final NotifyResponse.DetailInfo detailInfo =
-                selectFromWhere(
-                        notifyType,
-                        new QNotifyResponse_DetailInfo(
-                                N.id,
-                                N.sequence,
-                                member.username,
-                                N.title,
-                                N.content,
-                                N.createdAt))
-                        .join(N.writer, member)
-                        .where(N.id.eq(notifyId))
-                        .fetchFirst();
+    public Optional<NotifyResponse.DetailInfo> findDetail(final Long notifyId, final NotifyType notifyType) {
+        Optional<NotifyResponse.DetailInfo> detailInfo = Optional.ofNullable(selectFromWhere(
+                notifyType,
+                new QNotifyResponse_DetailInfo(
+                        N.id,
+                        N.sequence,
+                        member.username,
+                        N.title,
+                        N.content,
+                        N.createdAt))
+                .join(N.writer, member)
+                .where(N.id.eq(notifyId))
+                .fetchFirst());
 
-        detailInfo.addAroundTitles(getAround(notifyId));
+        detailInfo.ifPresent(e -> e.addAroundTitles(getAround(notifyId)));
 
         return detailInfo;
     }
