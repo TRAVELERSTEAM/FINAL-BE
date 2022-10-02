@@ -69,7 +69,7 @@ public class EmailService {
                         "임시 비밀번호는 " + authStringNumber + "입니다." +
                         "<br>" +
                         "비밀번호로 로그인 후 꼭 비밀번호를 재설정 해주세요!";
-//        sendMail(setFrom, toMail, title, content);
+        sendMail(setFrom, toMail, title, content);
         return authStringNumber;
     }
 
