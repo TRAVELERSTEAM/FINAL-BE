@@ -57,17 +57,17 @@ public class ReviewService {
         );
     }
 
-    private Product findProductById(Long productId) {
+    private Product findProductById(final Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new TravelersException(ErrorCode.CLIENT_BAD_REQUEST));
     }
 
-    private Member findMemberById(Long memberId) {
+    private Member findMemberById(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new TravelersException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private void validate(Long memberId, Long productId) {
+    private void validate(final Long memberId, final  Long productId) {
         if(travelPlaceRepository.existsPlace(memberId, productId)) {
             throw new TravelersException(ErrorCode.NO_PERMISSIONS);
         }
@@ -103,7 +103,7 @@ public class ReviewService {
     ) {
         final Review review = findReviewById(reviewId);
         review.checkAuthority(memberId);
-        
+
         reviewRepository.deleteById(reviewId);
     }
 }
