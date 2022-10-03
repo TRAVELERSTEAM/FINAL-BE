@@ -1,6 +1,8 @@
 package com.travelers.biz.domain.base;
 
 import com.travelers.biz.domain.Member;
+import com.travelers.exception.ErrorCode;
+import com.travelers.exception.TravelersException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +33,12 @@ public abstract class BaseContent extends BaseTime {
     public void edit(final String title, final String content){
         this.title = title;
         this.content = content;
+    }
+
+    public void isSameWriter(final Long memberId) {
+        if(writer.getId().equals(memberId)) {
+            return ;
+        }
+        throw new TravelersException(ErrorCode.NO_PERMISSIONS);
     }
 }

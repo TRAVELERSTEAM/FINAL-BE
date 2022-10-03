@@ -43,9 +43,4 @@ public class Review extends BaseContent {
         images.add(reviewImage);
     }
 
-    public void checkAuthority(final Long memberId){
-        if (!getWriter().getId().equals(memberId)) {
-            throw new TravelersException(ErrorCode.NO_PERMISSIONS);
-        }
-    }
 }
