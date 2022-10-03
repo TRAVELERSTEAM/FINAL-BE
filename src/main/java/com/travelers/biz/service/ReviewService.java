@@ -4,9 +4,7 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.Review;
 import com.travelers.biz.domain.image.Image;
-import com.travelers.biz.domain.image.NotifyImage;
 import com.travelers.biz.domain.image.ReviewImage;
-import com.travelers.biz.domain.notify.Notify;
 import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.ProductRepository;
@@ -17,7 +15,6 @@ import com.travelers.dto.BoardRequest;
 import com.travelers.dto.ReviewResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.exception.ErrorCode;
-import com.travelers.exception.OptionalHandler;
 import com.travelers.exception.TravelersException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -96,7 +93,7 @@ public class ReviewService {
             final Long memberId
     ) {
         Review review = findReview(() -> reviewRepository.findById(reviewId));
-        review.validate(memberId);
+        review.isSameWriter(memberId);
         return review;
     }
 
@@ -124,9 +121,13 @@ public class ReviewService {
             final Long memberId,
             final Long reviewId
     ) {
+        Review review = findReview(() -> reviewRepository.findById(reviewId));
+
+        review.isSameWriter(memberId);
+
         deleteImages(reviewId);
 
-        reviewRepository.delete(findReviewById(reviewId, memberId));
+        reviewRepository.delete(review);
     }
 
 }
