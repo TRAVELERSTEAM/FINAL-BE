@@ -2,6 +2,7 @@ package com.travelers.biz.service.handler;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
@@ -71,7 +72,7 @@ public class S3Uploader implements FileUploader {
     public void delete(final List<String> keys) {
         final List<KeyVersion> keyVersions = convertKeyVersionsFrom(keys);
         final DeleteObjectsRequest deleteObjectsRequest = getDeleteObjectsRequest(keyVersions);
-        amazonS3.deleteObjects(deleteObjectsRequest);
+        run(() -> amazonS3.deleteObjects(deleteObjectsRequest));
     }
 
     private DeleteObjectsRequest getDeleteObjectsRequest(final List<KeyVersion> keyVersions) {
@@ -84,5 +85,13 @@ public class S3Uploader implements FileUploader {
         return keys.stream()
                 .map(KeyVersion::new)
                 .collect(Collectors.toList());
+    }
+
+    void run(Runnable run) {
+        try {
+            run.run();
+        } catch (AmazonS3Exception ignored) {
+
+        }
     }
 }
