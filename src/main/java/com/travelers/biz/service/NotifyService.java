@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,7 +70,7 @@ public class NotifyService {
 
     private Member findMemberById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new TravelersException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     @Transactional
@@ -76,8 +78,7 @@ public class NotifyService {
             final Long notifyId,
             final BoardRequest.Write write
     ) {
-        final Notify notify = notifyRepository.findById(notifyId)
-                .orElseThrow(RuntimeException::new);
+        final Notify notify = findById(notifyId);
 
         notify.edit(write.getTitle(), write.getContent());
         deleteImages(notifyId);
@@ -89,7 +90,13 @@ public class NotifyService {
             final Long notifyId
     ) {
         deleteImages(notifyId);
-        notifyRepository.deleteById(notifyId);
+
+        notifyRepository.delete(findById(notifyId));
+    }
+
+    private Notify findById(Long notifyId) {
+        return notifyRepository.findById(notifyId)
+                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
     private void deleteImages(final Long notifyId) {
