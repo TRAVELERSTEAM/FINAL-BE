@@ -47,7 +47,11 @@ public class Aop {
     }
 
     @Before(value = "execution(* com.travelers.biz.service.NotifyService.write(..))"
-            + "|| execution(* com.travelers.biz.service.NotifyService.update(..))")
+            + "|| execution(* com.travelers.biz.service.NotifyService.update(..))"
+            + "|| execution(* com.travelers.biz.service.ReviewService.write(..))"
+            + "|| execution(* com.travelers.biz.service.ReviewService.update(..))"
+            + "|| execution(* com.travelers.biz.service.QnaService.write(..))"
+            + "|| execution(* com.travelers.biz.service.QnaService.update(..))")
     public void beforeReviewSave(final JoinPoint joinPoint) {
         Long targetId = SecurityUtil.getCurrentMemberId();
 
