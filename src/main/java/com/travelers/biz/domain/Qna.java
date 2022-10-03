@@ -1,6 +1,8 @@
 package com.travelers.biz.domain;
 
 import com.travelers.biz.domain.base.BaseContent;
+import com.travelers.biz.domain.image.QnaImage;
+import com.travelers.biz.domain.image.ReviewImage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,7 @@ public class Qna extends BaseContent {
 
     @RequiredArgsConstructor
     public enum Status{
-        UN_RESPONSE,
-        RESPONSE,;
+        UN_RESPONSE, RESPONSE,;
 
         public Status change(final Member member){
             return member.getAuthority() == Authority.ROLE_ADMIN ? RESPONSE : UN_RESPONSE;
@@ -30,19 +31,27 @@ public class Qna extends BaseContent {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.UN_RESPONSE;
+    private Status status;
 
     private int replyCnt;
+
+    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL)
+    private final List<QnaImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL)
     private final List<Reply> replyList = new ArrayList<>();
 
     private Qna(final Member writer, final String title, final String content) {
         super(writer, title, content);
+        this.status = Status.UN_RESPONSE;
     }
 
     public static Qna create(final Member writer, final String title, final String content) {
         return new Qna(writer, title, content);
+    }
+
+    public void addImage(final QnaImage qnaImage){
+        images.add(qnaImage);
     }
 
     public void addReply(final Reply reply){
@@ -60,4 +69,5 @@ public class Qna extends BaseContent {
     private void incrementReplyCnt() {
         replyCnt++;
     }
+
 }
