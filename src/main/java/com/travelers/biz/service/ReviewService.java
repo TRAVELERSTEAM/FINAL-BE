@@ -11,10 +11,14 @@ import com.travelers.dto.BoardRequest;
 import com.travelers.dto.ReviewResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.exception.ErrorCode;
+import com.travelers.exception.OptionalHandler;
 import com.travelers.exception.TravelersException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.travelers.exception.OptionalHandler.findMember;
+import static com.travelers.exception.OptionalHandler.findWithNotfound;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +53,7 @@ public class ReviewService {
     ) {
         validate(memberId, productId);
 
-        final Member member = findMemberById(memberId);
+        final Member member = findMember(() -> memberRepository.findById(memberId));
         final Product product = findProductById(productId);
 
         reviewRepository.save(
@@ -60,11 +64,6 @@ public class ReviewService {
     private Product findProductById(final Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new TravelersException(ErrorCode.CLIENT_BAD_REQUEST));
-    }
-
-    private Member findMemberById(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new TravelersException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     private void validate(final Long memberId, final  Long productId) {
@@ -85,15 +84,10 @@ public class ReviewService {
     }
 
     private Review checkAuthority(final Long memberId, final Long reviewId) {
-        final Review review = findReviewById(reviewId);
+        final Review review = findById(reviewId);
 
         review.checkAuthority(memberId);
         return review;
-    }
-
-    private Review findReviewById(Long reviewId) {
-        return reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
     @Transactional
@@ -101,9 +95,13 @@ public class ReviewService {
             final Long memberId,
             final Long reviewId
     ) {
-        final Review review = findReviewById(reviewId);
+        final Review review = findById(reviewId);
         review.checkAuthority(memberId);
 
         reviewRepository.deleteById(reviewId);
+    }
+
+    private Review findById(final Long reviewId){
+        return findWithNotfound(() -> reviewRepository.findById(reviewId));
     }
 }
