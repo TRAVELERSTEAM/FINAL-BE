@@ -55,7 +55,16 @@ public class AdminNotifyController {
     }
 
     @PostMapping("/notice")
-    public ResponseEntity<Void> create(
+    public ResponseEntity<Void> createNotice(
+            @RequestBody final BoardRequest.Write write
+    ) {
+        Long memberId = getCurrentMemberId();
+        notifyService.write(memberId, NotifyType.NOTICE, write);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/ref_library")
+    public ResponseEntity<Void> createRefLibrary(
             @RequestBody final BoardRequest.Write write
     ) {
         Long memberId = getCurrentMemberId();
