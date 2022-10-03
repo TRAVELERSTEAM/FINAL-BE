@@ -3,10 +3,16 @@ package com.travelers.biz.service;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.Review;
+import com.travelers.biz.domain.image.Image;
+import com.travelers.biz.domain.image.NotifyImage;
+import com.travelers.biz.domain.image.ReviewImage;
+import com.travelers.biz.domain.notify.Notify;
+import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.ProductRepository;
 import com.travelers.biz.repository.TravelPlaceRepository;
 import com.travelers.biz.repository.review.ReviewRepository;
+import com.travelers.biz.service.handler.FileUploader;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.ReviewResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
@@ -17,8 +23,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.travelers.exception.OptionalHandler.findMember;
-import static com.travelers.exception.OptionalHandler.findWithNotfound;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.travelers.exception.OptionalHandler.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +36,8 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final TravelPlaceRepository travelPlaceRepository;
+    private final ImageRepository imageRepository;
+    private final FileUploader fileUploader;
 
     @Transactional(readOnly = true)
     public PagingCorrespondence.Response<ReviewResponse.SimpleInfo> showReviews(
@@ -54,16 +64,12 @@ public class ReviewService {
         validate(memberId, productId);
 
         final Member member = findMember(() -> memberRepository.findById(memberId));
-        final Product product = findProductById(productId);
+        final Product product = findProduct(() -> productRepository.findById(productId));
 
-        reviewRepository.save(
-                Review.create(member, product, write.getTitle(), write.getContent())
-        );
-    }
+        Review review = Review.create(member, product, write.getTitle(), write.getContent());
 
-    private Product findProductById(final Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new TravelersException(ErrorCode.CLIENT_BAD_REQUEST));
+        addImages(review, write);
+        reviewRepository.save(review);
     }
 
     private void validate(final Long memberId, final  Long productId) {
@@ -78,16 +84,39 @@ public class ReviewService {
             final Long reviewId,
             final BoardRequest.Write write
     ) {
-        final Review review = checkAuthority(memberId, reviewId);
+        final Review review = findReviewById(reviewId, memberId);
 
         review.edit(write.getTitle(), write.getContent());
+        deleteImages(reviewId);
+        addImages(review, write);
     }
 
-    private Review checkAuthority(final Long memberId, final Long reviewId) {
-        final Review review = findById(reviewId);
-
-        review.checkAuthority(memberId);
+    private Review findReviewById(
+            final Long reviewId,
+            final Long memberId
+    ) {
+        Review review = findReview(() -> reviewRepository.findById(reviewId));
+        review.validate(memberId);
         return review;
+    }
+
+    private void addImages(
+            final Review review,
+            final BoardRequest.Write write
+    ) {
+        write.getUrls()
+                .forEach(url -> new ReviewImage(url, review));
+    }
+
+    private void deleteImages(final Long reviewId) {
+        final List<Image> images = imageRepository.findAllByReviewId(reviewId);
+
+        final List<String> keyList = images.stream()
+                .map(Image::getKey)
+                .collect(Collectors.toList());
+
+        fileUploader.delete(keyList);
+        imageRepository.deleteAll(images);
     }
 
     @Transactional
@@ -95,13 +124,9 @@ public class ReviewService {
             final Long memberId,
             final Long reviewId
     ) {
-        final Review review = findById(reviewId);
-        review.checkAuthority(memberId);
+        deleteImages(reviewId);
 
-        reviewRepository.deleteById(reviewId);
+        reviewRepository.delete(findReviewById(reviewId, memberId));
     }
 
-    private Review findById(final Long reviewId){
-        return findWithNotfound(() -> reviewRepository.findById(reviewId));
-    }
 }
