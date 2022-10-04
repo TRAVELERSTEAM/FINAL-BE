@@ -33,8 +33,8 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
-        return ResponseEntity.ok(authService.login(memberLoginRequestDto));
+    public ResponseEntity<TokenResponseDto> login(@RequestBody MemberRequestDto.Login login) {
+        return ResponseEntity.ok(authService.login(login));
     }
 
     // 토큰 재발급
@@ -45,21 +45,21 @@ public class AuthController {
 
     // 아이디 찾기
     @PostMapping("/find_email")
-    public ResponseEntity<MemberFindEmailResponseDto> findEmail(@RequestBody MemberFindEmailRequestDto memberFindEmailRequestDto){
-        return new ResponseEntity<>(memberService.getMemberEmailInfo(memberFindEmailRequestDto.getUsername(), memberFindEmailRequestDto.getBirth(), memberFindEmailRequestDto.getGender()), HttpStatus.OK);
+    public ResponseEntity<MemberResponseDto.FindEmail> findEmail(@RequestBody MemberRequestDto.FindEmail findEmail){
+        return new ResponseEntity<>(memberService.getMemberEmailInfo(findEmail.getUsername(), findEmail.getBirth(), findEmail.getGender()), HttpStatus.OK);
     }
 
     // 비밀번호 찾기 이메일 임시비밀번호 발송
     @PostMapping("/find_password")
-    public ResponseEntity<Objects> findPassword(@RequestBody MemberFindPasswordRequestDto memberFindPasswordRequestDto) {
-        Member member = memberService.getMemberInfo(memberFindPasswordRequestDto.getUsername(),
-                memberFindPasswordRequestDto.getBirth(),
-                memberFindPasswordRequestDto.getGender(),
-                memberFindPasswordRequestDto.getTel(),
-                memberFindPasswordRequestDto.getEmail());
+    public ResponseEntity<Objects> findPassword(@RequestBody MemberRequestDto.FindPassword findPassword) {
+        Member member = memberService.getMemberInfo(findPassword.getUsername(),
+                findPassword.getBirth(),
+                findPassword.getGender(),
+                findPassword.getTel(),
+                findPassword.getEmail());
 
-        String tempPassword = emailService.joinResetPassword(memberFindPasswordRequestDto.getEmail());
-        memberService.changePassword(member, tempPassword, memberFindPasswordRequestDto);
+        String tempPassword = emailService.joinResetPassword(findPassword.getEmail());
+        memberService.changePassword(member, tempPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

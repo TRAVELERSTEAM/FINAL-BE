@@ -1,13 +1,12 @@
 package com.travelers.api.controller;
 
 import com.travelers.biz.service.MemberService;
+import com.travelers.dto.MemberRequestDto;
 import com.travelers.dto.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -21,6 +20,13 @@ public class MemberController {
     @GetMapping("/user/me")
     public ResponseEntity<MemberResponseDto> getMyInfo(){
         return ResponseEntity.ok(memberService.getMyInfo());
+    }
+
+    // 비밀번호 변경
+    @PutMapping("/user/password")
+    public ResponseEntity<Objects> changeMyPassword(@RequestBody MemberRequestDto.ChangePassword changePassword) {
+        memberService.changeMyPassword(changePassword);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 회원 탈퇴

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,5 +39,18 @@ public class MemberResponseDto {
                 member.getRecommendCode(),
                 member.getGender(),
                 member.getAuthority());
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class FindEmail {
+
+        @NotNull
+        private String email;
+
+        public static FindEmail of(Member member){
+            return new FindEmail(member.getEmail());
+        }
     }
 }
