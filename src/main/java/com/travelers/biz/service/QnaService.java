@@ -131,6 +131,8 @@ public class QnaService {
     public void removeReply(
             final Long replyId
     ) {
-        replyRepository.deleteById(replyId);
+        Reply reply = findWithNotfound(() -> replyRepository.findWithQna(replyId));
+        reply.requestToDecrementCnt();
+        replyRepository.delete(reply);
     }
 }

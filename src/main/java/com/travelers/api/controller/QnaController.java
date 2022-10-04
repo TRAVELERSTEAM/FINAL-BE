@@ -5,12 +5,9 @@ import com.travelers.dto.BoardRequest;
 import com.travelers.dto.QnaResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.util.SecurityUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Security;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +17,7 @@ public class QnaController {
     private final QnaService qnaService;
 
     private Long currentMemberId() {
-        return SecurityUtil.getCurrentMemberId();
+        return getCurrentMemberId();
     }
 
     @GetMapping
@@ -72,7 +69,7 @@ public class QnaController {
     }
 
     @PutMapping("/reply/{replyId}")
-    public ResponseEntity<Void> updateReply (
+    public ResponseEntity<Void> updateReply(
             @PathVariable final Long replyId,
             @RequestBody final BoardRequest.Write write
     ) {
@@ -81,11 +78,15 @@ public class QnaController {
     }
 
     @DeleteMapping("/reply/{replyId}")
-    public ResponseEntity<Void> deleteReply (
+    public ResponseEntity<Void> deleteReply(
             @PathVariable final Long replyId
     ) {
         qnaService.removeReply(replyId);
         return ResponseEntity.noContent().build();
+    }
+
+    private static Long getCurrentMemberId() {
+        return SecurityUtil.getCurrentMemberId();
     }
 
 }

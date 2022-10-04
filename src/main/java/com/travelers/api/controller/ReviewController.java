@@ -19,7 +19,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<PagingCorrespondence.Response<ReviewResponse.SimpleInfo>> showAll(
-            final Long productId,
+            final long productId,
             final PagingCorrespondence.Request pagingInfo
     ) {
         return ResponseEntity.ok(
@@ -29,7 +29,7 @@ public class ReviewController {
 
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse.DetailInfo> showOne(
-            @PathVariable final Long reviewId
+            @PathVariable final long reviewId
     ) {
         return ResponseEntity.ok(
                 reviewService.showReview(reviewId)
@@ -65,5 +65,4 @@ public class ReviewController {
         reviewService.delete(currentMemberId(), reviewId);
         return ResponseEntity.noContent().build();
     }
-
 }

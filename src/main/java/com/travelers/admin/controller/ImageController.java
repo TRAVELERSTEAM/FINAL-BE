@@ -23,8 +23,7 @@ public class ImageController {
     public ResponseEntity<List<String>> uploadNotifyImage(
             final List<MultipartFile> files
     ){
-        Long currentMemberId = SecurityUtil.getCurrentMemberId();
-        return ResponseEntity.ok(imageService.uploadNotifyImage(currentMemberId, files));
+        return ResponseEntity.ok(imageService.uploadNotifyImage(SecurityUtil.getCurrentMemberId(), files));
     }
 
 }
