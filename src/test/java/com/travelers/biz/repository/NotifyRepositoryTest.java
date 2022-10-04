@@ -6,19 +6,17 @@ import com.travelers.biz.domain.image.NotifyImage;
 import com.travelers.biz.domain.notify.Notice;
 import com.travelers.biz.domain.notify.Notify;
 import com.travelers.biz.domain.notify.NotifyType;
+import com.travelers.biz.repository.notify.NotifyRepository;
 import com.travelers.config.DBSliceTest;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.NotifyResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
-import org.assertj.core.api.BDDSoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -114,7 +112,8 @@ class NotifyRepositoryTest {
     @MethodSource("aroundTest")
     @DisplayName("공지사항 한 건 출력 시 이전과 다음 게시글이 있으면 제목과 번호를 가져와야 한다.")
     void select_one(final Long id, final String title, final String[] aroundTitle) {
-        NotifyResponse.DetailInfo detail = notifyRepository.findDetail(id, NotifyType.NOTICE);
+        NotifyResponse.DetailInfo detail = notifyRepository.findDetail(id, NotifyType.NOTICE)
+                .orElseThrow(RuntimeException::new);
 
         then(detail.getId()).isSameAs(id);
         then(detail.getTitle()).isEqualTo(title);
@@ -147,7 +146,7 @@ class NotifyRepositoryTest {
 
         then(persistenceUnitUtil.isLoaded(notify)).isTrue();
         notify.getImages()
-                .forEach(e -> persistenceUnitUtil.isLoaded(e));
+                .forEach(e -> then(persistenceUnitUtil.isLoaded(e)).isTrue());
 
     }
 }

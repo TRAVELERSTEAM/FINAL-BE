@@ -4,6 +4,7 @@ import com.travelers.biz.domain.*;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.ReplyRepository;
 import com.travelers.config.DBSliceTest;
+import com.travelers.dto.QnaResponse;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,9 @@ class QnaRepositoryImplTest {
     private ReplyRepository replyRepository;
     @Autowired
     private EntityManagerFactory emf;
+    @Autowired
+    private EntityManager em;
+    private Qna qna;
 
     private Member member;
     private Member mockMember;
@@ -42,6 +46,9 @@ class QnaRepositoryImplTest {
                 .build());
         mockMember = Mockito.mock(Member.class);
         BDDMockito.given(mockMember.getAuthority()).willReturn(Authority.ROLE_ADMIN);
+        qna = Qna.create(member, "test", "test");
+        new Reply(mockMember, "관리자", qna);
+        qnaRepository.save(qna);
     }
 
     @Test
@@ -63,6 +70,5 @@ class QnaRepositoryImplTest {
 
         qna.getReplyList().forEach(e ->
                 then(persistenceUtil.isLoaded(e)).isTrue());
-
     }
 }

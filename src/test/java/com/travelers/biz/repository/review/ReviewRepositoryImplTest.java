@@ -1,15 +1,9 @@
 package com.travelers.biz.repository.review;
 
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelers.biz.domain.QReview;
-import com.travelers.biz.domain.Review;
 import com.travelers.config.DBSliceTest;
-import com.travelers.dto.QReviewResponse_AroundTitle;
 import com.travelers.dto.ReviewResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,13 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.travelers.biz.domain.QReview.review;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DBSliceTest
 class ReviewRepositoryImplTest {
@@ -67,7 +58,7 @@ class ReviewRepositoryImplTest {
     @MethodSource("repeatableTest")
     void parameterized(final Long reviewId, final String title, final String[] aroundTitle) {
         ReviewResponse.DetailInfo detailInfo = reviewRepository.findDetailInfo(reviewId)
-                .orElseThrow();
+                .orElseThrow(NullPointerException::new);
 
         then(detailInfo.getReviewId()).isSameAs(reviewId);
         then(detailInfo.getContent()).isEqualTo(title);
