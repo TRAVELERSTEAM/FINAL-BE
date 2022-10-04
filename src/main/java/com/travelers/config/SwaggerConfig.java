@@ -34,6 +34,7 @@ public class SwaggerConfig {
                 .tags( new Tag("admin-member-controller", "사용자 관리"))
                 .tags( new Tag("admin-product-controller", "여행 상품 관리"))
                 .tags( new Tag("admin-banner-controller", "배너 관리"))
+                .tags( new Tag("admin-notify-controller", "공지, 자료실 관리"))
                 ;
     }
 
@@ -54,6 +55,9 @@ public class SwaggerConfig {
                 .tags( new Tag("product-controller", "상품 관리"))
                 .tags( new Tag("reservation-controller", "예약 관리"))
                 .tags( new Tag("content-controller", "컨텐츠 관리"))
+                .tags( new Tag("review-controller", "리뷰 관리"))
+                .tags( new Tag("qna-controller", "1:1 문의 관리"))
+                .tags( new Tag("notify-controller", "공지, 자료 출력"))
                 ;
     }
 
