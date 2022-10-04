@@ -70,7 +70,7 @@ public class ReviewService {
     }
 
     private void validate(final Long memberId, final  Long productId) {
-        if(!travelPlaceRepository.existsPlace(memberId, productId)) {
+        if(travelPlaceRepository.existsPlace(memberId, productId)) {
             throw new TravelersException(ErrorCode.NO_PERMISSIONS);
         }
     }

@@ -68,7 +68,7 @@ public class AdminNotifyController {
             @RequestBody final BoardRequest.Write write
     ) {
         Long memberId = getCurrentMemberId();
-        notifyService.write(memberId, NotifyType.NOTICE, write);
+        notifyService.write(memberId, NotifyType.REFERENCE_LIBRARY, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
