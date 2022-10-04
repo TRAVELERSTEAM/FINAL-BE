@@ -1,0 +1,4 @@
+[submodule "src/main/resources"]
+	path = src/main/resources
+	url = https://github.com/moner050/resources.git
+            branch = main
