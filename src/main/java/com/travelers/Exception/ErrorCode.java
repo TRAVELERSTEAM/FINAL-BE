@@ -32,6 +32,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
     KEY_NOT_FOUND(NOT_FOUND, "이메일 인증키가 유효하지 않습니다."),
     RESOURCE_NOT_FOUND(NOT_FOUND, "요청하신 자원을 찾을 수 없습니다."),
+    PRODUCT_NOT_FOUND(NOT_FOUND, "해당 상품을 찾을 수 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

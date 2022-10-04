@@ -42,4 +42,8 @@ public class Reply extends BaseTime {
     public void edit(final String content) {
         this.content = content;
     }
+
+    public void requestToDecrementCnt() {
+        qna.decrementReplyCnt();
+    }
 }

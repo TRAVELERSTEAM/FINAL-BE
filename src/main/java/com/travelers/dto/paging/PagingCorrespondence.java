@@ -1,8 +1,6 @@
 package com.travelers.dto.paging;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,16 +8,18 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
+import static java.util.Objects.requireNonNullElse;
+
 public class PagingCorrespondence {
 
     public static class Request {
-        private final int page;
-        private final int size;
+        private final Integer page;
+        private final Integer size;
         private final Sort sort;
 
-        public Request() {
-            page = 1;
-            size = 7;
+        public Request(final Integer page, final Integer size) {
+            this.page = requireNonNullElse(page, 1);
+            this.size = requireNonNullElse(size, 7);
             sort = Sort.by("id").descending();
         }
 
@@ -34,7 +34,7 @@ public class PagingCorrespondence {
 
         private final List<T> contents;
         private final int currentPage;
-        private final int naviSize; // 페이지 내비게이션의 크기
+        private final int naviSize;
         private final int startPage;
         private final int endPage;
         private final boolean showPrev;

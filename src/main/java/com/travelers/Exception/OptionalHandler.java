@@ -14,4 +14,14 @@ public class OptionalHandler {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
+
+    public static <T> T findProduct(Supplier<Optional<T>> supplier){
+        return supplier.get()
+                .orElseThrow(() -> new TravelersException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    public static <T> T findReview(Supplier<Optional<T>> supplier) {
+        return supplier.get()
+                .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+    }
 }

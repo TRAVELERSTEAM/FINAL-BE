@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Qna extends BaseContent {
-
+    // TODO: 2022-10-04 댓글 삭제 시 카운트 감소
     @RequiredArgsConstructor
     public enum Status{
         UN_RESPONSE, RESPONSE,;
@@ -66,8 +66,12 @@ public class Qna extends BaseContent {
         }
     }
 
-    private void incrementReplyCnt() {
+    public void incrementReplyCnt() {
         replyCnt++;
+    }
+
+    public void decrementReplyCnt() {
+        replyCnt--;
     }
 
 }
