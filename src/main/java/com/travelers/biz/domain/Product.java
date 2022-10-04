@@ -1,5 +1,6 @@
 package com.travelers.biz.domain;
 
+import com.travelers.biz.domain.base.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,9 +16,10 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product extends BaseTime{
+public class Product extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long id;
     private String title;
     private Integer price;

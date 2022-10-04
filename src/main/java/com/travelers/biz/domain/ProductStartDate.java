@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class ProductStartDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_start_date_id")
     private Long id;
 
     private Integer startDate;
