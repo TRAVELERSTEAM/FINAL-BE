@@ -69,9 +69,8 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
-    // TODO: 2022-10-04 다녀온 여행지당 리뷰 하나만 작성 가능하도록 변경 해야함.
     private void validate(final Long memberId, final  Long productId) {
-        if(travelPlaceRepository.existsPlace(memberId, productId)) {
+        if(!travelPlaceRepository.existsPlace(memberId, productId)) {
             throw new TravelersException(ErrorCode.NO_PERMISSIONS);
         }
     }
