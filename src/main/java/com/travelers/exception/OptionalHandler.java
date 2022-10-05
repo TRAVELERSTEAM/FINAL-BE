@@ -1,6 +1,7 @@
 package com.travelers.exception;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class OptionalHandler {
@@ -23,5 +24,10 @@ public class OptionalHandler {
     public static <T> T findReview(Supplier<Optional<T>> supplier) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    public static <T> T findOrThrow(Long id, Function<Long, Optional<T>> function, ErrorCode errorCode){
+        return function.apply(id)
+                .orElseThrow(() -> new TravelersException(errorCode));
     }
 }
