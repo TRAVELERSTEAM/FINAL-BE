@@ -30,25 +30,18 @@ public class Departure extends BaseTime {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Convert(converter = LocalDateConverter.class)
-    @Column(name = "when_departure")
-    private LocalDate whenDeparture;
-
-    @Convert(converter = LocalDateConverter.class)
-    @Column(name = "when_return")
-    private LocalDate whenReturn;
+    @Embedded
+    private Capacity capacity;
 
     @Embedded
-    @Column(name = "capacity")
-    private Capacity capacity;
+    private When when;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
     private Departure(final Product product, final LocalDate whenDeparture, final Capacity capacity) {
         this.product = product;
-        this.whenDeparture = whenDeparture;
-        this.whenReturn = whenDeparture.plusDays(product.getPeriod());
+        this.when = new When(whenDeparture, product.getPeriod());
         this.capacity = capacity;
     }
 
