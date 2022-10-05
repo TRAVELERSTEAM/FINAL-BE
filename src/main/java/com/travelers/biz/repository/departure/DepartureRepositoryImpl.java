@@ -23,10 +23,10 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
 
     @Override
     public List<DepartureResponse.TravelPeriod> availableReservationListBy(final Long productId) {
-        return select(new QDepartureResponse_TravelPeriod(
-                D.whenDeparture,
-                D.whenReturn
-        ))
+        return select(
+                new QDepartureResponse_TravelPeriod(
+                        D.whenDeparture,
+                        D.whenReturn))
                 .from(D)
                 .where(D.product.id.eq(productId)
                         .and(D.status.eq(Departure.Status.OPENED)))
