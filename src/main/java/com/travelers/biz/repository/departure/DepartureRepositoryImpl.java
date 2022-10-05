@@ -19,7 +19,7 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
     }
 
     @Override
-    public List<LocalDate> findAllByProductId(Long productId) {
+    public List<LocalDate> availableReservationBy(Long productId) {
         return select(D.whenDeparture)
                 .from(D)
                 .where(D.product.id.eq(productId)

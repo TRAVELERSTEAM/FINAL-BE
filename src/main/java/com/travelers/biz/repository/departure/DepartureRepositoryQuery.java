@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface DepartureRepositoryQuery {
 
-    List<LocalDate> findAllByProductId(final Long productId);
+    List<LocalDate> availableReservationBy(final Long productId);
 }
