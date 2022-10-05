@@ -1,14 +1,25 @@
 package com.travelers.biz.domain.reservation.embeddable;
 
-public abstract class Tourist {
+import com.travelers.biz.domain.departure.embeddable.Price;
+import lombok.Getter;
 
-    protected int checkHeadCount(final int headCount){
-        return Math.max(headCount, 0);
+import javax.persistence.Embeddable;
+
+@Getter
+@Embeddable
+public class HeadCount {
+
+    private int adult;
+    private int kid;
+    private int infant;
+
+    public int totalHeadCount() {
+        return adult + kid + infant;
     }
 
-    public abstract int getHeadCount();
-
-    public int calculateFee(final int fee) {
-        return getHeadCount() * fee;
+    public long calculateFee(final Price price) {
+        return adult * price.getAdult()
+                + kid * price.getKid()
+                + infant * price.getInfant();
     }
 }

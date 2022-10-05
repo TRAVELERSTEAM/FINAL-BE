@@ -4,7 +4,8 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.base.BaseTime;
 import com.travelers.biz.domain.reservation.Reservation;
-import com.travelers.biz.domain.reservation.embeddable.*;
+import com.travelers.biz.domain.reservation.embeddable.Capacity;
+import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.config.converter.LocalDateConverter;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 @Entity
 @Getter
@@ -25,6 +25,10 @@ public class Departure extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Convert(converter = LocalDateConverter.class)
     @Column(name = "when_departure")
@@ -41,10 +45,6 @@ public class Departure extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
     private Departure(final Product product, final LocalDate whenDeparture, final Capacity capacity) {
         this.product = product;
         this.whenDeparture = whenDeparture;
@@ -56,27 +56,18 @@ public class Departure extends BaseTime {
         return new Departure(product, whenDeparture, capacity);
     }
 
-    public Reservation reserve(final Member member, final Adult adult, final Kid kid, final Infant infant){
-        calculateCapacity(adult, kid, infant);
+    public Reservation reserve(final Member member, final HeadCount headCount){
+        minusCapacity(headCount.totalHeadCount());
         return Reservation.builder()
                 .member(member)
                 .departure(this)
-                .adult(adult)
-                .kid(kid)
-                .infant(infant)
-                .fee(calculateFee(adult, kid, infant))
+                .headCount(headCount)
+                .fee(calculateFee(headCount))
                 .build();
     }
 
-    private int calculateFee(final Adult adult, final Kid kid, final Infant infant) {
-        return adult.calculateFee(product.getAdultPrice())
-                + kid.calculateFee(product.getKidPrice())
-                + infant.calculateFee(product.getInfantPrice());
-    }
-
-    private void calculateCapacity(final Tourist... person) {
-        Arrays.asList(person)
-                .forEach(e -> minusCapacity(e.getHeadCount()));
+    private long calculateFee(final HeadCount headCount) {
+        return headCount.calculateFee(product.getPrice());
     }
 
     private void minusCapacity(final int touristCnt){

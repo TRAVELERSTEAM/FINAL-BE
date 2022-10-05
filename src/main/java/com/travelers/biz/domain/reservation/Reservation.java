@@ -1,11 +1,12 @@
 package com.travelers.biz.domain.reservation;
 
 import com.travelers.biz.domain.Member;
-import com.travelers.biz.domain.reservation.embeddable.Adult;
 import com.travelers.biz.domain.departure.Departure;
-import com.travelers.biz.domain.reservation.embeddable.Infant;
-import com.travelers.biz.domain.reservation.embeddable.Kid;
-import lombok.*;
+import com.travelers.biz.domain.reservation.embeddable.HeadCount;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -26,34 +27,21 @@ public class Reservation {
     private Departure departure;
 
     @Embedded
-    @Column(name = "adult_count")
-    private Adult adult;
-
-    @Embedded
-    @Column(name = "kids_count")
-    private Kid kid;
-
-    @Embedded
-    @Column(name = "infant_count")
-    private Infant infant;
+    private HeadCount headCount;
 
     @Column(name = "fee")
-    private int fee;
+    private long fee;
 
     @Builder
     private Reservation(
             final Member member,
             final Departure departure,
-            final Adult adult,
-            final Kid kid,
-            final Infant infant,
-            final int fee
+            final HeadCount headCount,
+            final long fee
     ) {
         this.member = member;
         this.departure = departure;
-        this.adult = adult;
-        this.kid = kid;
-        this.infant = infant;
+        this.headCount = headCount;
         this.fee = fee;
     }
 
