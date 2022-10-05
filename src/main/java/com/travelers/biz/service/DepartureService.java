@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.travelers.exception.OptionalHandler.findWithNotfound;
+
 @Service
 @RequiredArgsConstructor
 public class DepartureService {
@@ -15,5 +17,9 @@ public class DepartureService {
 
     public List<DepartureResponse.TravelPeriod> availableReservationList(final Long productId) {
         return departureRepository.availableReservationListBy(productId);
+    }
+
+    public DepartureResponse.ReservationInfo findDeparture(final Long departureId) {
+        return findWithNotfound(() -> departureRepository.findForReservation(departureId));
     }
 }
