@@ -23,7 +23,7 @@ public class ImageController {
     public ResponseEntity<List<String>> uploadNotifyImage(
             final List<MultipartFile> files
     ){
-        return ResponseEntity.ok(imageService.uploadNotifyImage(SecurityUtil.getCurrentMemberId(), files));
+        return ResponseEntity.ok(imageService.uploadImage(SecurityUtil.getCurrentMemberId(), files));
     }
 
 }

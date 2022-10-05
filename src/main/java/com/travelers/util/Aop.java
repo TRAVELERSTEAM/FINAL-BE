@@ -52,7 +52,7 @@ public class Aop {
             + "|| execution(* com.travelers.biz.service.ReviewService.update(..))"
             + "|| execution(* com.travelers.biz.service.QnaService.write(..))"
             + "|| execution(* com.travelers.biz.service.QnaService.update(..))")
-    public void beforeReviewSave(final JoinPoint joinPoint) {
+    public void beforeSave(final JoinPoint joinPoint) {
         Long targetId = SecurityUtil.getCurrentMemberId();
 
         if (cashMap.containsKey(targetId)) {
