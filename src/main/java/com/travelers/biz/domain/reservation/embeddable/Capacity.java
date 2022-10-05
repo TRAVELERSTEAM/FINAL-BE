@@ -14,20 +14,29 @@ import javax.persistence.Embeddable;
 public class Capacity {
 
     private int maxCapacity;
+    private int minCapacity;
+    private int curCapacity;
     private int remainCapacity;
 
-    public Capacity(final int maxCapacity) {
+    public Capacity(final int maxCapacity, final int minCapacity) {
         this.maxCapacity = maxCapacity;
+        this.minCapacity = minCapacity;
     }
 
     public int minusCapacity(final int touristCnt){
         if(remainCapacity < touristCnt) {
             throw new TravelersException(ErrorCode.CANT_RESERVE_TRAVEL);
         }
-        return remainCapacity -= touristCnt;
+        return calculateCapacity(touristCnt);
+    }
+
+    private int calculateCapacity(final int touristCnt) {
+        curCapacity = touristCnt;
+        return remainCapacity = maxCapacity -  touristCnt;
     }
 
     public void plusCapacity(final int touristCnt){
-        this.remainCapacity += touristCnt;
+        curCapacity -= touristCnt;
+        remainCapacity += touristCnt;
     }
 }
