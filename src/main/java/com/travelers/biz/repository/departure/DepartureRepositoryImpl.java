@@ -25,6 +25,7 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
     public List<DepartureResponse.TravelPeriod> availableReservationListBy(final Long productId) {
         return select(
                 new QDepartureResponse_TravelPeriod(
+                        D.id,
                         D.whenDeparture,
                         D.whenReturn))
                 .from(D)

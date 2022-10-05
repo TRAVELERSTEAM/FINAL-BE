@@ -9,14 +9,17 @@ public class DepartureResponse {
 
     @Getter
     public static class TravelPeriod {
+        private final Long departureId;
         private final LocalDate whenDeparture;
         private final LocalDate whenReturn;
 
         @QueryProjection
         public TravelPeriod(
+                final Long departureId,
                 final LocalDate whenDeparture,
                 final LocalDate whenReturn
         ) {
+            this.departureId = departureId;
             this.whenDeparture = whenDeparture;
             this.whenReturn = whenReturn;
         }
