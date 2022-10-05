@@ -28,9 +28,8 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
     public List<DepartureResponse.TravelPeriod> availableReservationListBy(final Long productId) {
         return select(
                 new QDepartureResponse_TravelPeriod(
-                        D.id,
-                        D.whenDeparture,
-                        D.whenReturn))
+                        D.id.as("productId"),
+                        D.when))
                 .from(D)
                 .where(D.product.id.eq(productId)
                         .and(D.status.eq(Departure.Status.OPENED)))
@@ -41,16 +40,16 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
     public Optional<DepartureResponse.ReservationInfo> findForReservation(final Long departureId) {
         return Optional.ofNullable(
                 select(new QDepartureResponse_ReservationInfo(
-                        product.id,
-                        D.id,
-                        product.name,
+                        product.id.as("productId"),
+                        D.id.as("productId"),
+                        product.name.as("productName"),
                         product.period,
                         product.price,
                         D.capacity
                 ))
-                .from(D)
-                .join(D.product, product)
-                .where(D.id.eq(departureId))
-                .fetchOne());
+                        .from(D)
+                        .join(D.product, product)
+                        .where(D.id.eq(departureId))
+                        .fetchOne());
     }
 }
