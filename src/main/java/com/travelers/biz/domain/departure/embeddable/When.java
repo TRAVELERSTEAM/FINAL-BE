@@ -1,4 +1,4 @@
-package com.travelers.biz.domain.departure;
+package com.travelers.biz.domain.departure.embeddable;
 
 import com.travelers.config.converter.LocalDateConverter;
 import lombok.AccessLevel;
