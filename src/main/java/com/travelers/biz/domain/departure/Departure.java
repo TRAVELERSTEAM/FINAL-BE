@@ -5,6 +5,7 @@ import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.base.BaseTime;
 import com.travelers.biz.domain.reservation.Reservation;
 import com.travelers.biz.domain.reservation.embeddable.*;
+import com.travelers.config.converter.LocalDateConverter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,13 @@ public class Departure extends BaseTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "when_departure")
     private LocalDate whenDeparture;
+
+    @Convert(converter = LocalDateConverter.class)
+    @Column(name = "when_return")
+    private LocalDate whenReturn;
 
     @Embedded
     @Column(name = "capacity")
@@ -39,12 +45,11 @@ public class Departure extends BaseTime {
     @JoinColumn(name = "product_id")
     private Product product;
 
-
     private Departure(final Product product, final LocalDate whenDeparture, final Capacity capacity) {
         this.product = product;
         this.whenDeparture = whenDeparture;
+        this.whenReturn = whenDeparture.plusDays(product.getPeriod());
         this.capacity = capacity;
-
     }
 
     public static Departure create(final Product product, final LocalDate whenDeparture, final Capacity capacity) {
