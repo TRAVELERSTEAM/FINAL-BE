@@ -58,8 +58,7 @@ public class AdminNotifyController {
     public ResponseEntity<Void> createNotice(
             @RequestBody final BoardRequest.Write write
     ) {
-        Long memberId = getCurrentMemberId();
-        notifyService.write(memberId, NotifyType.NOTICE, write);
+        notifyService.write(getCurrentMemberId(), NotifyType.NOTICE, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -67,8 +66,7 @@ public class AdminNotifyController {
     public ResponseEntity<Void> createRefLibrary(
             @RequestBody final BoardRequest.Write write
     ) {
-        Long memberId = getCurrentMemberId();
-        notifyService.write(memberId, NotifyType.REFERENCE_LIBRARY, write);
+        notifyService.write(getCurrentMemberId(), NotifyType.REFERENCE_LIBRARY, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
