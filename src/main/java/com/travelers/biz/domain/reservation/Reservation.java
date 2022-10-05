@@ -2,7 +2,7 @@ package com.travelers.biz.domain.reservation;
 
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.departure.Departure;
-import com.travelers.biz.domain.departure.When;
+import com.travelers.biz.domain.departure.embeddable.When;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import lombok.AccessLevel;
 import lombok.Builder;
