@@ -2,10 +2,10 @@ package com.travelers.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.travelers.biz.domain.departure.embeddable.Price;
+import com.travelers.biz.domain.departure.embeddable.When;
 import com.travelers.biz.domain.reservation.embeddable.Capacity;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.Period;
 
 public class DepartureResponse {
@@ -13,18 +13,15 @@ public class DepartureResponse {
     @Getter
     public static class TravelPeriod {
         private final Long departureId;
-        private final LocalDate whenDeparture;
-        private final LocalDate whenReturn;
+        private final When when;
 
         @QueryProjection
         public TravelPeriod(
                 final Long departureId,
-                final LocalDate whenDeparture,
-                final LocalDate whenReturn
+                final When when
         ) {
             this.departureId = departureId;
-            this.whenDeparture = whenDeparture;
-            this.whenReturn = whenReturn;
+            this.when = when;
         }
     }
 
