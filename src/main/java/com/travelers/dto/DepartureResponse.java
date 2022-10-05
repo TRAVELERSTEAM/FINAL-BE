@@ -30,7 +30,8 @@ public class DepartureResponse {
 
     @Getter
     public static class ReservationInfo {
-        private final Long id;
+        private final Long productId;
+        private final Long departureId;
         private final String productName;
         private final Period period;
         private final Price price;
@@ -38,13 +39,15 @@ public class DepartureResponse {
 
         @QueryProjection
         public ReservationInfo(
-                final Long id,
+                final Long productId,
+                final Long departureId,
                 final String productName,
                 final Period period,
                 final Price price,
                 final Capacity capacity
         ) {
-            this.id = id;
+            this.productId = productId;
+            this.departureId = departureId;
             this.productName = productName;
             this.period = period;
             this.price = price;
