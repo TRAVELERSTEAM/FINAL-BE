@@ -13,16 +13,24 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/departure")
+@RequestMapping
 public class DepartureController {
 
     private final DepartureService departureService;
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<List<DepartureResponse.TravelPeriod>> getList(
+    @GetMapping("/{productId}/departure")
+    public ResponseEntity<List<DepartureResponse.TravelPeriod>> showList(
             @PathVariable final Long productId
     ) {
         return ResponseEntity.ok(departureService.availableReservationList(productId));
+    }
+
+    // TODO: 2022-10-06 경로 생각
+    @GetMapping("/{productId}/departure/{departureId}")
+    public ResponseEntity<DepartureResponse.ReservationInfo> showOne(
+            @PathVariable final Long departureId
+    ) {
+        return ResponseEntity.ok(departureService.findDeparture(departureId));
     }
 
 }
