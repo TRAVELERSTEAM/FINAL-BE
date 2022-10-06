@@ -4,15 +4,23 @@ import com.travelers.biz.domain.Member;
 import com.travelers.biz.service.AuthService;
 import com.travelers.biz.service.EmailService;
 import com.travelers.biz.service.MemberService;
-import com.travelers.dto.*;
+import com.travelers.dto.MemberRequestDto;
+import com.travelers.dto.MemberResponseDto;
+import com.travelers.dto.TokenRequestDto;
+import com.travelers.dto.TokenResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -25,9 +33,11 @@ public class AuthController {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping("/register")
-    public ResponseEntity<Objects> register(@RequestBody MemberRequestDto memberRequestDto) {
-        authService.register(memberRequestDto);
+    @PostMapping(path = "/register", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Objects> register(
+            @RequestPart MemberRequestDto memberRequestDto,
+            @RequestPart(value="file", required=true) List<MultipartFile> files) throws IOException {
+        authService.register(memberRequestDto, files);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
