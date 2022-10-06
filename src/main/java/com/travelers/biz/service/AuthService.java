@@ -71,16 +71,21 @@ public class AuthService {
                 .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
 
         String location = "src/main/resources/images/";
-        String normalProfile = "https://pll0123.s3.ap-northeast-2.amazonaws.com/images/96c025fd-47b5-4993-aaa6-7d55de4e4c29.png";
-
-        String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
-        File file = new File(storedLocation);
-        FileCopyUtils.copy(files.get(0).getBytes(), file);
-
-        String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
-
-        if(!files.isEmpty()) addImage(myMember, url);
-        else addImage(myMember, normalProfile);
+        if(files != null && !files.isEmpty()) {
+            String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
+            File file = new File(storedLocation);
+            FileCopyUtils.copy(files.get(0).getBytes(), file);
+            String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
+            addImage(myMember, url);
+        }
+        else {
+            String normalProfile = "normal_profile.png";
+            String storedLocation = FileUtils.getStoredLocation(normalProfile, location);
+            File file = new File(storedLocation);
+            FileCopyUtils.copy(normalProfile.getBytes(), file);
+            String url = s3Uploader.upload(file, normalProfile);
+            addImage(myMember, url);
+        }
 
         memberRepository.save(myMember);
 
