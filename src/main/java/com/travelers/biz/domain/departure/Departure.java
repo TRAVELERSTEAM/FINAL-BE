@@ -55,7 +55,7 @@ public class Departure extends BaseTime {
                 .member(member)
                 .departure(this)
                 .headCount(headCount)
-                .fee(calculateFee(headCount))
+                .payment(calculateFee(headCount))
                 .build();
     }
 

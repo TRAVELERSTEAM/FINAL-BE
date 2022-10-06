@@ -68,6 +68,7 @@ public class Reservation {
 
     public void cancel() {
         this.status = Status.CANCELED;
+        this.departure.plusRemainCapacity(headCount.getHeadCount());
     }
 }
 
