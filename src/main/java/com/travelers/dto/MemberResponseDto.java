@@ -27,6 +27,7 @@ public class MemberResponseDto {
     private String recommendCode;
     private Gender gender;
     private Authority authority;
+    private String profile;
 
     public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(member.getUsername(),
@@ -38,7 +39,9 @@ public class MemberResponseDto {
                 Arrays.asList(member.getTheme().split(",")),
                 member.getRecommendCode(),
                 member.getGender(),
-                member.getAuthority());
+                member.getAuthority(),
+                member.getImages().get(0).getUrl()
+        );
     }
 
     @Getter
