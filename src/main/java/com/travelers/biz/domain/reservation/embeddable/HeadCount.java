@@ -1,6 +1,6 @@
 package com.travelers.biz.domain.reservation.embeddable;
 
-import com.travelers.biz.domain.departure.embeddable.Price;
+import com.travelers.biz.domain.product.embeddable.Price;
 
 import javax.persistence.Embeddable;
 

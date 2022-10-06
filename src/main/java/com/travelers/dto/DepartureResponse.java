@@ -1,7 +1,7 @@
 package com.travelers.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.travelers.biz.domain.departure.embeddable.Price;
+import com.travelers.biz.domain.product.embeddable.Price;
 import com.travelers.biz.domain.departure.embeddable.When;
 import com.travelers.biz.domain.reservation.embeddable.Capacity;
 import lombok.Getter;

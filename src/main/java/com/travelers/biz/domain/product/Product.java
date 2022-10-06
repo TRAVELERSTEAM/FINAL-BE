@@ -1,6 +1,6 @@
 package com.travelers.biz.domain.product;
 
-import com.travelers.biz.domain.departure.embeddable.Price;
+import com.travelers.biz.domain.product.embeddable.Price;
 import com.travelers.config.converter.PeriodConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
