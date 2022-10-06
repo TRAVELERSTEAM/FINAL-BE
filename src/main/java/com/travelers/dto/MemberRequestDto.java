@@ -3,15 +3,14 @@ package com.travelers.dto;
 import com.travelers.annotation.Tel;
 import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,11 +40,11 @@ public class MemberRequestDto {
     @Tel
     private String tel;
 
-    private String groupTrip;
+    private List<String> groupTrip = new ArrayList<>();
 
-    private String area;
+    private List<String> area = new ArrayList<>();
 
-    private String theme;
+    private List<String> theme = new ArrayList<>();
 
     private String recommend;
 
@@ -59,9 +58,9 @@ public class MemberRequestDto {
                 .password(passwordEncoder.encode(password))
                 .tel(tel)
                 .birth(birth)
-                .groupTrip(groupTrip)
-                .area(area)
-                .theme(theme)
+                .groupTrip(String.join(",", groupTrip))
+                .area(String.join(",", area))
+                .theme(String.join(",", theme))
                 .recommend(recommend)
                 .gender(gender)
                 .build();
