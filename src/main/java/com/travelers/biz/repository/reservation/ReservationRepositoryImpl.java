@@ -1,7 +1,5 @@
 package com.travelers.biz.repository.reservation;
 
-import com.travelers.biz.domain.QProduct;
-import com.travelers.biz.domain.departure.QDeparture;
 import com.travelers.biz.domain.reservation.QReservation;
 import com.travelers.biz.repository.notify.config.QuerydslSupports;
 import com.travelers.dto.QReservationResInfo;
@@ -11,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 
-import static com.travelers.biz.domain.QProduct.product;
 import static com.travelers.biz.domain.departure.QDeparture.departure;
+import static com.travelers.biz.domain.product.QProduct.product;
 import static com.travelers.biz.domain.reservation.QReservation.reservation;
 
 public class ReservationRepositoryImpl extends QuerydslSupports implements ReservationRepositoryQuery {

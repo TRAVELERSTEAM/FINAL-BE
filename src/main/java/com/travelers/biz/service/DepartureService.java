@@ -1,7 +1,6 @@
 package com.travelers.biz.service;
 
-import com.travelers.biz.domain.Product;
-import com.travelers.biz.domain.departure.Departure;
+import com.travelers.biz.domain.product.Product;
 import com.travelers.biz.repository.ProductRepository;
 import com.travelers.biz.repository.departure.DepartureRepository;
 import com.travelers.dto.DepartureRequest;

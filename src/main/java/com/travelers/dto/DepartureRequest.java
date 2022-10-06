@@ -1,7 +1,7 @@
 package com.travelers.dto;
 
-import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.departure.Departure;
+import com.travelers.biz.domain.product.Product;
 import com.travelers.biz.domain.reservation.embeddable.Capacity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
 package com.travelers.biz.domain;
 
+import com.travelers.biz.domain.product.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

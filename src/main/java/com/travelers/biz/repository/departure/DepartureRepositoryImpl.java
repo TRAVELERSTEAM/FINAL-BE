@@ -1,6 +1,5 @@
 package com.travelers.biz.repository.departure;
 
-import com.travelers.biz.domain.QProduct;
 import com.travelers.biz.domain.departure.Departure;
 import com.travelers.biz.domain.departure.QDeparture;
 import com.travelers.biz.repository.notify.config.QuerydslSupports;
@@ -13,8 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.travelers.biz.domain.QProduct.product;
 import static com.travelers.biz.domain.departure.QDeparture.departure;
+import static com.travelers.biz.domain.product.QProduct.product;
 
 public class DepartureRepositoryImpl extends QuerydslSupports implements DepartureRepositoryQuery {
 

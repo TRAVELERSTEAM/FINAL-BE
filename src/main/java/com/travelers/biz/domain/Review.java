@@ -2,10 +2,7 @@ package com.travelers.biz.domain;
 
 import com.travelers.biz.domain.base.BaseContent;
 import com.travelers.biz.domain.image.ReviewImage;
-import com.travelers.biz.domain.notify.Notice;
-import com.travelers.exception.ErrorCode;
-import com.travelers.exception.TravelersException;
-import io.lettuce.core.dynamic.annotation.CommandNaming;
+import com.travelers.biz.domain.product.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
