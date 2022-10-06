@@ -34,6 +34,14 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<Void> cancel(
+            @PathVariable final Long reservationId
+    ) {
+        reservationService.cancel(currentMemberId(), reservationId);
+        return ResponseEntity.noContent().build();
+    }
+
     private Long currentMemberId() {
         return SecurityUtil.getCurrentMemberId();
     }
