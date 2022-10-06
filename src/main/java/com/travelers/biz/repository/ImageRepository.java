@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
@@ -17,4 +18,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Query(" select i from QnaImage i where i.qna.id = :qnaId")
     List<Image> findAllByQnaId(@Param("qnaId") final Long qnaId);
+
+    @Query(" select i from MemberImage i where i.member.id = :memberId")
+    Optional<Image> findByMemberId(@Param("memberId") final Long memberId);
 }
