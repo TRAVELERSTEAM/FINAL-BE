@@ -1,38 +1,55 @@
 package com.travelers.biz.service;
 
 
-import com.travelers.exception.TravelersException;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Token;
+import com.travelers.biz.domain.image.Image;
+import com.travelers.biz.domain.image.MemberImage;
+import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.TokenRepository;
+import com.travelers.biz.service.handler.FileUploader;
+import com.travelers.biz.service.handler.S3Uploader;
 import com.travelers.dto.MemberRequestDto;
 import com.travelers.dto.MemberResponseDto;
 import com.travelers.dto.TokenRequestDto;
 import com.travelers.dto.TokenResponseDto;
+import com.travelers.exception.TravelersException;
 import com.travelers.jwt.JwtTokenProvider;
+import com.travelers.util.FileUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import static com.travelers.exception.ErrorCode.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
+    private final FileUploader fileUploader;
     private final EmailService emailService;
+    private final S3Uploader s3Uploader;
 
     @Transactional
-    public MemberResponseDto register(MemberRequestDto memberRequestDto) {
+    public MemberResponseDto register(MemberRequestDto memberRequestDto, List<MultipartFile> files) throws IOException {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new TravelersException(DUPLICATE_ACCOUNT);
         }
@@ -47,6 +64,26 @@ public class AuthService {
 
         Member member = memberRequestDto.toMember(passwordEncoder);
         emailService.deleteKey(memberRequestDto.getKey());
+
+        memberRepository.save(member);
+
+        Member myMember = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
+
+        String location = "src/main/resources/images/";
+        String normalProfile = "https://pll0123.s3.ap-northeast-2.amazonaws.com/images/96c025fd-47b5-4993-aaa6-7d55de4e4c29.png";
+
+        String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
+        File file = new File(storedLocation);
+        FileCopyUtils.copy(files.get(0).getBytes(), file);
+
+        String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
+
+        if(!files.isEmpty()) addImage(myMember, url);
+        else addImage(myMember, normalProfile);
+
+        memberRepository.save(myMember);
+
         return MemberResponseDto.of(memberRepository.save(member));
     }
 
@@ -108,5 +145,28 @@ public class AuthService {
     // 회원 비밀번호 체크(같은지 안같은지)
     public boolean checkPasswordIsSame(String password, String confirmPassword) {
         return password.equals(confirmPassword);
+    }
+
+    // 프로필 이미지 추가
+    private void addImage(final Member member, String url) {
+        new MemberImage(url, member);
+    }
+
+    // 프로필 이미지 업데이트
+    public void update(final Long memberId, String url) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
+        deleteImage(memberId);
+        addImage(member, url);
+    }
+
+    // 프로필 이미지 삭제
+    private void deleteImage(final Long memberId) {
+        final Image image = imageRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new TravelersException(IMAGE_NOT_FOUND));
+
+        final String key = image.getKey();
+        fileUploader.delete(List.of(key));
+        imageRepository.delete(image);
     }
 }
