@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -33,11 +30,11 @@ public class AuthController {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping(path = "/register", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(path = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Objects> register(
-            @RequestPart MemberRequestDto memberRequestDto,
-            @RequestPart(value="file", required=true) List<MultipartFile> files) throws IOException {
-        authService.register(memberRequestDto, files);
+            @RequestPart(value="file", required = false) List<MultipartFile> files,
+            @RequestPart(value="request") MemberRequestDto request) throws IOException {
+        authService.register(request, files);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
