@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ import javax.persistence.*;
 public class Reservation {
 
     public enum Status {
-        STANDBY, CANCEL, COMPLETION, TRAVEL_COMPLETION
+        STANDBY, CANCELED, COMPLETION, TRAVEL_COMPLETION
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +44,7 @@ public class Reservation {
     @Embedded
     private When when;
 
-    private String reservationCode;
+    private String code;
 
     @Builder
     private Reservation(
@@ -51,7 +52,7 @@ public class Reservation {
             final Departure departure,
             final HeadCount headCount,
             final long fee,
-            final String reservationCode
+            final String code
     ) {
         this.member = member;
         this.departure = departure;
@@ -59,11 +60,15 @@ public class Reservation {
         this.fee = fee;
         this.when = departure.getWhen();
         this.status = Status.STANDBY;
-        this.reservationCode = reservationCode;
+        this.code = randomCode();
+    }
+
+    private String randomCode() {
+        return UUID.randomUUID().toString().substring(0, 10);
     }
 
     public void cancel() {
-        this.status = Status.CANCEL;
+        this.status = Status.CANCELED;
     }
 }
 
