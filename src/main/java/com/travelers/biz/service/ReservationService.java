@@ -32,9 +32,10 @@ public class ReservationService {
     ) {
         final Member member = findOrThrow(memberId, memberRepository::findById, ErrorCode.MEMBER_NOT_FOUND);
         final Departure departure = findOrThrow(departureId, departureRepository::findById, ErrorCode.RESOURCE_NOT_FOUND);
-        final Reservation reserve = departure.reserve(member, headCount);
 
-        reservationRepository.save(reserve);
+        reservationRepository.save(
+                departure.reserve(member, headCount)
+        );
     }
 
     @Transactional(readOnly = true)
@@ -43,5 +44,14 @@ public class ReservationService {
             final PagingCorrespondence.Request paging
     ) {
         return reservationRepository.findListByMemberId(memberId, paging.toPageable());
+    }
+
+    @Transactional
+    public void cancel(
+            final Long memberId,
+            final Long reservationId
+    ) {
+        findOrThrow(memberId, reservationId, reservationRepository::findByIdAndMemberId, ErrorCode.RESERVATION_NOT_FOUND)
+                .cancel();
     }
 }
