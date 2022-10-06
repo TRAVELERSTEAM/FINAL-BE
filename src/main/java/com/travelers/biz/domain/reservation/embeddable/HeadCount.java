@@ -1,11 +1,9 @@
 package com.travelers.biz.domain.reservation.embeddable;
 
 import com.travelers.biz.domain.departure.embeddable.Price;
-import lombok.Getter;
 
 import javax.persistence.Embeddable;
 
-@Getter
 @Embeddable
 public class HeadCount {
 
@@ -13,7 +11,7 @@ public class HeadCount {
     private int kid;
     private int infant;
 
-    public int totalHeadCount() {
+    public int getHeadCount() {
         return adult + kid + infant;
     }
 
@@ -22,4 +20,5 @@ public class HeadCount {
                 + kid * price.getKid()
                 + infant * price.getInfant();
     }
+
 }
