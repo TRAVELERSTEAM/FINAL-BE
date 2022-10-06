@@ -1,4 +1,4 @@
-package com.travelers.biz.domain.departure.embeddable;
+package com.travelers.biz.domain.product.embeddable;
 
 import lombok.Getter;
 
