@@ -51,6 +51,12 @@ public class S3Uploader implements FileUploader {
         return getS3Url(fileName);
     }
 
+    public String upload(final File file, String fileName) {
+        putS3(file, () -> amazonS3.putObject(new PutObjectRequest(bucket, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead)));
+
+        return getS3Url(fileName);
+    }
+
     private String getFileName(final File file) {
         return s3Directory + file.getName();
     }
