@@ -21,10 +21,10 @@ public class AdminDepartureController {
         departureService.createDeparture(productId, createReq);
         return ResponseEntity.ok().build();
     }
-    
+
     @DeleteMapping("/{departureId}")
     public ResponseEntity<Void> delete(
-            final Long departureId
+            @PathVariable final Long departureId
     ) {
         departureService.delete(departureId);
         return ResponseEntity.noContent().build();
