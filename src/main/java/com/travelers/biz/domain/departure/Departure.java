@@ -50,7 +50,7 @@ public class Departure extends BaseTime {
     }
 
     public Reservation reserve(final Member member, final HeadCount headCount){
-        minusCapacity(headCount.totalHeadCount());
+        minusCapacity(headCount.getHeadCount());
         return Reservation.builder()
                 .member(member)
                 .departure(this)

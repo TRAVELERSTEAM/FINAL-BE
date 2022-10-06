@@ -11,7 +11,7 @@ public class ReservationResInfo {
 
     private final String code;
     private final String productName;
-    private final String payment;
+    private final Long payment;
     private final HeadCount headCount;
     private final When when;
     private final Reservation.Status status;
@@ -20,7 +20,7 @@ public class ReservationResInfo {
     public ReservationResInfo(
             final String code,
             final String productName,
-            final String payment,
+            final Long payment,
             final HeadCount headCount,
             final When when,
             final Reservation.Status status

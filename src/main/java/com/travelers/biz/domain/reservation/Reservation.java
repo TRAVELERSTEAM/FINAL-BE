@@ -35,8 +35,8 @@ public class Reservation {
     @Embedded
     private HeadCount headCount;
 
-    @Column(name = "fee")
-    private long fee;
+    @Column(name = "payment")
+    private long payment;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -51,13 +51,12 @@ public class Reservation {
             final Member member,
             final Departure departure,
             final HeadCount headCount,
-            final long fee,
-            final String code
+            final long payment
     ) {
         this.member = member;
         this.departure = departure;
         this.headCount = headCount;
-        this.fee = fee;
+        this.payment = payment;
         this.when = departure.getWhen();
         this.status = Status.STANDBY;
         this.code = randomCode();
