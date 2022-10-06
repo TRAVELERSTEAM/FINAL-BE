@@ -1,10 +1,13 @@
 package com.travelers.biz.domain;
 
 import com.travelers.biz.domain.base.BaseTime;
+import com.travelers.biz.domain.image.MemberImage;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Entity
@@ -57,6 +60,9 @@ public class Member extends BaseTime {
     @Column(name = "authority")
     private Authority authority;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private final List<MemberImage> images = new ArrayList<>();
+
     @Builder
     private Member(String username, String password, String email, String tel, String birth, String groupTrip, String area, String theme, Gender gender, String recommend, String recommendCode){
         this.username = username;
@@ -100,4 +106,9 @@ public class Member extends BaseTime {
     public void changePassword(String password, PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);
     }
+
+    public void addImage(final MemberImage image) {
+        images.add(image);
+    }
+
 }
