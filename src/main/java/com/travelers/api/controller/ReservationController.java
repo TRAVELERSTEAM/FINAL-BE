@@ -2,6 +2,8 @@ package com.travelers.api.controller;
 
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.biz.service.ReservationService;
+import com.travelers.dto.ReservationResInfo;
+import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,16 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping
-    public void temp() {
-
+    public ResponseEntity<PagingCorrespondence.Response<ReservationResInfo>> showList(
+            final PagingCorrespondence.Request pagingInfo
+    ) {
+        return ResponseEntity.ok(
+                reservationService.reservationList(currentMemberId(), pagingInfo)
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Void> temp1(
+    public ResponseEntity<Void> create(
             final Long departureId,
             @RequestBody final HeadCount headCount
     ) {
