@@ -18,14 +18,14 @@ public class DepartureController {
 
     private final DepartureService departureService;
 
-    @GetMapping("/{productId}/departure")
+    @GetMapping("/product/{productId}/departure")
     public ResponseEntity<List<DepartureResponse.TravelPeriod>> showList(
             @PathVariable final Long productId
     ) {
         return ResponseEntity.ok(departureService.availableReservationList(productId));
     }
 
-    @GetMapping("/{productId}/departure/{departureId}")
+    @GetMapping("/departure/{departureId}")
     public ResponseEntity<DepartureResponse.ReservationInfo> showOne(
             @PathVariable final Long departureId
     ) {
