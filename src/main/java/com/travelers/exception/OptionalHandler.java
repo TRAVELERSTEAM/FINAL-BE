@@ -7,28 +7,48 @@ import java.util.function.Supplier;
 
 public class OptionalHandler {
 
-    @Deprecated
+    @Deprecated(since = "recommend : Functional 타입을 쓰는 메서드로 변경 권장")
     public static <T> T findMember(Supplier<Optional<T>> supplier) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    @Deprecated
+    @Deprecated(since = "recommend : Functional 타입을 쓰는 메서드로 변경 권장")
     public static <T> T findWithNotfound(Supplier<Optional<T>> supplier) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
-    @Deprecated
+    @Deprecated(since = "recommend : Functional 타입을 쓰는 메서드로 변경 권장")
     public static <T> T findProduct(Supplier<Optional<T>> supplier) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
-    @Deprecated
+    @Deprecated(since = "recommend : Functional 타입을 쓰는 메서드로 변경 권장")
     public static <T> T findReview(Supplier<Optional<T>> supplier) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    public static <T, R> R findMemberOrThrow(T identifier, Function<T, Optional<R>> function) {
+        return findOrThrow(identifier, function, ErrorCode.MEMBER_NOT_FOUND);
+    }
+
+    public static <T, R> R findProductOrThrow(T identifier, Function<T, Optional<R>> function) {
+        return findOrThrow(identifier, function, ErrorCode.PRODUCT_NOT_FOUND);
+    }
+
+    public static <T, R> R findReviewOrThrow(T identifier, Function<T, Optional<R>> function){
+        return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
+    }
+
+    public static <T, R> R findDepartureOrThrow(T identifier, Function<T, Optional<R>> function){
+        return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
+    }
+    
+    public static <T, R> R findNotifyOrThrow(T identifier, Function<T, Optional<R>> function){
+        return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
     }
 
     public static <T, R> R findOrThrow(T identifier, Function<T, Optional<R>> function, ErrorCode errorCode) {
