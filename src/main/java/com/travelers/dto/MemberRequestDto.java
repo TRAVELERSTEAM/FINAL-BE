@@ -69,16 +69,40 @@ public class MemberRequestDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class ChangePassword {
+    public static class ChangeInfo {
 
         @NotNull
+        private String username;
+
+        @NotNull
+        private Gender gender;
+
+        @Email
+        @NotNull
+        private String email;
+
+        @NotNull
+        private String key;
+
+        @NotNull
+        private String birth;
+
+        @NotNull
+        @Tel
+        private String tel;
+
         private String currentPassword;
 
-        @NotNull
         private String changePassword;
 
-        @NotNull
         private String confirmChangePassword;
+
+        private List<String> groupTrip = new ArrayList<>();
+
+        private List<String> area = new ArrayList<>();
+
+        private List<String> theme = new ArrayList<>();
+
     }
 
     @Getter
