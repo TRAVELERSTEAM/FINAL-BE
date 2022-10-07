@@ -1,5 +1,10 @@
 package com.travelers.biz.service;
 
+import com.travelers.biz.domain.image.Image;
+import com.travelers.biz.domain.image.MemberImage;
+import com.travelers.biz.repository.ImageRepository;
+import com.travelers.biz.service.handler.FileUploader;
+import com.travelers.biz.service.handler.S3Uploader;
 import com.travelers.exception.TravelersException;
 import com.travelers.biz.domain.Authority;
 import com.travelers.biz.domain.Gender;
@@ -10,13 +15,18 @@ import com.travelers.biz.repository.TokenRepository;
 import com.travelers.dto.AuthorityResponseDto;
 import com.travelers.dto.MemberRequestDto;
 import com.travelers.dto.MemberResponseDto;
+import com.travelers.util.FileUtils;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +40,10 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
+    private final S3Uploader s3Uploader;
+    private final EmailService emailService;
+    private final ImageRepository imageRepository;
+    private final FileUploader fileUploader;
 
     // 비회원
     // 해당 유저이름과 성별, 생년월일에 해당하는 이메일 리턴
@@ -60,23 +74,57 @@ public class MemberService {
 
     // 회원 정보 수정하기
     @Transactional
-    public void changeMyPassword(MemberRequestDto.ChangePassword changePassword) {
+    public void changeMyInfo(MemberRequestDto.ChangeInfo changeInfo, List<MultipartFile> files) throws IOException {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new TravelersException(ACCESS_TOKEN_NOT_FOUND));
 
-        // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
-        if(!checkPasswordIsSame(changePassword.getChangePassword(), changePassword.getConfirmChangePassword())) {
-            throw new TravelersException(PASSWORD_NOT_MATCHING);
+        if(!emailService.verifyKey(changeInfo.getEmail() ,changeInfo.getKey())) {
+            throw new TravelersException(KEY_NOT_FOUND);
         }
 
-        // 입력받은 비밀번호가 현재 비밀번호와 일치하지 않으면
-        if(!changePassword.getCurrentPassword().isEmpty() &&
-                !passwordEncoder.matches(changePassword.getCurrentPassword(), member.getPassword())) {
-            throw new TravelersException(CURRENT_PASSWORD_NOT_MATCHING);
+        // 비밀번호 입력칸이 비어있지 않고
+        if(!changeInfo.getCurrentPassword().isEmpty()) {
+            // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
+            if(!checkPasswordIsSame(changeInfo.getChangePassword(), changeInfo.getConfirmChangePassword())) {
+                throw new TravelersException(PASSWORD_NOT_MATCHING);
+            }
+
+            // 입력받은 비밀번호가 현재 비밀번호와 일치하지 않으면
+            if(!passwordEncoder.matches(changeInfo.getCurrentPassword(), member.getPassword())) {
+                throw new TravelersException(CURRENT_PASSWORD_NOT_MATCHING);
+            }
+            member.changePassword(changeInfo.getChangePassword(), passwordEncoder);
         }
 
-        member.changePassword(changePassword.getChangePassword(), passwordEncoder);
-        memberRepository.save(member);
+        Member myMember = Member.builder()
+                .username(changeInfo.getUsername())
+                .gender(changeInfo.getGender())
+                .birth(changeInfo.getBirth())
+                .tel(changeInfo.getTel())
+                .email(changeInfo.getEmail())
+                .password(member.getPassword())
+                .groupTrip(String.join(",", changeInfo.getGroupTrip()))
+                .area(String.join(",", changeInfo.getArea()))
+                .theme(String.join(",", changeInfo.getTheme()))
+                .recommend(member.getRecommend())
+                .recommendCode(member.getRecommendCode())
+                .build();
+
+        myMember.setId(member.getId());
+        myMember.setCreatedAt(member.getCreatedAt());
+        myMember.changeAuthority(member.getAuthority());
+
+        String location = "src/main/resources/images/";
+        if(files != null && !files.isEmpty()) {
+            String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
+            File file = new File(storedLocation);
+            FileCopyUtils.copy(files.get(0).getBytes(), file);
+            String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
+            update(myMember.getId(), url);
+        }
+
+        emailService.deleteKey(changeInfo.getKey());
+        memberRepository.save(myMember);
     }
 
     // 회원 탈퇴하기
@@ -139,5 +187,28 @@ public class MemberService {
     public void changePassword(Member member, String password) {
         member.changePassword(password, passwordEncoder);
         memberRepository.save(member);
+    }
+
+    // 프로필 이미지 업데이트
+    public void update(final Long memberId, String url) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
+        deleteImage(memberId);
+        addImage(member, url);
+    }
+
+    // 프로필 이미지 추가
+    private void addImage(final Member member, String url) {
+        new MemberImage(url, member);
+    }
+
+    // 프로필 이미지 삭제
+    private void deleteImage(final Long memberId) {
+        final Image image = imageRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new TravelersException(IMAGE_NOT_FOUND));
+
+        final String key = image.getKey();
+        fileUploader.delete(List.of(key));
+        imageRepository.delete(image);
     }
 }
