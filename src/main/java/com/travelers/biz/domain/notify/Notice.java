@@ -22,6 +22,6 @@ public class Notice extends Notify{
 
     @Override
     protected void init() {
-        super.sequence = ManualIncrement.NOTICE_ID.incrementAndGet();
+        super.sequence = ManualIncrement.NOTICE.incrementAndGet();
     }
 }
