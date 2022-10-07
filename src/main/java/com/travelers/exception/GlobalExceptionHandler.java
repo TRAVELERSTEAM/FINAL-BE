@@ -34,7 +34,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { IllegalStateException.class } )
     public ResponseEntity<String> handlerException() {
-        return ResponseEntity.badRequest().body("잘못된 요청 입니다.");
+        return ResponseEntity
+                .badRequest()
+                .body("잘못된 요청 값 입니다.");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
