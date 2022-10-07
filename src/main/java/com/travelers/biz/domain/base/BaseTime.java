@@ -15,11 +15,9 @@ import java.time.format.DateTimeFormatter;
 public class BaseTime {
 
     @Column(name = "createdAt")
-    @CreatedDate
     private String createdAt;
 
     @Column(name = "modifiedAt")
-    @LastModifiedDate
     private String modifiedAt;
 
     @PrePersist
@@ -36,5 +34,9 @@ public class BaseTime {
 
     protected void init(){
 
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }
