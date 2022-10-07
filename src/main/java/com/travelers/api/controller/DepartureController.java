@@ -25,7 +25,6 @@ public class DepartureController {
         return ResponseEntity.ok(departureService.availableReservationList(productId));
     }
 
-    // TODO: 2022-10-06 경로 생각
     @GetMapping("/{productId}/departure/{departureId}")
     public ResponseEntity<DepartureResponse.ReservationInfo> showOne(
             @PathVariable final Long departureId
