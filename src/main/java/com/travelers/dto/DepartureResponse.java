@@ -30,7 +30,7 @@ public class DepartureResponse {
         private final Long productId;
         private final Long departureId;
         private final String productName;
-        private final Period period;
+        private final int period;
         private final Price price;
         private final Capacity capacity;
 
@@ -46,7 +46,7 @@ public class DepartureResponse {
             this.productId = productId;
             this.departureId = departureId;
             this.productName = productName;
-            this.period = period;
+            this.period = period.getDays();
             this.price = price;
             this.capacity = capacity;
         }
