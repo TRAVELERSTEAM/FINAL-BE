@@ -31,39 +31,39 @@ public class OptionalHandler {
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
-    public static <T, R> R findMemberOrThrow(T identifier, Function<T, Optional<R>> function) {
+    public static <T, R> R findMemberOrThrow(final T identifier, final Function<T, Optional<R>> function) {
         return findOrThrow(identifier, function, ErrorCode.MEMBER_NOT_FOUND);
     }
 
-    public static <T, R> R findProductOrThrow(T identifier, Function<T, Optional<R>> function) {
+    public static <T, R> R findProductOrThrow(final T identifier, final Function<T, Optional<R>> function) {
         return findOrThrow(identifier, function, ErrorCode.PRODUCT_NOT_FOUND);
     }
 
-    public static <T, R> R findDepartureOrThrow(T identifier, Function<T, Optional<R>> function){
+    public static <T, R> R findDepartureOrThrow(final T identifier, final Function<T, Optional<R>> function){
         return findOrResourceNotFound(identifier, function);
     }
 
-    public static <T, R> R findNotifyOrThrow(T identifier, Function<T, Optional<R>> function){
+    public static <T, R> R findNotifyOrThrow(final T identifier, final Function<T, Optional<R>> function){
         return findOrResourceNotFound(identifier, function);
     }
 
-    public static <T, R> R findOrResourceNotFound(T identifier, Function<T, Optional<R>> function){
+    public static <T, R> R findOrResourceNotFound(final T identifier, final Function<T, Optional<R>> function){
         return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
     }
 
-    public static <T, R> R findOrThrow(T identifier, Function<T, Optional<R>> function, ErrorCode errorCode) {
+    public static <T, R> R findOrThrow(final T identifier, final Function<T, Optional<R>> function, final ErrorCode errorCode) {
         return orElseThrow(() -> function.apply(identifier), errorCode);
     }
 
-    public static <T, R> R findOrThrow(final T identifier1, final T identifier2, BiFunction<T, T, Optional<R>> biFunction, ErrorCode errorCode) {
+    public static <T, R> R findOrThrow(final T identifier1, final T identifier2, final BiFunction<T, T, Optional<R>> biFunction, final ErrorCode errorCode) {
         return orElseThrow(() -> biFunction.apply(identifier1, identifier2), errorCode);
     }
 
-    public static <T, U, R> R findBiOrThrow(final T identifier1, final U identifier2, BiFunction<T, U, Optional<R>> biFunction, ErrorCode errorCode) {
+    public static <T, U, R> R findBiOrThrow(final T identifier1, final U identifier2, BiFunction<T, U, Optional<R>> biFunction, final ErrorCode errorCode) {
         return orElseThrow(() -> biFunction.apply(identifier1, identifier2), errorCode);
     }
 
-    private static <R> R orElseThrow(Supplier<Optional<R>> supplier, ErrorCode errorCode) {
+    private static <R> R orElseThrow(final Supplier<Optional<R>> supplier, final ErrorCode errorCode) {
         return supplier.get()
                 .orElseThrow(() -> new TravelersException(errorCode));
     }
