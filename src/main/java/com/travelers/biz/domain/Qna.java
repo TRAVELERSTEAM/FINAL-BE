@@ -33,6 +33,7 @@ public class Qna extends BaseContent {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "reply_cnt")
     private int replyCnt;
 
     @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL)

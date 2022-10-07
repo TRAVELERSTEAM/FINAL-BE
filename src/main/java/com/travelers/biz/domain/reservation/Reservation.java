@@ -22,6 +22,7 @@ public class Reservation {
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reservation_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,11 +40,13 @@ public class Reservation {
     private long payment;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Embedded
     private When when;
 
+    @Column(name = "code")
     private String code;
 
     @Builder

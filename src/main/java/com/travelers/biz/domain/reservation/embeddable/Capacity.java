@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -13,9 +14,13 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Capacity {
 
+    @Column(name = "max_capacity")
     private int maxCapacity;
+    @Column(name = "min_capacity")
     private int minCapacity;
+    @Column(name = "cur_capacity")
     private int curCapacity;
+    @Column(name = "remain_capacity")
     private int remainCapacity;
 
     public Capacity(final int maxCapacity, final int minCapacity) {

@@ -24,6 +24,7 @@ public class Departure extends BaseTime {
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "departure_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +38,7 @@ public class Departure extends BaseTime {
     private When when;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     private Departure(final Product product, final LocalDate whenDeparture, final Capacity capacity) {
