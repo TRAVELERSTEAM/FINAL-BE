@@ -3,7 +3,9 @@ package com.travelers;
 import com.travelers.biz.domain.Authority;
 import com.travelers.biz.domain.Gender;
 import com.travelers.biz.domain.Member;
+import com.travelers.biz.domain.notify.ManualIncrement;
 import com.travelers.biz.repository.MemberRepository;
+import com.travelers.biz.repository.notify.NotifyRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -25,8 +29,11 @@ public class TravelersApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(MemberRepository memberRepository, PasswordEncoder passwordEncoder){
-
+    public CommandLineRunner initData(
+            MemberRepository memberRepository,
+            PasswordEncoder passwordEncoder,
+            NotifyRepository notifyRepository
+    ){
         return (arg) -> {
             if(!memberRepository.existsByEmail(email)) {
                 Member member = Member.builder()
@@ -45,6 +52,11 @@ public class TravelersApplication {
                 member.changeAuthority(Authority.ROLE_ADMIN);
                 memberRepository.save(member);
             }
+
+            notifyRepository.initRefLibrary()
+                    .ifPresent(e -> ManualIncrement.REF_LIBRARY.set(e.getSequence()));
+            notifyRepository.initNotice()
+                    .ifPresent(e -> ManualIncrement.NOTICE.set(e.getSequence()));
         };
     }
 
