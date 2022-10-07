@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/notify")
@@ -56,7 +58,7 @@ public class AdminNotifyController {
 
     @PostMapping("/notice")
     public ResponseEntity<Void> createNotice(
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Write write
     ) {
         notifyService.write(getCurrentMemberId(), NotifyType.NOTICE, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -64,7 +66,7 @@ public class AdminNotifyController {
 
     @PostMapping("/ref_library")
     public ResponseEntity<Void> createRefLibrary(
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Write write
     ) {
         notifyService.write(getCurrentMemberId(), NotifyType.REFERENCE_LIBRARY, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -73,7 +75,7 @@ public class AdminNotifyController {
     @PutMapping("/{notifyId}")
     public ResponseEntity<Void> update(
             @PathVariable final Long notifyId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid BoardRequest.Write write
     ) {
         notifyService.update(notifyId, write);
         return ResponseEntity.noContent().build();

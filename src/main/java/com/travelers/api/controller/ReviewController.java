@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
@@ -39,7 +41,7 @@ public class ReviewController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> create(
             @PathVariable final Long productId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Write write
     ) {
         reviewService.write(currentMemberId(), productId, write);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -52,7 +54,7 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     public ResponseEntity<Void> update(
             @PathVariable final Long reviewId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Write write
     ) {
         reviewService.update(currentMemberId(), reviewId, write);
         return ResponseEntity.noContent().build();
