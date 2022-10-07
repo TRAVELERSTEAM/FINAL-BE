@@ -26,6 +26,8 @@ public class Reply extends BaseTime {
     @JoinColumn(name = "member_id")
     private Member writer;
 
+    @Lob
+    @Column(name = "content")
     private String content;
 
     public Reply(final Member writer, final String content, final Qna qna){

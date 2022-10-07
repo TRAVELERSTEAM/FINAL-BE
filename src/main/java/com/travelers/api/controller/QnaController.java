@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/qna")
@@ -45,7 +47,7 @@ public class QnaController {
     @PutMapping("/{qnaId}")
     public ResponseEntity<Void> update(
             @PathVariable final Long qnaId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Write write
     ) {
         qnaService.update(currentMemberId(), qnaId, write);
         return ResponseEntity.noContent().build();
@@ -62,7 +64,7 @@ public class QnaController {
     @PostMapping("/{qnaId}/reply")
     public ResponseEntity<Void> createReply(
             @PathVariable final Long qnaId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Reply write
     ) {
         qnaService.addReply(currentMemberId(), qnaId, write);
         return ResponseEntity.noContent().build();
@@ -71,7 +73,7 @@ public class QnaController {
     @PutMapping("/reply/{replyId}")
     public ResponseEntity<Void> updateReply(
             @PathVariable final Long replyId,
-            @RequestBody final BoardRequest.Write write
+            @RequestBody @Valid final BoardRequest.Reply write
     ) {
         qnaService.updateReply(replyId, write);
         return ResponseEntity.noContent().build();

@@ -22,13 +22,13 @@ public enum NotifyType {
             final BoardRequest.Write write
     ){
         return createNotify(() -> {
-            Constructor<?> constructor = ReflectionUtils.accessibleConstructor(notifyType.clazz, Member.class, String.class, String.class);
+            final Constructor<?> constructor = ReflectionUtils.accessibleConstructor(notifyType.clazz, Member.class, String.class, String.class);
             ReflectionUtils.makeAccessible(constructor);
             return (Notify) constructor.newInstance(member, write.getTitle(), write.getContent());
         });
     }
 
-    public Notify createNotify(SupplierWithThrowable<Notify> supplier) {
+    public Notify createNotify(final SupplierWithThrowable<Notify> supplier) {
         try {
             return supplier.get();
         } catch (final ReflectiveOperationException e){

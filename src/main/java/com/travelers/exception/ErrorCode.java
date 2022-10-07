@@ -15,6 +15,7 @@ public enum ErrorCode {
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     MISMATCH_ACCESS_TOKEN(BAD_REQUEST, "액세스 토큰의 유저 정보가 일치하지 않습니다"),
     CLIENT_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
+    CANT_RESERVE_TRAVEL(BAD_REQUEST, "남은 수용 인원보다 요청 인원이 많습니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
@@ -33,6 +34,7 @@ public enum ErrorCode {
     KEY_NOT_FOUND(NOT_FOUND, "이메일 인증키가 유효하지 않습니다."),
     RESOURCE_NOT_FOUND(NOT_FOUND, "요청하신 자원을 찾을 수 없습니다."),
     PRODUCT_NOT_FOUND(NOT_FOUND, "해당 상품을 찾을 수 없습니다."),
+    RESERVATION_NOT_FOUND(NOT_FOUND, "예약하신 상품이 없습니다."),
     IMAGE_NOT_FOUND(NOT_FOUND, "이미지를 찾을 수 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */

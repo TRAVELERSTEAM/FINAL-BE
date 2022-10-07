@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-@Getter
+@Entity
 @DiscriminatorValue("ref_library")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefLibrary extends Notify{

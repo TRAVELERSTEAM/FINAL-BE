@@ -1,10 +1,10 @@
 package com.travelers.biz.service;
 
 import com.travelers.biz.domain.Member;
-import com.travelers.biz.domain.Product;
 import com.travelers.biz.domain.Review;
 import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.image.ReviewImage;
+import com.travelers.biz.domain.product.Product;
 import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.ProductRepository;

@@ -2,6 +2,7 @@ package com.travelers.util;
 
 import com.travelers.biz.service.handler.S3Uploader;
 import com.travelers.dto.BoardRequest;
+import com.travelers.dto.Changeable;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.aspectj.lang.JoinPoint;
@@ -21,7 +22,7 @@ public class Aop {
 
     public Aop(final S3Uploader s3Uploader) {
         cashMap = ExpiringMap.builder()
-                .maxSize(1000)
+                .maxSize(15)
                 .expirationPolicy(ExpirationPolicy.CREATED)
                 .expiration(60, TimeUnit.SECONDS)
                 .build();
@@ -52,22 +53,20 @@ public class Aop {
             + "|| execution(* com.travelers.biz.service.ReviewService.update(..))"
             + "|| execution(* com.travelers.biz.service.QnaService.write(..))"
             + "|| execution(* com.travelers.biz.service.QnaService.update(..))")
-    public void beforeReviewSave(final JoinPoint joinPoint) {
-        Long targetId = SecurityUtil.getCurrentMemberId();
+    public void beforeSave(final JoinPoint joinPoint) {
+        final Long memberId = SecurityUtil.getCurrentMemberId();
 
-        if (cashMap.containsKey(targetId)) {
-            transferTo(joinPoint, targetId);
-            cashMap.remove(targetId);
+        if (cashMap.containsKey(memberId)) {
+            transferTo(joinPoint, memberId);
+            cashMap.remove(memberId);
         }
     }
 
     private void transferTo(final JoinPoint joinPoint, final Long targetId) {
-        List.of(joinPoint.getArgs())
-                .forEach(e -> {
-                    if (BoardRequest.Write.class.isAssignableFrom(e.getClass())) {
-                        ((BoardRequest.Write) e).changeUrls(cashMap.get(targetId));
-                    }
-                });
+        for (final Object obj : joinPoint.getArgs()) {
+            if(obj instanceof Changeable)
+                ((Changeable)obj).changeUrls(cashMap.get(targetId));
+        }
     }
 
 }

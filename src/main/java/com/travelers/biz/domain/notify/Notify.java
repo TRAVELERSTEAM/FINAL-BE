@@ -5,6 +5,7 @@ import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.image.NotifyImage;
 import lombok.AccessLevel;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,12 +24,14 @@ public abstract class Notify extends BaseContent {
     @Column(name = "notify_id")
     private Long id;
 
+    @Column(name = "sequence")
     protected Long sequence;
 
     @OneToMany(mappedBy = "notify", cascade = CascadeType.ALL)
     private final List<NotifyImage> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private NotifyType notifyType;
 
     protected Notify(final NotifyType notifyType, final Member writer, final String title, final String content) {
