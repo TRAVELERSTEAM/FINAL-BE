@@ -39,15 +39,15 @@ public class OptionalHandler {
         return findOrThrow(identifier, function, ErrorCode.PRODUCT_NOT_FOUND);
     }
 
-    public static <T, R> R findReviewOrThrow(T identifier, Function<T, Optional<R>> function){
-        return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
+    public static <T, R> R findDepartureOrThrow(T identifier, Function<T, Optional<R>> function){
+        return findOrResourceNotFound(identifier, function);
     }
 
-    public static <T, R> R findDepartureOrThrow(T identifier, Function<T, Optional<R>> function){
-        return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
-    }
-    
     public static <T, R> R findNotifyOrThrow(T identifier, Function<T, Optional<R>> function){
+        return findOrResourceNotFound(identifier, function);
+    }
+
+    public static <T, R> R findOrResourceNotFound(T identifier, Function<T, Optional<R>> function){
         return findOrThrow(identifier, function, ErrorCode.RESOURCE_NOT_FOUND);
     }
 
