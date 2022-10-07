@@ -19,4 +19,5 @@ public class WebConfig implements WebMvcConfigurer {
         registrar.setDateTimeFormatter(DateTimeFormatter.ISO_DATE_TIME);
         registrar.registerFormatters(registry);
     }
+
 }
