@@ -40,7 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> validHandling(final BindingResult br) {
+    public ResponseEntity<ErrorResponse> validHandling(final BindingResult br) {
 
         return ResponseEntity
                 .badRequest()
