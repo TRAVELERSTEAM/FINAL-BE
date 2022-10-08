@@ -16,6 +16,7 @@ public enum ErrorCode {
     MISMATCH_ACCESS_TOKEN(BAD_REQUEST, "액세스 토큰의 유저 정보가 일치하지 않습니다"),
     CLIENT_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
     CANT_RESERVE_TRAVEL(BAD_REQUEST, "남은 수용 인원보다 요청 인원이 많습니다."),
+    CANT_WRITE_REVIEW(BAD_REQUEST, "다녀오신 여행지가 아니거나 이미 작성하신 리뷰 입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
