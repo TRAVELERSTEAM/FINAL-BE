@@ -72,7 +72,7 @@ public class ReviewService {
     private void validate(final Long memberId, final  Long productId) {
         travelPlaceRepository.existsPlace(memberId, productId)
                 .ifPresent(then -> {
-                    throw new TravelersException(ErrorCode.NO_PERMISSIONS);
+                    throw new TravelersException(ErrorCode.CANT_WRITE_REVIEW);
                 });
     }
 
