@@ -82,7 +82,7 @@ public class ReviewService {
             final Long reviewId,
             final BoardRequest.Write write
     ) {
-        final Review review = findReviewById(reviewId, memberId);
+        final Review review = findReviewById(memberId, reviewId);
 
         review.edit(write.getTitle(), write.getContent());
         deleteImages(reviewId);
@@ -90,12 +90,16 @@ public class ReviewService {
     }
 
     private Review findReviewById(
-            final Long reviewId,
-            final Long memberId
+            final Long memberId,
+            final Long reviewId
     ) {
-        Review review = findReview(() -> reviewRepository.findById(reviewId));
+        final Review review = findById(reviewId);
         review.isSameWriter(memberId);
         return review;
+    }
+
+    private Review findById(final Long reviewId) {
+        return findOrResourceNotFound(reviewId, reviewRepository::findById);
     }
 
     private void addImages(
@@ -122,7 +126,7 @@ public class ReviewService {
             final Long memberId,
             final Long reviewId
     ) {
-        Review review = findReview(() -> reviewRepository.findById(reviewId));
+        final Review review = findById(reviewId);
 
         review.isSameWriter(memberId);
 
