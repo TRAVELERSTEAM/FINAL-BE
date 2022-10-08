@@ -60,19 +60,20 @@ public class ReviewService {
     ) {
         validate(memberId, productId);
 
-        final Member member = findMember(() -> memberRepository.findById(memberId));
-        final Product product = findProduct(() -> productRepository.findById(productId));
+        final Member member = findMemberOrThrow(memberId, memberRepository::findById);
+        final Product product = findProductOrThrow(productId, productRepository::findById);
 
-        Review review = Review.create(member, product, write.getTitle(), write.getContent());
+        final Review review = Review.create(member, product, write.getTitle(), write.getContent());
 
         addImages(review, write);
         reviewRepository.save(review);
     }
 
     private void validate(final Long memberId, final  Long productId) {
-        if(travelPlaceRepository.existsPlace(memberId, productId)) {
-            throw new TravelersException(ErrorCode.NO_PERMISSIONS);
-        }
+        travelPlaceRepository.existsPlace(memberId, productId)
+                .ifPresent(then -> {
+                    throw new TravelersException(ErrorCode.NO_PERMISSIONS);
+                });
     }
 
     @Transactional

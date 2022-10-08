@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface TravelPlaceRepository extends JpaRepository<TravelPlace, Long> {
 
-    @Query("select count(tp.id) > 0 from TravelPlace tp where tp.member.id = :memberId and tp.product.id = :productId")
-    boolean existsPlace(@Param("memberId") final Long memberId, @Param("productId") final Long productId);
+    @Query("select tp from TravelPlace tp where tp.member.id = :memberId and tp.product.id = :productId")
+    Optional<TravelPlace> existsPlace(@Param("memberId") final Long memberId, @Param("productId") final Long productId);
 }
