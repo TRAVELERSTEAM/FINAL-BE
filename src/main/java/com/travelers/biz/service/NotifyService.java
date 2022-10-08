@@ -79,7 +79,7 @@ public class NotifyService {
         final Notify notify = findById(notifyId);
 
         notify.edit(write.getTitle(), write.getContent());
-        deleteImages(notifyId);
+        fileUploader.deleteImages(notifyId, imageRepository::findAllByNotifyId);
         addImages(notify, write);
     }
 
@@ -87,7 +87,7 @@ public class NotifyService {
     public void delete(
             final Long notifyId
     ) {
-        deleteImages(notifyId);
+        fileUploader.deleteImages(notifyId, imageRepository::findAllByNotifyId);
 
         notifyRepository.delete(findById(notifyId));
     }
@@ -97,14 +97,4 @@ public class NotifyService {
                 .orElseThrow(() -> new TravelersException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 
-    private void deleteImages(final Long notifyId) {
-        final List<Image> images = imageRepository.findAllByNotifyId(notifyId);
-
-        final List<String> keyList = images.stream()
-                .map(Image::getKey)
-                .collect(Collectors.toList());
-
-        fileUploader.delete(keyList);
-        imageRepository.deleteAll(images);
-    }
 }

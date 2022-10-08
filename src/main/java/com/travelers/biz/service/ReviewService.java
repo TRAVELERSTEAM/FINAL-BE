@@ -85,8 +85,22 @@ public class ReviewService {
         final Review review = findReviewById(memberId, reviewId);
 
         review.edit(write.getTitle(), write.getContent());
-        deleteImages(reviewId);
+        fileUploader.deleteImages(reviewId, imageRepository::findAllByReviewId);
         addImages(review, write);
+    }
+
+    @Transactional
+    public void delete(
+            final Long memberId,
+            final Long reviewId
+    ) {
+        final Review review = findById(reviewId);
+
+        review.isSameWriter(memberId);
+
+        fileUploader.deleteImages(reviewId, imageRepository::findAllByReviewId);
+
+        reviewRepository.delete(review);
     }
 
     private Review findReviewById(
@@ -108,31 +122,6 @@ public class ReviewService {
     ) {
         write.getUrls()
                 .forEach(url -> new ReviewImage(url, review));
-    }
-
-    private void deleteImages(final Long reviewId) {
-        final List<Image> images = imageRepository.findAllByReviewId(reviewId);
-
-        final List<String> keyList = images.stream()
-                .map(Image::getKey)
-                .collect(Collectors.toList());
-
-        fileUploader.delete(keyList);
-        imageRepository.deleteAll(images);
-    }
-
-    @Transactional
-    public void delete(
-            final Long memberId,
-            final Long reviewId
-    ) {
-        final Review review = findById(reviewId);
-
-        review.isSameWriter(memberId);
-
-        deleteImages(reviewId);
-
-        reviewRepository.delete(review);
     }
 
 }

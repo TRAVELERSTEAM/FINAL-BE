@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.travelers.biz.domain.image.Image;
+import com.travelers.biz.repository.ImageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,15 +25,18 @@ public class S3Uploader implements FileUploader {
 
     private final AmazonS3 amazonS3;
     private final FileHandler fileHandler;
+    private final ImageRepository imageRepository;
     private final String bucket;
     private final String s3Directory;
 
     public S3Uploader(final AmazonS3 amazonS3,
                       final FileHandler fileHandler,
+                      final ImageRepository imageRepository,
                       @Value("${cloud.aws.s3.image.bucket}") final String bucket,
                       @Value("${cloud.aws.s3.image.directory}") final String directory) {
         this.amazonS3 = amazonS3;
         this.fileHandler = fileHandler;
+        this.imageRepository = imageRepository;
         this.bucket = bucket;
         this.s3Directory = directory;
     }
@@ -99,5 +105,21 @@ public class S3Uploader implements FileUploader {
         } catch (AmazonS3Exception ignored) {
 
         }
+    }
+
+    @Override
+    public void deleteImages(
+            final Long id,
+            final Function<Long, List<Image>> function
+    ) {
+        final List<Image> images = function.apply(id);
+
+        final List<String> keyList = images
+                .stream()
+                .map(Image::getKey)
+                .collect(Collectors.toList());
+
+        this.delete(keyList);
+        imageRepository.deleteAll(images);
     }
 }

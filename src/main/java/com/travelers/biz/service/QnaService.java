@@ -77,7 +77,7 @@ public class QnaService {
         qna.isSameWriter(memberId);
 
         qna.edit(write.getTitle(), write.getContent());
-        deleteImages(qnaId);
+        fileUploader.deleteImages(qnaId, imageRepository::findAllByQnaId);
         addImages(qna, write);
     }
 
@@ -90,20 +90,9 @@ public class QnaService {
 
         qna.isSameWriter(memberId);
 
-        deleteImages(qnaId);
+        fileUploader.deleteImages(qnaId, imageRepository::findAllByQnaId);
 
         qnaRepository.delete(qna);
-    }
-
-    private void deleteImages(final Long qnaId) {
-        final List<Image> images = imageRepository.findAllByQnaId(qnaId);
-
-        final List<String> keyList = images.stream()
-                .map(Image::getKey)
-                .collect(Collectors.toList());
-
-        fileUploader.delete(keyList);
-        imageRepository.deleteAll(images);
     }
 
     @Transactional
