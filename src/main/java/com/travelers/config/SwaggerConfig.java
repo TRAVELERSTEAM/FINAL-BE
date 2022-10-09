@@ -77,6 +77,7 @@ public class SwaggerConfig {
         Set<String> consumes = new HashSet<>();
         consumes.add("application/json;charset=UTF-8");
         consumes.add("application/x-www-form-urlencoded");
+        consumes.add("multipart/form-data");
         return consumes;
     }
 
