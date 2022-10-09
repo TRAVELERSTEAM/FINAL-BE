@@ -12,7 +12,9 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableSwagger2
@@ -22,6 +24,7 @@ public class SwaggerConfig {
     @Bean
     public Docket TravelerAdminApi(){
         return new Docket(DocumentationType.SWAGGER_2)
+                .consumes(getConsumeContentTypes())
                 .securityContexts(List.of(securityContext()))
                 .securitySchemes(List.of(apiKey()))
                 .groupName("관리자페이지 API")
@@ -41,6 +44,7 @@ public class SwaggerConfig {
     @Bean
     public Docket TravelerUserApi(){
         return new Docket(DocumentationType.SWAGGER_2)
+                .consumes(getConsumeContentTypes())
                 .securityContexts(List.of(securityContext()))
                 .securitySchemes(List.of(apiKey()))
                 .groupName("사용자페이지 API")
@@ -68,6 +72,15 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    private Set<String> getConsumeContentTypes() {
+        Set<String> consumes = new HashSet<>();
+        consumes.add("application/json;charset=UTF-8");
+        consumes.add("application/x-www-form-urlencoded");
+        consumes.add("multipart/form-data");
+        return consumes;
+    }
+
 
     private ApiKey apiKey() {
         return new ApiKey("Bearer +accessToken", "Authorization", "header");
