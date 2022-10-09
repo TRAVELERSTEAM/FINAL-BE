@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.travelers.exception.OptionalHandler.findOrThrow;
-import static com.travelers.exception.OptionalHandler.findWithNotfound;
+import static com.travelers.exception.OptionalHandler.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class DepartureService {
 
     @Transactional(readOnly = true)
     public DepartureResponse.ReservationInfo findDeparture(final Long departureId) {
-        return findWithNotfound(() -> departureRepository.findForReservation(departureId));
+        return findOrResourceNotFound(departureId, departureRepository::findForReservation);
     }
 
     @Transactional

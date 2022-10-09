@@ -3,7 +3,6 @@ package com.travelers.biz.service;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.Qna;
 import com.travelers.biz.domain.Reply;
-import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.image.QnaImage;
 import com.travelers.biz.repository.ImageRepository;
 import com.travelers.biz.repository.MemberRepository;
@@ -13,15 +12,12 @@ import com.travelers.biz.service.handler.FileUploader;
 import com.travelers.dto.BoardRequest;
 import com.travelers.dto.QnaResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
-import com.travelers.exception.OptionalHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.travelers.exception.OptionalHandler.*;
+import static com.travelers.exception.OptionalHandler.findMemberOrThrow;
+import static com.travelers.exception.OptionalHandler.findOrResourceNotFound;
 
 @Service
 @RequiredArgsConstructor

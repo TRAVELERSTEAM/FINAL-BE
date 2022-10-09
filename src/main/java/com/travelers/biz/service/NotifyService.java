@@ -1,7 +1,6 @@
 package com.travelers.biz.service;
 
 import com.travelers.biz.domain.Member;
-import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.image.NotifyImage;
 import com.travelers.biz.domain.notify.Notify;
 import com.travelers.biz.domain.notify.NotifyType;
@@ -17,9 +16,6 @@ import com.travelers.exception.TravelersException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -2,11 +2,10 @@ package com.travelers.biz.service;
 
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.departure.Departure;
-import com.travelers.biz.domain.reservation.Reservation;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.biz.repository.MemberRepository;
-import com.travelers.biz.repository.reservation.ReservationRepository;
 import com.travelers.biz.repository.departure.DepartureRepository;
+import com.travelers.biz.repository.reservation.ReservationRepository;
 import com.travelers.dto.ReservationResInfo;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.exception.ErrorCode;
@@ -14,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.travelers.exception.OptionalHandler.*;
+import static com.travelers.exception.OptionalHandler.findOrThrow;
 
 @Service
 @RequiredArgsConstructor
