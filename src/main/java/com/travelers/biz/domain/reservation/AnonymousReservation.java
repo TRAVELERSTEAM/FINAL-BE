@@ -63,8 +63,14 @@ public class AnonymousReservation {
         this.payment = payment;
         this.when = departure.getWhen();
         this.status = AnonymousReservation.Status.STANDBY;
-        this.code = randomCode();
+        createRandomCode();
     }
+
+    private void createRandomCode() {
+        this.code = randomCode();
+        member.addReservationCode(code);
+    }
+
 
     private String randomCode() {
         return UUID.randomUUID().toString().substring(0, 12);

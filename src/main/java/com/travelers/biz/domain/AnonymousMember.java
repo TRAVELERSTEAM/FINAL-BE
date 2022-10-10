@@ -39,4 +39,8 @@ public class AnonymousMember {
         this.tel = tel;
         this.email = email;
     }
+
+    public void addReservationCode(final String reservationCode) {
+        this.reservationCode = reservationCode;
+    }
 }
