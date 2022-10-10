@@ -1,8 +1,12 @@
 package com.travelers.biz.service;
 
+import com.travelers.biz.domain.AnonymousMember;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.departure.Departure;
+import com.travelers.biz.domain.reservation.AnonymousReservation;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
+import com.travelers.biz.repository.AnonymousMemberRepository;
+import com.travelers.biz.repository.AnonymousReservationRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.departure.DepartureRepository;
 import com.travelers.biz.repository.reservation.ReservationRepository;
@@ -23,6 +27,8 @@ public class ReservationService {
     private final MemberRepository memberRepository;
     private final DepartureRepository departureRepository;
     private final ReservationRepository reservationRepository;
+    private final AnonymousMemberRepository anonymousMemberRepository;
+    private final AnonymousReservationRepository anonymousReservationRepository;
 
     @Transactional
     public void memberCreate(
@@ -41,13 +47,13 @@ public class ReservationService {
     @Transactional
     public void nonMemberCreate(
             final Long departureId,
-            final ReservationRequest.Anonymous reservation
+            final ReservationRequest.NonMember reserveRequest
     ) {
-        final Member anonymousMember = memberRepository.save(reservation.toAnonymousMember());
+        final AnonymousMember anonymousMember = anonymousMemberRepository.save(reserveRequest.toAnonymousMember());
         final Departure departure = findOrThrow(departureId, departureRepository::findById, ErrorCode.RESERVATION_NOT_FOUND);
 
-        reservationRepository.save(
-                departure.reserve(anonymousMember, reservation.getHeadCount())
+        anonymousReservationRepository.save(
+                departure.reserve(anonymousMember, reserveRequest.getHeadCount())
         );
     }
 

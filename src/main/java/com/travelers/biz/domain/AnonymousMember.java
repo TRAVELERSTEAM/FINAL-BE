@@ -1,6 +1,7 @@
 package com.travelers.biz.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +20,23 @@ public class AnonymousMember {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "tel")
+    private String tel;
+
     @Column(name = "email")
     private String email;
 
     @Column(name = "reservation_code")
     private String reservationCode;
+
+    @Builder
+    private AnonymousMember(
+            final String username,
+            final String tel,
+            final String email
+    ) {
+        this.username = username;
+        this.tel = tel;
+        this.email = email;
+    }
 }
