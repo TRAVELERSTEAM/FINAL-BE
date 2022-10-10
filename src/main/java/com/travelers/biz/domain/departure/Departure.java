@@ -52,7 +52,7 @@ public class Departure extends BaseTime {
     }
 
     public Reservation reserve(final Member member, final HeadCount headCount){
-        minusCapacity(headCount.getHeadCount());
+        minusCapacity(headCount.getTotalCount());
         return Reservation.builder()
                 .member(member)
                 .departure(this)
@@ -75,7 +75,4 @@ public class Departure extends BaseTime {
         this.capacity.plusCapacity(touristCnt);
     }
 
-    public int getCapacity(){
-        return this.capacity.getMaxCapacity();
-    }
 }
