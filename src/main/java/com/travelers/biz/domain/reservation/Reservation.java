@@ -66,7 +66,7 @@ public class Reservation {
     }
 
     private String randomCode() {
-        return UUID.randomUUID().toString().substring(0, 10);
+        return UUID.randomUUID().toString().substring(0, 12);
     }
 
     public void cancel() {
