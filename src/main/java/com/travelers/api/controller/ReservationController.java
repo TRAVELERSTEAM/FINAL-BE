@@ -38,7 +38,7 @@ public class ReservationController {
     @PostMapping("/{departureId}/anonymous")
     public ResponseEntity<Void> createNonMember(
             @PathVariable final Long departureId,
-            @RequestBody final ReservationRequest.Anonymous headCount
+            @RequestBody final ReservationRequest.NonMember headCount
     ) {
         reservationService.nonMemberCreate(departureId, headCount);
         return ResponseEntity.ok().build();
