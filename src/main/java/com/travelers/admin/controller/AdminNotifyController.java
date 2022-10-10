@@ -78,7 +78,7 @@ public class AdminNotifyController {
             @RequestBody @Valid BoardRequest.Write write
     ) {
         notifyService.update(notifyId, write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{notifyId}")
@@ -86,7 +86,7 @@ public class AdminNotifyController {
             @PathVariable final Long notifyId
     ) {
         notifyService.delete(notifyId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private static Long getCurrentMemberId() {

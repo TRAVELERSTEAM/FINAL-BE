@@ -25,13 +25,13 @@ public class ReservationController {
         );
     }
 
-    @PostMapping
+    @PostMapping("/{departureId}")
     public ResponseEntity<Void> create(
-            final Long departureId,
+            @PathVariable final Long departureId,
             @RequestBody final HeadCount headCount
     ) {
         reservationService.create(currentMemberId(), departureId, headCount);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{reservationId}")
@@ -39,7 +39,7 @@ public class ReservationController {
             @PathVariable final Long reservationId
     ) {
         reservationService.cancel(currentMemberId(), reservationId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private Long currentMemberId() {

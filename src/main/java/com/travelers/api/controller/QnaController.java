@@ -41,7 +41,7 @@ public class QnaController {
             @RequestBody BoardRequest.Write write
     ) {
         qnaService.write(currentMemberId(), write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{qnaId}")
@@ -50,7 +50,7 @@ public class QnaController {
             @RequestBody @Valid final BoardRequest.Write write
     ) {
         qnaService.update(currentMemberId(), qnaId, write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{qnaId}")
@@ -58,7 +58,7 @@ public class QnaController {
             @PathVariable final Long qnaId
     ) {
         qnaService.delete(currentMemberId(), qnaId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{qnaId}/reply")
@@ -67,7 +67,7 @@ public class QnaController {
             @RequestBody @Valid final BoardRequest.Reply write
     ) {
         qnaService.addReply(currentMemberId(), qnaId, write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/reply/{replyId}")
@@ -76,7 +76,7 @@ public class QnaController {
             @RequestBody @Valid final BoardRequest.Reply write
     ) {
         qnaService.updateReply(replyId, write);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reply/{replyId}")
@@ -84,7 +84,7 @@ public class QnaController {
             @PathVariable final Long replyId
     ) {
         qnaService.removeReply(replyId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private static Long getCurrentMemberId() {

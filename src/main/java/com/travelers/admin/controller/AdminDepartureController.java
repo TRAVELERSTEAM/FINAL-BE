@@ -27,6 +27,6 @@ public class AdminDepartureController {
             @PathVariable final Long departureId
     ) {
         departureService.delete(departureId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
