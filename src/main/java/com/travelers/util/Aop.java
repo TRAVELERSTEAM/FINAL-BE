@@ -1,7 +1,6 @@
 package com.travelers.util;
 
 import com.travelers.biz.service.handler.S3Uploader;
-import com.travelers.dto.BoardRequest;
 import com.travelers.dto.Changeable;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
@@ -27,9 +26,9 @@ public class Aop {
                 .expiration(60, TimeUnit.SECONDS)
                 .build();
 
-        cashMap.addExpirationListener((k, v) -> {
-            s3Uploader.delete(extractFromFolder(v));
-        });
+        cashMap.addExpirationListener(
+                (k, v) -> s3Uploader.delete(extractFromFolder(v))
+        );
     }
 
     public void temporaryStorage(final Long memberId, final List<String> s3Url) {
