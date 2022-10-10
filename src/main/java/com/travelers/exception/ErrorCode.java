@@ -17,6 +17,7 @@ public enum ErrorCode {
     CLIENT_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
     CANT_RESERVE_TRAVEL(BAD_REQUEST, "남은 수용 인원보다 요청 인원이 많습니다."),
     CANT_WRITE_REVIEW(BAD_REQUEST, "다녀오신 여행지가 아니거나 이미 작성하신 리뷰 입니다."),
+    HEAD_COUNT_MUST_GRATER_THEN_ZERO(BAD_REQUEST, "예약 인원 합이 0보다 커야합니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
