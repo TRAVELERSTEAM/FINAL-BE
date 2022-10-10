@@ -6,6 +6,7 @@ import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.departure.DepartureRepository;
 import com.travelers.biz.repository.reservation.ReservationRepository;
+import com.travelers.dto.ReservationRequest;
 import com.travelers.dto.ReservationResInfo;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.exception.ErrorCode;
@@ -24,7 +25,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public void create(
+    public void memberCreate(
             final Long memberId,
             final Long departureId,
             final HeadCount headCount
@@ -34,6 +35,19 @@ public class ReservationService {
 
         reservationRepository.save(
                 departure.reserve(member, headCount)
+        );
+    }
+
+    @Transactional
+    public void nonMemberCreate(
+            final Long departureId,
+            final ReservationRequest.Anonymous reservation
+    ) {
+        final Member anonymousMember = memberRepository.save(reservation.toAnonymousMember());
+        final Departure departure = findOrThrow(departureId, departureRepository::findById, ErrorCode.RESERVATION_NOT_FOUND);
+
+        reservationRepository.save(
+                departure.reserve(anonymousMember, reservation.getHeadCount())
         );
     }
 
