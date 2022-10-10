@@ -40,7 +40,7 @@ public class MemberResponseDto {
                 member.getRecommendCode(),
                 member.getGender(),
                 member.getAuthority(),
-                member.getImages().get(0).getUrl()
+                (member.getImages().size()) == 0 ? "" : (member.getImages().get(0).getUrl())
         );
     }
 
