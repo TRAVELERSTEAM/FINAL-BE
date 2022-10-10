@@ -1,12 +1,14 @@
 package com.travelers.biz.domain.reservation.embeddable;
 
 import com.travelers.biz.domain.product.embeddable.Price;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.PositiveOrZero;
 
 @Embeddable
+@NoArgsConstructor
 public class HeadCount {
 
     @PositiveOrZero
