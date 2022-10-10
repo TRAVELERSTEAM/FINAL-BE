@@ -2,7 +2,6 @@ package com.travelers.biz.domain;
 
 import com.travelers.biz.domain.base.BaseContent;
 import com.travelers.biz.domain.image.QnaImage;
-import com.travelers.biz.domain.image.ReviewImage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,11 +1,9 @@
 package com.travelers.biz.domain.notify;
 
 import com.travelers.biz.domain.base.BaseContent;
-import com.travelers.biz.domain.image.Image;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.image.NotifyImage;
 import lombok.AccessLevel;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

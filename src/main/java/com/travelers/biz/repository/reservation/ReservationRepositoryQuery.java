@@ -1,7 +1,6 @@
 package com.travelers.biz.repository.reservation;
 
 import com.travelers.dto.ReservationResInfo;
-import com.travelers.dto.ReviewResponse;
 import com.travelers.dto.paging.PagingCorrespondence;
 import org.springframework.data.domain.Pageable;
 

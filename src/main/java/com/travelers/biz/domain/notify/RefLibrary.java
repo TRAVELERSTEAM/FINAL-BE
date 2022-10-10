@@ -2,7 +2,6 @@ package com.travelers.biz.domain.notify;
 
 import com.travelers.biz.domain.Member;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;

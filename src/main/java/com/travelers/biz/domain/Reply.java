@@ -1,6 +1,5 @@
 package com.travelers.biz.domain;
 
-import com.travelers.biz.domain.base.BaseContent;
 import com.travelers.biz.domain.base.BaseTime;
 import lombok.AccessLevel;
 import lombok.Getter;

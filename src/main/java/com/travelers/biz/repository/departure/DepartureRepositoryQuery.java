@@ -2,7 +2,6 @@ package com.travelers.biz.repository.departure;
 
 import com.travelers.dto.DepartureResponse;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
