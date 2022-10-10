@@ -19,6 +19,7 @@ import com.travelers.jwt.JwtTokenProvider;
 import com.travelers.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -70,7 +71,7 @@ public class AuthService {
         Member myMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
 
-        String location = "src/main/resources/images/";
+        String location = "images/";
         if(files != null && !files.isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
