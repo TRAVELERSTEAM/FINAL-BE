@@ -2,6 +2,7 @@ package com.travelers.api.controller;
 
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.biz.service.ReservationService;
+import com.travelers.dto.ReservationRequest;
 import com.travelers.dto.ReservationResInfo;
 import com.travelers.dto.paging.PagingCorrespondence;
 import com.travelers.util.SecurityUtil;
@@ -30,7 +31,16 @@ public class ReservationController {
             @PathVariable final Long departureId,
             @RequestBody final HeadCount headCount
     ) {
-        reservationService.create(currentMemberId(), departureId, headCount);
+        reservationService.memberCreate(currentMemberId(), departureId, headCount);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{departureId}/anonymous")
+    public ResponseEntity<Void> createNonMember(
+            @PathVariable final Long departureId,
+            @RequestBody final ReservationRequest.Anonymous headCount
+    ) {
+        reservationService.nonMemberCreate(departureId, headCount);
         return ResponseEntity.ok().build();
     }
 
