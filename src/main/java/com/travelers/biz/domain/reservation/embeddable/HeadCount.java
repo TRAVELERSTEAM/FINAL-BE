@@ -4,14 +4,20 @@ import com.travelers.biz.domain.product.embeddable.Price;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.PositiveOrZero;
 
 @Embeddable
 public class HeadCount {
 
+    @PositiveOrZero
     @Column(name = "adult")
     private int adult;
+
+    @PositiveOrZero
     @Column(name = "kid")
     private int kid;
+
+    @PositiveOrZero
     @Column(name = "infant")
     private int infant;
 
