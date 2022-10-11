@@ -31,11 +31,10 @@ public class AuthController {
 
     // 회원가입
     @PostMapping(path = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<Objects> register(
+    public ResponseEntity<MemberResponseDto> register(
             @RequestPart(value="file", required = false) List<MultipartFile> files,
             @RequestPart(value="request") MemberRequestDto request) throws IOException {
-        authService.register(request, files);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.register(request, files), HttpStatus.CREATED);
     }
 
     // 로그인
