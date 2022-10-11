@@ -31,4 +31,11 @@ public class AnonymousReservationController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{reservationCode}")
+    public ResponseEntity<Void> cancel (
+            @PathVariable final String reservationCode
+    ) {
+        reservationService.cancel(reservationCode);
+        return ResponseEntity.ok().build();
+    }
 }

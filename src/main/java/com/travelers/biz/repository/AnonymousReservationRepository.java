@@ -16,5 +16,7 @@ public interface AnonymousReservationRepository extends JpaRepository<AnonymousR
             " join ar.departure d " +
             " join d.product p " +
             " where ar.code = :reservationCode")
-    Optional<AnonymousReservationResInfo> findByCode(@Param("reservationCode") final String reservationCode);
+    Optional<AnonymousReservationResInfo> findDtoByCode(@Param("reservationCode") final String reservationCode);
+
+    Optional<AnonymousReservation> findByCode(final String reservationCode);
 }

@@ -3,7 +3,6 @@ package com.travelers.biz.service;
 import com.travelers.biz.domain.AnonymousMember;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.departure.Departure;
-import com.travelers.biz.domain.reservation.AnonymousReservation;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
 import com.travelers.biz.repository.AnonymousMemberRepository;
 import com.travelers.biz.repository.AnonymousReservationRepository;
@@ -80,6 +79,14 @@ public class ReservationService {
     public AnonymousReservationResInfo findAnonymousReservation(
             final String reservationCode
     ) {
-        return findOrResourceNotFound(reservationCode, anonymousReservationRepository::findByCode);
+        return findOrResourceNotFound(reservationCode, anonymousReservationRepository::findDtoByCode);
+    }
+
+    @Transactional
+    public void cancel(
+            final String reservationCode
+    ) {
+        findOrThrow(reservationCode, anonymousReservationRepository::findByCode, ErrorCode.RESOURCE_NOT_FOUND)
+                .cancel();
     }
 }
