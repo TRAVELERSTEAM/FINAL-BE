@@ -88,9 +88,7 @@ public class AuthService {
             addImage(myMember, url);
         }
 
-        memberRepository.save(myMember);
-
-        return MemberResponseDto.of(memberRepository.save(member));
+        return MemberResponseDto.of(memberRepository.save(myMember));
     }
 
     @Transactional
