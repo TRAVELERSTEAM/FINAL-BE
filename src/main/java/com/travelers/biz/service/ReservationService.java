@@ -10,6 +10,7 @@ import com.travelers.biz.repository.AnonymousReservationRepository;
 import com.travelers.biz.repository.MemberRepository;
 import com.travelers.biz.repository.departure.DepartureRepository;
 import com.travelers.biz.repository.reservation.ReservationRepository;
+import com.travelers.dto.AnonymousReservationResInfo;
 import com.travelers.dto.ReservationRequest;
 import com.travelers.dto.ReservationResInfo;
 import com.travelers.dto.paging.PagingCorrespondence;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.travelers.exception.OptionalHandler.findOrResourceNotFound;
 import static com.travelers.exception.OptionalHandler.findOrThrow;
 
 @Service
@@ -72,5 +74,12 @@ public class ReservationService {
     ) {
         findOrThrow(memberId, reservationId, reservationRepository::findByIdAndMemberId, ErrorCode.RESERVATION_NOT_FOUND)
                 .cancel();
+    }
+
+    @Transactional(readOnly = true)
+    public AnonymousReservationResInfo findAnonymousReservation(
+            final String reservationCode
+    ) {
+        return findOrResourceNotFound(reservationCode, anonymousReservationRepository::findByCode);
     }
 }
