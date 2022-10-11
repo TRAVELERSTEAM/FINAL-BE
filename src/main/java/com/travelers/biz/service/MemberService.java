@@ -19,6 +19,7 @@ import com.travelers.util.FileUtils;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ import static com.travelers.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
+    @Value("${spring.file.directory}")
+    private String location;
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
@@ -114,7 +118,6 @@ public class MemberService {
         myMember.setCreatedAt(member.getCreatedAt());
         myMember.changeAuthority(member.getAuthority());
 
-        String location = "src/main/resources/images/";
         if(files != null && !files.isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
