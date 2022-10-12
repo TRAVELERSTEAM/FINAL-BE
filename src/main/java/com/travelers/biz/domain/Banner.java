@@ -1,33 +1,36 @@
 package com.travelers.biz.domain;
 
+import com.travelers.biz.domain.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
 
-/**
- * @author kei
- * @since 2022-09-23
- */
 @Entity
 @Getter
-@Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "banner")
 public class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "banner_id")
     private Long id;
+    @Column(name = "hashtag")
     private String hashtag;
+    @Column(name = "title")
     private String title;
-    private String image;
-    private Long productId;
+    @Column(name = "subImage")
+    private String subImage;
+
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Builder
-    public Banner(Long id, String hashtag, String title, String image, Long productId) {
+    public Banner(Long id, String hashtag, String title, String subImage, Product product) {
         this.id = id;
         this.hashtag = hashtag;
         this.title = title;
-        this.image = image;
-        this.productId = productId;
+        this.subImage = subImage;
+        this.product = product;
     }
 }
