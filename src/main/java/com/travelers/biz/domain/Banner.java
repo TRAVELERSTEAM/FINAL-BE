@@ -18,19 +18,22 @@ public class Banner {
     private String hashtag;
     @Column(name = "title")
     private String title;
-    @Column(name = "subImage")
-    private String subImage;
+    @Column(name = "image")
+    private String image;
 
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Builder
-    public Banner(Long id, String hashtag, String title, String subImage, Product product) {
+    public Banner(Long id, String hashtag, String title, String image) {
         this.id = id;
         this.hashtag = hashtag;
         this.title = title;
-        this.subImage = subImage;
+        this.image = image;
+    }
+
+    public void setProduct(Product product) {
         this.product = product;
     }
 }
