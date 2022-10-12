@@ -36,6 +36,7 @@ public enum ErrorCode {
     KEY_NOT_FOUND(NOT_FOUND, "이메일 인증키가 유효하지 않습니다."),
     RESOURCE_NOT_FOUND(NOT_FOUND, "요청하신 자원을 찾을 수 없습니다."),
     PRODUCT_NOT_FOUND(NOT_FOUND, "해당 상품을 찾을 수 없습니다."),
+    BANNER_NOT_FOUND(NOT_FOUND, "배너를 찾을 수 없습니다"),
     RESERVATION_NOT_FOUND(NOT_FOUND, "예약하신 상품이 없습니다."),
     IMAGE_NOT_FOUND(NOT_FOUND, "이미지를 찾을 수 없습니다."),
 

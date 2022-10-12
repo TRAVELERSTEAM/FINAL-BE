@@ -4,70 +4,61 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.travelers.biz.domain.Banner;
 import com.travelers.biz.repository.BannerRepository;
-import com.travelers.dto.BannerDto;
+import com.travelers.biz.repository.ProductRepository;
+import com.travelers.dto.BannerRequestDto;
+import com.travelers.dto.BannerResponseDto;
+import com.travelers.exception.TravelersException;
 import com.travelers.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * @author kei
- * @since 2022-09-06
- */
+import static com.travelers.exception.ErrorCode.BANNER_NOT_FOUND;
+import static com.travelers.exception.ErrorCode.PRODUCT_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BannerService {
+    private final ProductRepository productRepository;
     private final BannerRepository bannerRepository;
 
-    public void registAll(List<BannerDto> bannerDtoList) {
-        List<Banner> bannerList = new ArrayList<>();
-        for(BannerDto bannerDto: bannerDtoList) {
-            Banner banner = Banner.builder()
-                    .hashtag(bannerDto.getHashtag())
-                    .title(bannerDto.getTitle())
-                    .image(bannerDto.getImage())
-                    .productId(bannerDto.getProductId())
-                    .build();
-            bannerList.add(banner);
-        }
-        bannerRepository.saveAll(bannerList);
-    }
-
+    // 배너 넣기
+    @Transactional
     public void loadData() throws IOException {
-        List<BannerDto> bannerDtoList = new ArrayList<>();
         JsonArray jsonBanner = JsonUtil.getJson("json/banner.json");
         for (int i = 0; i < jsonBanner.size(); i++) {
             JsonObject jsonObject = (JsonObject) jsonBanner.get(i);
-            BannerDto bannerDto = BannerDto.builder()
+            BannerRequestDto bannerRequestDto = BannerRequestDto.builder()
                     .hashtag(jsonObject.get("hashtag").getAsString())
                     .title(jsonObject.get("title").getAsString())
                     .image(jsonObject.get("image").getAsString())
                     .productId(jsonObject.get("productId").getAsLong())
                     .build();
-            bannerDtoList.add(bannerDto);
+            Banner banner = bannerRequestDto.toBanner();
+            banner.setProduct(productRepository.findById(bannerRequestDto.getProductId())
+                    .orElseThrow(() -> new TravelersException(PRODUCT_NOT_FOUND)));
+            bannerRepository.save(banner);
         }
-        registAll(bannerDtoList);
     }
 
-    public List<Banner> getBannerList() {
-        return bannerRepository.findAll();
+    // 배너 전체 목록 조회
+    @Transactional(readOnly = true)
+    public List<BannerResponseDto> findAllBanner() {
+        return bannerRepository.findAll()
+                .stream().map(BannerResponseDto::of)
+                .collect(Collectors.toList());
     }
 
-    public void modifyBanner(Long id, BannerDto bannerDto) {
-        bannerRepository.findById(id).ifPresent(banner -> {
-            banner.setHashtag(bannerDto.getHashtag());
-            banner.setTitle(bannerDto.getTitle());
-            banner.setImage(bannerDto.getImage());
-            banner.setProductId(bannerDto.getProductId());
-        });
+    // 배너 목록 조회
+    @Transactional(readOnly = true)
+    public BannerResponseDto findBanner(Long bannerId) {
+        Banner banner =  bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new TravelersException(BANNER_NOT_FOUND));
+        return BannerResponseDto.of(banner);
     }
 
-    public void deleteBanner(Long id) {
-        bannerRepository.deleteById(id);
-    }
 }
