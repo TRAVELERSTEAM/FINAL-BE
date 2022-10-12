@@ -118,7 +118,7 @@ public class MemberService {
         myMember.setCreatedAt(member.getCreatedAt());
         myMember.changeAuthority(member.getAuthority());
 
-        if(files != null && !files.isEmpty()) {
+        if(files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
