@@ -19,6 +19,7 @@ import com.travelers.jwt.JwtTokenProvider;
 import com.travelers.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,13 @@ import static com.travelers.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+    @Value("${spring.file.directory}")
+    private String location;
+
+    @Value("${profileImage}")
+    private String url;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final ImageRepository imageRepository;
@@ -45,6 +53,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
     private final FileUploader fileUploader;
+    private final MemberService memberService;
     private final EmailService emailService;
     private final S3Uploader s3Uploader;
 
@@ -69,27 +78,18 @@ public class AuthService {
 
         Member myMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
-
-        String location = "src/main/resources/images/";
-        if(files != null && !files.isEmpty()) {
+        if(files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
-            String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
-            addImage(myMember, url);
+            String s3url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
+            addImage(myMember, s3url);
         }
         else {
-            String normalProfile = "normal_profile.png";
-            String storedLocation = FileUtils.getStoredLocation(normalProfile, location);
-            File file = new File(storedLocation);
-            FileCopyUtils.copy(normalProfile.getBytes(), file);
-            String url = s3Uploader.upload(file, normalProfile);
             addImage(myMember, url);
         }
 
-        memberRepository.save(myMember);
-
-        return MemberResponseDto.of(memberRepository.save(member));
+        return MemberResponseDto.of(memberRepository.save(myMember));
     }
 
     @Transactional
@@ -145,6 +145,23 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    @Transactional
+    public void findPassword(MemberRequestDto.FindPassword findPassword) {
+        Member member = memberRepository.findByUsernameAndBirthAndGenderAndTelAndEmail(
+                findPassword.getUsername(),
+                findPassword.getBirth(),
+                findPassword.getGender(),
+                findPassword.getTel(),
+                findPassword.getEmail()
+        ).orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
+
+        if(!emailService.verifyKey(findPassword.getEmail(), findPassword.getKey())){
+            throw new TravelersException(KEY_NOT_FOUND);
+        }
+        String tempPassword = emailService.joinResetPassword(findPassword.getEmail());
+        memberService.changePassword(member, tempPassword);
     }
 
     // 회원 비밀번호 체크(같은지 안같은지)

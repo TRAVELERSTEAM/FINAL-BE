@@ -25,17 +25,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final EmailService emailService;
     private final AuthService authService;
     private final MemberService memberService;
 
     // 회원가입
     @PostMapping(path = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<Objects> register(
+    public ResponseEntity<MemberResponseDto> register(
             @RequestPart(value="file", required = false) List<MultipartFile> files,
             @RequestPart(value="request") MemberRequestDto request) throws IOException {
-        authService.register(request, files);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.register(request, files), HttpStatus.CREATED);
     }
 
     // 로그인
@@ -56,17 +54,10 @@ public class AuthController {
         return new ResponseEntity<>(memberService.getMemberEmailInfo(findEmail.getUsername(), findEmail.getBirth(), findEmail.getGender()), HttpStatus.OK);
     }
 
-    // 비밀번호 찾기 이메일 임시비밀번호 발송
+    // 비밀번호 찾기 이메일 인증 후 임시비밀번호 발송
     @PostMapping("/find_password")
     public ResponseEntity<Objects> findPassword(@RequestBody MemberRequestDto.FindPassword findPassword) {
-        Member member = memberService.getMemberInfo(findPassword.getUsername(),
-                findPassword.getBirth(),
-                findPassword.getGender(),
-                findPassword.getTel(),
-                findPassword.getEmail());
-
-        String tempPassword = emailService.joinResetPassword(findPassword.getEmail());
-        memberService.changePassword(member, tempPassword);
+        authService.findPassword(findPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

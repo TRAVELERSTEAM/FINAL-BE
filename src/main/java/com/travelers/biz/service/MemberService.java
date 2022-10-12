@@ -19,6 +19,7 @@ import com.travelers.util.FileUtils;
 import com.travelers.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ import static com.travelers.exception.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
+    @Value("${spring.file.directory}")
+    private String location;
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
@@ -78,10 +82,6 @@ public class MemberService {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new TravelersException(ACCESS_TOKEN_NOT_FOUND));
 
-        if(!emailService.verifyKey(changeInfo.getEmail() ,changeInfo.getKey())) {
-            throw new TravelersException(KEY_NOT_FOUND);
-        }
-
         // 비밀번호 입력칸이 비어있지 않고
         if(!changeInfo.getCurrentPassword().isEmpty()) {
             // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
@@ -114,16 +114,13 @@ public class MemberService {
         myMember.setCreatedAt(member.getCreatedAt());
         myMember.changeAuthority(member.getAuthority());
 
-        String location = "src/main/resources/images/";
-        if(files != null && !files.isEmpty()) {
+        if(files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
             String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
             update(myMember.getId(), url);
         }
-
-        emailService.deleteKey(changeInfo.getKey());
         memberRepository.save(myMember);
     }
 
