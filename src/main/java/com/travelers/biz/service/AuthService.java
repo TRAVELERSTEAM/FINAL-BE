@@ -43,6 +43,9 @@ public class AuthService {
     @Value("${spring.file.directory}")
     private String location;
 
+    @Value("${profileImage}")
+    private String url;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final ImageRepository imageRepository;
@@ -74,20 +77,14 @@ public class AuthService {
 
         Member myMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
-
-        if(files != null && !files.isEmpty()) {
+        if(!files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
-            String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
-            addImage(myMember, url);
+            String s3url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
+            addImage(myMember, s3url);
         }
         else {
-            String normalProfile = "normal_profile.png";
-            String storedLocation = FileUtils.getStoredLocation(normalProfile, location);
-            File file = new File(storedLocation);
-            FileCopyUtils.copy(normalProfile.getBytes(), file);
-            String url = s3Uploader.upload(file, normalProfile);
             addImage(myMember, url);
         }
 
