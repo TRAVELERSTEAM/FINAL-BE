@@ -53,6 +53,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
     private final FileUploader fileUploader;
+    private final MemberService memberService;
     private final EmailService emailService;
     private final S3Uploader s3Uploader;
 
@@ -144,6 +145,23 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    @Transactional
+    public void findPassword(MemberRequestDto.FindPassword findPassword) {
+        Member member = memberRepository.findByUsernameAndBirthAndGenderAndTelAndEmail(
+                findPassword.getUsername(),
+                findPassword.getBirth(),
+                findPassword.getGender(),
+                findPassword.getTel(),
+                findPassword.getEmail()
+        ).orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
+
+        if(!emailService.verifyKey(findPassword.getEmail(), findPassword.getKey())){
+            throw new TravelersException(KEY_NOT_FOUND);
+        }
+        String tempPassword = emailService.joinResetPassword(findPassword.getEmail());
+        memberService.changePassword(member, tempPassword);
     }
 
     // 회원 비밀번호 체크(같은지 안같은지)
