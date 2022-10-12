@@ -141,6 +141,9 @@ public class MemberRequestDto {
         @NotNull
         private String email;
 
+        @NotNull
+        private String key;
+
         public Member toMember(Member member, PasswordEncoder passwordEncoder, String password) {
             return Member.builder()
                     .username(member.getUsername())
