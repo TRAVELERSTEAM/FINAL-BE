@@ -14,59 +14,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author kei
- * @since 2022-09-06
- */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BannerService {
     private final BannerRepository bannerRepository;
 
+    @Transactional
     public void registAll(List<BannerDto> bannerDtoList) {
-        List<Banner> bannerList = new ArrayList<>();
-        for(BannerDto bannerDto: bannerDtoList) {
-            Banner banner = Banner.builder()
-                    .hashtag(bannerDto.getHashtag())
-                    .title(bannerDto.getTitle())
-                    .image(bannerDto.getImage())
-                    .productId(bannerDto.getProductId())
-                    .build();
-            bannerList.add(banner);
-        }
-        bannerRepository.saveAll(bannerList);
     }
 
+    @Transactional(readOnly = true)
     public void loadData() throws IOException {
         List<BannerDto> bannerDtoList = new ArrayList<>();
         JsonArray jsonBanner = JsonUtil.getJson("json/banner.json");
-        for (int i = 0; i < jsonBanner.size(); i++) {
-            JsonObject jsonObject = (JsonObject) jsonBanner.get(i);
-            BannerDto bannerDto = BannerDto.builder()
-                    .hashtag(jsonObject.get("hashtag").getAsString())
-                    .title(jsonObject.get("title").getAsString())
-                    .image(jsonObject.get("image").getAsString())
-                    .productId(jsonObject.get("productId").getAsLong())
-                    .build();
-            bannerDtoList.add(bannerDto);
-        }
-        registAll(bannerDtoList);
+
     }
 
+    @Transactional(readOnly = true)
     public List<Banner> getBannerList() {
         return bannerRepository.findAll();
     }
 
+    @Transactional
     public void modifyBanner(Long id, BannerDto bannerDto) {
-        bannerRepository.findById(id).ifPresent(banner -> {
-            banner.setHashtag(bannerDto.getHashtag());
-            banner.setTitle(bannerDto.getTitle());
-            banner.setImage(bannerDto.getImage());
-            banner.setProductId(bannerDto.getProductId());
-        });
+
     }
 
+    @Transactional
     public void deleteBanner(Long id) {
         bannerRepository.deleteById(id);
     }
