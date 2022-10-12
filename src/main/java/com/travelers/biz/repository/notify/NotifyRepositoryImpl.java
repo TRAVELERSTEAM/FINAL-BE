@@ -38,7 +38,10 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
     @Override
-    public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable) {
+    public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(
+            final NotifyType notifyType,
+            final Pageable pageable
+    ) {
 
         return PagingCorrespondence.Response.from(
                 applyPagination(pageable,
@@ -59,7 +62,10 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
     @Override
-    public Optional<NotifyResponse.DetailInfo> findDetail(final Long notifyId, final NotifyType notifyType) {
+    public Optional<NotifyResponse.DetailInfo> findDetail(
+            final Long notifyId,
+            final NotifyType notifyType
+    ) {
         Optional<NotifyResponse.DetailInfo> detailInfo = Optional.ofNullable(
                 selectFromWhere(
                         notifyType,
@@ -80,7 +86,10 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
         return detailInfo;
     }
 
-    private List<NotifyResponse.AroundTitle> getAround(final Long notifyId, final NotifyType notifyType) {
+    private List<NotifyResponse.AroundTitle> getAround(
+            final Long notifyId,
+            final NotifyType notifyType
+    ) {
         return getAround(getPrev(notifyId, notifyType), getNext(notifyId, notifyType));
     }
 
