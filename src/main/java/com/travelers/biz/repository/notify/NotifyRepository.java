@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface NotifyRepository extends JpaRepository<Notify, Long>, NotifyRepositoryQuery {
 
-    @Query(" select n.sequence from Notify n where n.notifyType = Notice")
+    @Query(" select n.sequence from Notify n where n.notifyType = Notice order by n.id desc ")
     Optional<Notify> initNotice();
 
-    @Query(" select n.sequence from Notify n where n.notifyType = RefLibrary")
+    @Query(" select n.sequence from Notify n where n.notifyType = RefLibrary order by n.id desc ")
     Optional<Notify> initRefLibrary();
 }
