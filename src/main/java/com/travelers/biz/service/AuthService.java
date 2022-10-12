@@ -78,7 +78,7 @@ public class AuthService {
 
         Member myMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new TravelersException(MEMBER_NOT_FOUND));
-        if(!files.get(0).isEmpty()) {
+        if(files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
