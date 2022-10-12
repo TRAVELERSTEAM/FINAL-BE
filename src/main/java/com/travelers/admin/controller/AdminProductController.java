@@ -1,14 +1,16 @@
 package com.travelers.admin.controller;
 
 import com.travelers.biz.service.ProductService;
-import com.travelers.dto.ProductRequestDto;
 import com.travelers.dto.ProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -30,5 +32,10 @@ public class AdminProductController {
         return new ResponseEntity<>(productService.findProduct(productId), HttpStatus.OK);
     }
 
-
+    // 제품 로딩하기
+    @GetMapping("/product/load")
+    public ResponseEntity<Object> loadProduct() throws IOException {
+        productService.loadData();
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
