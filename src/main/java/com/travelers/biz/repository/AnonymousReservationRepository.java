@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface AnonymousReservationRepository extends JpaRepository<AnonymousReservation, Long> {
 
     @Query("  select new " +
-            " com.travelers.dto.AnonymousReservationResInfo(ar.code, p.name, ar.payment, ar.headCount, ar.when, ar.status) " +
+            " com.travelers.dto.AnonymousReservationResInfo(ar.code, p.title, ar.payment, ar.headCount, ar.when, ar.status) " +
             " from AnonymousReservation ar " +
             " join ar.departure d " +
             " join d.product p " +
