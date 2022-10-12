@@ -25,7 +25,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final EmailService emailService;
     private final AuthService authService;
     private final MemberService memberService;
 
@@ -55,17 +54,10 @@ public class AuthController {
         return new ResponseEntity<>(memberService.getMemberEmailInfo(findEmail.getUsername(), findEmail.getBirth(), findEmail.getGender()), HttpStatus.OK);
     }
 
-    // 비밀번호 찾기 이메일 임시비밀번호 발송
+    // 비밀번호 찾기 이메일 인증 후 임시비밀번호 발송
     @PostMapping("/find_password")
     public ResponseEntity<Objects> findPassword(@RequestBody MemberRequestDto.FindPassword findPassword) {
-        Member member = memberService.getMemberInfo(findPassword.getUsername(),
-                findPassword.getBirth(),
-                findPassword.getGender(),
-                findPassword.getTel(),
-                findPassword.getEmail());
-
-        String tempPassword = emailService.joinResetPassword(findPassword.getEmail());
-        memberService.changePassword(member, tempPassword);
+        authService.findPassword(findPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
