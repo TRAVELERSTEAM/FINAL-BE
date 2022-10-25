@@ -2,7 +2,7 @@
 
 <table>
   <tr style="text-align: center">
-    <td colspan="3">당담 임무</td>
+    <td colspan="3">담당 임무</td>
   </tr>
   <tr>
     <td>이민형</td>
