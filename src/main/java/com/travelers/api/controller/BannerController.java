@@ -1,27 +1,22 @@
-package com.travelers.admin.controller;
+package com.travelers.api.controller;
 
 import com.travelers.biz.service.BannerService;
 import com.travelers.dto.BannerResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/user")
 @RequiredArgsConstructor
-public class AdminBannerController {
+public class BannerController {
     private final BannerService bannerService;
-
-    @GetMapping("/banner/load")
-    public ResponseEntity<Objects> loadData() throws IOException {
-        bannerService.loadData();
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @GetMapping("/banners")
     public ResponseEntity<List<BannerResponseDto>> allBanner() {

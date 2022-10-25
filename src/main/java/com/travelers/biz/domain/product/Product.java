@@ -1,5 +1,6 @@
 package com.travelers.biz.domain.product;
 
+import com.travelers.biz.domain.Banner;
 import com.travelers.biz.domain.base.BaseTime;
 import com.travelers.biz.domain.image.ProductImage;
 import com.travelers.biz.domain.product.embeddable.Price;
@@ -7,9 +8,7 @@ import com.travelers.config.converter.PeriodConverter;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +53,9 @@ public class Product extends BaseTime {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImage> images = new LinkedList<>();
+
+    @OneToOne(mappedBy = "product")
+    private Banner banner;
 
     @Builder
     public Product(String title, String target, String area, String theme, String startDate, String summary, Period period, Price price) {

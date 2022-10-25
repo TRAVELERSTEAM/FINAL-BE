@@ -47,6 +47,7 @@ public class ProductService {
     /*****************************************************************************/
 
     // 여행상품 넣기
+    @Transactional
     public void loadData() throws IOException {
         JsonArray jsonProduct = JsonUtil.getJson("json/product.json");
         for (int i = 0; i < jsonProduct.size(); i++) {

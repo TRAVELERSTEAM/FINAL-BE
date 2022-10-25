@@ -1,6 +1,6 @@
 package com.travelers.biz.domain.reservation;
 
-import com.travelers.biz.domain.Member;
+import com.travelers.biz.domain.AnonymousMember;
 import com.travelers.biz.domain.departure.Departure;
 import com.travelers.biz.domain.departure.embeddable.When;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reservation {
+public class AnonymousReservation {
 
     public enum Status {
         STANDBY, CANCELED, COMPLETION, TRAVEL_COMPLETION
@@ -26,8 +26,8 @@ public class Reservation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "anonymous_member_id")
+    private AnonymousMember member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departure_id")
@@ -41,7 +41,7 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private AnonymousReservation.Status status;
 
     @Embedded
     private When when;
@@ -50,8 +50,8 @@ public class Reservation {
     private String code;
 
     @Builder
-    private Reservation(
-            final Member member,
+    private AnonymousReservation(
+            final AnonymousMember member,
             final Departure departure,
             final HeadCount headCount,
             final long payment
@@ -61,8 +61,13 @@ public class Reservation {
         this.headCount = headCount;
         this.payment = payment;
         this.when = departure.getWhen();
-        this.status = Status.STANDBY;
+        this.status = AnonymousReservation.Status.STANDBY;
+        createRandomCode();
+    }
+
+    private void createRandomCode() {
         this.code = randomCode();
+        member.addReservationCode(code);
     }
 
     private String randomCode() {
@@ -70,9 +75,8 @@ public class Reservation {
     }
 
     public void cancel() {
-        this.status = Status.CANCELED;
+        this.status = AnonymousReservation.Status.CANCELED;
         this.departure.plusRemainCapacity(headCount.getTotalCount());
     }
 
 }
-

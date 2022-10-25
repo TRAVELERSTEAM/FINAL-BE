@@ -41,7 +41,7 @@ public class DepartureRepositoryImpl extends QuerydslSupports implements Departu
                 select(new QDepartureResponse_ReservationInfo(
                         product.id.as("productId"),
                         D.id.as("productId"),
-                        product.name.as("productName"),
+                        product.title.as("title"),
                         product.period,
                         product.price,
                         D.capacity

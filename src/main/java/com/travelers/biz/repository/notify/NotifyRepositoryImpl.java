@@ -5,7 +5,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.travelers.biz.domain.notify.NotifyType;
-import com.travelers.biz.domain.notify.QNotify;
 import com.travelers.biz.repository.notify.config.QuerydslSupports;
 import com.travelers.dto.*;
 import com.travelers.dto.paging.PagingCorrespondence;
@@ -22,67 +21,76 @@ import static com.travelers.biz.domain.notify.QNotify.notify;
 
 public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepositoryQuery {
 
-    private static final QNotify N = notify;
-
     public NotifyRepositoryImpl(EntityManager em) {
         super(em);
     }
 
     private <T> JPAQuery<T> selectFromWhere(final NotifyType notifyType, ConstructorExpression<T> dtoResponse) {
         return select(dtoResponse)
-                .from(N)
-                .where(N.notifyType.eq(notifyType)
+                .from(notify)
+                .where(notify.notifyType.eq(notifyType)
                 );
     }
 
     private JPAQuery<Long> countQuery(final NotifyType type) {
-        return select(N.count()).from(N)
-                .where(N.notifyType.eq(type));
+        return select(notify.count()).from(notify)
+                .where(notify.notifyType.eq(type));
     }
 
     @Override
-    public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(final NotifyType notifyType, final Pageable pageable) {
+    public PagingCorrespondence.Response<NotifyResponse.SimpleInfo> findSimpleList(
+            final NotifyType notifyType,
+            final Pageable pageable
+    ) {
 
         return PagingCorrespondence.Response.from(
                 applyPagination(pageable,
                         () -> selectFromWhere(notifyType,
                                 new QNotifyResponse_SimpleInfo(
-                                        N.id,
-                                        N.sequence,
+                                        notify.id,
+                                        notify.sequence,
                                         member.username,
-                                        N.title,
-                                        N.createdAt))
-                                .join(N.writer, member)
+                                        notify.title,
+                                        notify.createdAt))
+                                .join(notify.writer, member)
                                 .offset(pageable.getOffset())
                                 .limit(pageable.getPageSize())
-                                .orderBy(N.id.desc()),
+                                .orderBy(notify.id.desc()),
                         countQuery(notifyType)
                 )
         );
     }
 
     @Override
-    public Optional<NotifyResponse.DetailInfo> findDetail(final Long notifyId, final NotifyType notifyType) {
-        Optional<NotifyResponse.DetailInfo> detailInfo = Optional.ofNullable(selectFromWhere(
-                notifyType,
-                new QNotifyResponse_DetailInfo(
-                        N.id,
-                        N.sequence,
-                        member.username,
-                        N.title,
-                        N.content,
-                        N.createdAt))
-                .join(N.writer, member)
-                .where(N.id.eq(notifyId))
-                .fetchFirst());
+    public Optional<NotifyResponse.DetailInfo> findDetail(
+            final Long notifyId,
+            final NotifyType notifyType
+    ) {
+        Optional<NotifyResponse.DetailInfo> detailInfo = Optional.ofNullable(
+                selectFromWhere(
+                        notifyType,
+                        new QNotifyResponse_DetailInfo(
+                                notify.id,
+                                notify.sequence,
+                                member.username,
+                                notify.title,
+                                notify.content,
+                                notify.createdAt))
+                        .join(notify.writer, member)
+                        .where(notify.id.eq(notifyId))
+                        .fetchFirst()
+        );
 
-        detailInfo.ifPresent(e -> e.addAroundTitles(getAround(notifyId)));
+        detailInfo.ifPresent(e -> e.addAroundTitles(getAround(notifyId, notifyType)));
 
         return detailInfo;
     }
 
-    private List<NotifyResponse.AroundTitle> getAround(final Long notifyId) {
-        return getAround(getPrev(notifyId), getNext(notifyId));
+    private List<NotifyResponse.AroundTitle> getAround(
+            final Long notifyId,
+            final NotifyType notifyType
+    ) {
+        return getAround(getPrev(notifyId, notifyType), getNext(notifyId, notifyType));
     }
 
     private List<NotifyResponse.AroundTitle> getAround(final NotifyResponse.AroundTitle... aroundTitles) {
@@ -95,24 +103,33 @@ public class NotifyRepositoryImpl extends QuerydslSupports implements NotifyRepo
     }
 
 
-    private NotifyResponse.AroundTitle getNext(final Long notifyId) {
-        return getWhere(N.id.min(), N.id.gt(notifyId)).fetchFirst();
+    private NotifyResponse.AroundTitle getNext(final Long notifyId, final NotifyType notifyType) {
+        return getWhere(notify.id.min(), notify.id.gt(notifyId), notifyType)
+                .fetchFirst();
     }
 
-    private NotifyResponse.AroundTitle getPrev(final Long notifyId) {
-        return getWhere(N.id.max(), N.id.lt(notifyId)).fetchFirst();
+    private NotifyResponse.AroundTitle getPrev(final Long notifyId, final NotifyType notifyType) {
+        return getWhere(notify.id.max(), notify.id.lt(notifyId), notifyType)
+                .fetchFirst();
     }
 
-    private JPAQuery<NotifyResponse.AroundTitle> getWhere(final NumberExpression<Long> target, final BooleanExpression condition) {
-        return getFrom().where(N.id.eq(JPAExpressions.select(target).from(N).where(condition)));
+    private JPAQuery<NotifyResponse.AroundTitle> getWhere(
+            final NumberExpression<Long> target,
+            final BooleanExpression condition,
+            final NotifyType notifyType
+    ) {
+        return getFrom()
+                .where(notify.notifyType.eq(notifyType),
+                        notify.id.eq(JPAExpressions.select(target).from(notify).where(condition))
+                );
     }
 
     private JPAQuery<NotifyResponse.AroundTitle> getFrom() {
         return select(
                 new QNotifyResponse_AroundTitle(
-                        N.id, N.sequence, N.title
+                        notify.id, notify.sequence, notify.title
                 ))
-                .from(N);
+                .from(notify);
     }
 
 }

@@ -27,7 +27,7 @@ public class ReservationRepositoryImpl extends QuerydslSupports implements Reser
                 applyPagination(pageable,
                         () -> select(new QReservationResInfo(
                                 R.code,
-                                product.name.as("productName"),
+                                product.title.as("title"),
                                 R.payment,
                                 R.headCount,
                                 R.when,

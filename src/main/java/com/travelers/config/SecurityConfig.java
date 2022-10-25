@@ -43,7 +43,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests()
                 .antMatchers(swaggerList).permitAll()
-                .antMatchers("/notify/**", "/login", "/register", "/reissue", "/find_email", "/find_password", "/verify/**", "/admin/login").permitAll()
+                .antMatchers("/", "/notify/**", "/login", "/register", "/reissue", "/find_email", "/find_password", "/verify/**", "/admin/login").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**", "/image", "qna/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()

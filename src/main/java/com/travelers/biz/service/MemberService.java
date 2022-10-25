@@ -82,10 +82,6 @@ public class MemberService {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId())
                 .orElseThrow(() -> new TravelersException(ACCESS_TOKEN_NOT_FOUND));
 
-        if(!emailService.verifyKey(changeInfo.getEmail() ,changeInfo.getKey())) {
-            throw new TravelersException(KEY_NOT_FOUND);
-        }
-
         // 비밀번호 입력칸이 비어있지 않고
         if(!changeInfo.getCurrentPassword().isEmpty()) {
             // 바꿀 비밀번호와 바꿀 확인비밀번호가 다르면
@@ -118,15 +114,13 @@ public class MemberService {
         myMember.setCreatedAt(member.getCreatedAt());
         myMember.changeAuthority(member.getAuthority());
 
-        if(files != null && !files.isEmpty()) {
+        if(files != null && !files.isEmpty() && !files.get(0).isEmpty()) {
             String storedLocation = FileUtils.getStoredLocation(files.get(0).getOriginalFilename(), location);
             File file = new File(storedLocation);
             FileCopyUtils.copy(files.get(0).getBytes(), file);
             String url = s3Uploader.upload(file, files.get(0).getOriginalFilename());
             update(myMember.getId(), url);
         }
-
-        emailService.deleteKey(changeInfo.getKey());
         memberRepository.save(myMember);
     }
 

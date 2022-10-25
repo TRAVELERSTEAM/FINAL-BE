@@ -1,9 +1,11 @@
 package com.travelers.biz.domain.departure;
 
+import com.travelers.biz.domain.AnonymousMember;
 import com.travelers.biz.domain.Member;
 import com.travelers.biz.domain.base.BaseTime;
 import com.travelers.biz.domain.departure.embeddable.When;
 import com.travelers.biz.domain.product.Product;
+import com.travelers.biz.domain.reservation.AnonymousReservation;
 import com.travelers.biz.domain.reservation.Reservation;
 import com.travelers.biz.domain.reservation.embeddable.Capacity;
 import com.travelers.biz.domain.reservation.embeddable.HeadCount;
@@ -52,9 +54,20 @@ public class Departure extends BaseTime {
     }
 
     public Reservation reserve(final Member member, final HeadCount headCount){
-        minusCapacity(headCount.getHeadCount());
+        minusCapacity(headCount.getTotalCount());
         return Reservation.builder()
                 .member(member)
+                .departure(this)
+                .headCount(headCount)
+                .payment(calculateFee(headCount))
+                .build();
+    }
+
+    public AnonymousReservation reserve(final AnonymousMember anonymousMember, final HeadCount headCount) {
+        minusCapacity(headCount.getTotalCount());
+        return AnonymousReservation
+                .builder()
+                .member(anonymousMember)
                 .departure(this)
                 .headCount(headCount)
                 .payment(calculateFee(headCount))
@@ -75,7 +88,4 @@ public class Departure extends BaseTime {
         this.capacity.plusCapacity(touristCnt);
     }
 
-    public int getCapacity(){
-        return this.capacity.getMaxCapacity();
-    }
 }

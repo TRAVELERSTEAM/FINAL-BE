@@ -82,9 +82,6 @@ public class MemberRequestDto {
         private String email;
 
         @NotNull
-        private String key;
-
-        @NotNull
         private String birth;
 
         @NotNull

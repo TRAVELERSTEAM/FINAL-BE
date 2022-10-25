@@ -1,5 +1,6 @@
 package com.travelers.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,8 @@ public class BoardRequest {
 
         @NotBlank(message = "본문은 공백일 수 없습니다.")
         private final String content;
+
+        @JsonIgnore
         private List<String> urls;
 
         public Write() {
