@@ -89,8 +89,8 @@
 |---|---|---|:---:|
 |회원가입|POST|/register|X|
 |로그인|POST|/login|X|
-|**아이디찾기**|POST|/find_email|X|
-|**비밀번호찾기**|POST|/find_password|X|
+|**아이디찾기**|POST|/find-email|X|
+|**비밀번호찾기**|POST|/find-password|X|
 |이메일 인증번호 받기|POST|/verify|X|
 |이메일 인증하기|GET|/verify/{email}/{key}|X|
 |사용자 정보 받아오기|GET|/user/me|O|
